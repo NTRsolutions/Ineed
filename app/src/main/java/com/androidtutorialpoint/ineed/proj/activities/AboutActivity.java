@@ -46,6 +46,7 @@ String language;
         language = tinyDB.getString("language_id");
         setuptoolbar();
         //Abc
+        String name="Muhib";
     }
 
     private void setuptoolbar() {
