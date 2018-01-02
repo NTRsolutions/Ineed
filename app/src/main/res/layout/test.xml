@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:weightSum="1"
+        style="@style/Signupsimplerectangle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+      <CheckBox
+          android:layout_marginTop="3dp"
+
+          android:layout_marginLeft="5dp"
+          android:padding="15dp"
+          android:layout_width="35dp"
+          android:layout_height="wrap_content"
+          android:gravity="center|right"
+          android:button="@drawable/ic_blank_circle"/>
+        <LinearLayout
+            android:layout_weight="0.80"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:padding="2dp"
+           >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QUICK"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+            <TextView
+                android:layout_marginTop="1dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="View up to 45 cv"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="end"
+            android:layout_weight="0.2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="end">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="top"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="7dp"
+                android:paddingTop="7dp"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:text="45 Credits"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="$65"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="5dp"
+                android:textStyle="bold"
+                android:textColor="@color/appbasecolor"
+                android:textSize="22sp"
+                />
+        </LinearLayout>
+        </LinearLayout>
+</LinearLayout>

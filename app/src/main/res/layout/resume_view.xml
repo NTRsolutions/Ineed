@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@drawable/buttoncurve_grey_border">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="8dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:text="@string/my_resume"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:background="@drawable/profileback"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:padding="8dp"
+            android:text="@string/resume_view"
+            android:gravity="center_horizontal"
+            android:id="@+id/txt_resume_view"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/profileback"
+            android:layout_width="0dp"
+            android:textColor="@color/white"
+            android:padding="8dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:text="@string/resume_download"
+            android:id="@+id/txt_resume_download"/>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

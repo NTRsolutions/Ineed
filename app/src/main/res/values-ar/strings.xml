@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ineed</string>
+
+    <!--Global-->
+    <string name="internetConnection">تحقق من اتصالك بالإنترنت</string>
+    <string name="fieldsmeand">جميع الحقول إلزامية</string>
+    <string name="validemail">الرجاء إدخال بريد إلكتروني صحيح</string>
+    <string name="pleasewait">أرجو الإنتظار</string>
+    <string name="emptyemail">البريد الإلكتروني فارغ</string>
+
+    <!--Splash Screen-->
+    <string name="sellorbuy">بيع/شراء</string>
+    <string name="consultant">مستشار</string>
+    <string name="jobs">وظائف</string>
+    <string name="investment">استثمار</string>
+    <string name="contiue">استمر</string>
+
+    <!--LOGIN-->
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="forgotpass">نسيت كلمة المرور</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="skip">تخطى</string>
+
+    <!--Forget Screen-->
+    <string name="recoverpass">نحن بحاجة فقط معرف البريد الإلكتروني المسجل أن نرسل لك كلمة المرور إعادة تعيين التعليمات.</string>
+
+
+    <!--SIGNUP-->
+    <string name="areyoua">هل أنت </string>
+    <string name="or">أو</string>
+    <string name="jobseeker">طالب عمل</string>
+    <string name="employer">صاحب العمل</string>
+    <string name="step1signup">إدارة كل ما تبذلونه من الحجوزات ونقلت</string>
+    <string name="step2signup">حدد الحزم</string>
+    <string name="step3signup">قم بالدفع</string>
+    <string name="username">اسم المستخدم</string>
+    <string name="emailadd">عنوان البريد الإلكتروني</string>
+    <string name="pass">كلمة المرور</string>
+    <string name="confipass">تأكيد كلمة المرور</string>
+    <string name="next">التالى</string>
+    <string name="confirequal">كلمة المرور وتأكيد كلمة المرور غير متطابقة</string>
+
+    <string name="help">How can we help you?</string>
+    <string name="searchname">Cook</string>
+    <string name="about">HSed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</string>
+    <string name="resetpass">Reset password</string>
+    <string name="contactus">Contact Us</string>
+    <string name="select_package">Select Package</string>
+
+
+    <!--Home Activity-->
+    <string name="dashboard">DashBoard</string>
+    <string name="updateprofile">Update Profile</string>
+    <string name="changepassword">Change Password</string>
+    <string name="upgradesubscription">Upgrade Subscription</string>
+
+    <string name="abouttitle">About</string>
+    <string name="terms">Terms of Use</string>
+    <string name="Logout">Log Out</string>
+
+    <string name="search1">Search</string>
+    <string name="profileview">Profile Viewed</string>
+
+
+    <string name="personal">Personal</string>
+    <string name="name">Name</string>
+    <string name="company">Company</string>
+    <string name="phone">Phone</string>
+
+    <!-- Profile-->
+    <string name="contact">Contact no</string>
+    <string name="designation">Designation</string>
+    <string name="experience">Experience</string>
+    <string name="resume">Resume</string>
+    <string name="dob">Date of Birth</string>
+    <string name="gender">Gender</string>
+    <string name="location">Location</string>
+    <string name="skills">Skills</string>
+    <string name="workexper">Work experience</string>
+    <string name="proftitle">Profile Title:</string>
+    <string name="totalexp">Total Experience:</string>
+    <string name="largesttimesizehandled">Largest Team Size Handled:</string>
+    <string name="currentsalary">Current/Latest Annual Salary:</string>
+    <string name="noticeperiod">Notice Period:</string>
+
+    <string name="plandetails">Plan details</string>
+    <string name="packkage">Package</string>
+    <string name="Expired">Expired</string>
+    <string name="creditpoint">Credit Point</string>
+    <string name="credituse">Credit Use</string>
+    <string name="creditleft">Credit Left</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Save">Save</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!--fragment job seeker-->
+
+    <string name="language_select">Please select language</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

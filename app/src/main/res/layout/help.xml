@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appbasecolor">
+    <include layout="@layout/toolbar"></include>
+    <EditText
+
+        android:gravity="center_vertical"
+       android:layout_margin="20dp"
+        android:textColor="@color/white"
+        android:drawableStart="@drawable/icn_search_white"
+        android:drawableLeft="@drawable/icn_search_white"
+        android:drawablePadding="15dp"
+        android:textColorHint="@color/white"
+        android:maxLines="1"
+        android:textSize="18sp"
+        style="@style/GDroundedRectanglet"
+        android:hint="@string/help"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/background">
+
+    </LinearLayout>
+
+</LinearLayout>

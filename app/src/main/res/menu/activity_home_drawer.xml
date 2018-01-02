@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single"
+        >
+        <item
+            android:id="@+id/nav_dashboard"
+            android:icon="@drawable/ic_dashboard"
+            android:title="@string/dashboard" />
+        <item
+            android:visible="false"
+            android:id="@+id/nav_updateprofile"
+            android:icon="@drawable/ic_profile"
+            android:title="@string/updateprofile" />
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/icn_search_white"
+            android:title="@string/search1" />
+        <item
+            android:id="@+id/nav_changepass"
+            android:icon="@drawable/ic_lock"
+            android:title="@string/changepassword" />
+
+        <item
+            android:id="@+id/nav_terms"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/terms" />
+         <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_about_successful_man"
+            android:title="@string/abouttitle" />
+        <item
+            android:id="@+id/nav_contact"
+            android:icon="@drawable/ic_business_cards"
+            android:title="@string/contactus" />
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_help"
+            android:title="@string/help_drawer" />
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/Logout" />
+    </group>
+
+
+
+</menu>

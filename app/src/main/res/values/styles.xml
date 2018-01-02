@@ -1,0 +1,79 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+
+        <item name="colorPrimary">@color/appbasecolor</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/black</item>
+    </style>
+    <style name="buttondesign">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:padding">5dp</item>
+    </style>
+    <style name="BlueBorderButtonTheme" parent="buttondesign">
+        <item name="android:background">@drawable/buttoncurve</item>
+    </style>
+    <style name="WhiteBorderButtonTheme" parent="buttondesign">
+        <item name="android:background">@drawable/buttoncurve_white</item>
+    </style>
+
+    <style name="Theme.MyDialog" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimary">#fff</item>
+        <item name="colorPrimaryDark">#fff</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppTheme.Blue.NoActionBar" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">@color/appbasecolor</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+    </style>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.Blue">
+        <item name="colorPrimary">@color/appbasecolor</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="simplerectangle">
+        <item name="android:background">@drawable/simplerectangle</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColorHint">@color/Light_grey</item>
+        <item name="android:textColor">@color/black</item>
+
+        <item name="android:layout_margin">10dp</item>
+    </style>
+
+    <style name="GDroundedRectanglet">
+        <item name="android:background">@drawable/roundedrectangle</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>
+
+    <style name="Signupsimplerectangle">
+        <item name="android:background">@drawable/simplerectangle</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textColorHint">@color/Light_grey</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_margin">3dp</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>
