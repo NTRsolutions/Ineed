@@ -58,6 +58,7 @@ import static com.androidtutorialpoint.ineed.proj.activities.SignUpActivity.imag
 /**
  * Created by Muhib.
  * Contact Number : +91 9796173066
+ * Uploaded on Git Successfully
  */
 public class CompleteSignup3frag extends Fragment {
     View view;
