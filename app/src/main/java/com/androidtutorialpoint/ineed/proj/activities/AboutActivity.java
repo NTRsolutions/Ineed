@@ -47,7 +47,7 @@ String language;
         setuptoolbar();
         //Abc
         String name="Muhib";
-        String ac= "abccccc";
+        String ac= "abccccc";//
     }
 
     private void setuptoolbar() {
