@@ -89,7 +89,7 @@ public class CompleteSignup3frag extends Fragment {
 //        mobile = loginData.getUser_detail().getUser_phone();
         language=sharpref.getString("language_id");
 
-        String noAccount = "DON'T SELECT PACKAGE LOGOUT ";
+        String noAccount = "DON'TSELECT PACKAGE LOGOUT ";
         int i = noAccount.indexOf("LO");
         int j = noAccount.indexOf("OUT");
         price = getArguments().getString("price");
