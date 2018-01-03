@@ -153,7 +153,6 @@ public class CompleteSignup3frag extends Fragment {
         requestMap.put("customer_email",CUSTOMER_EMAIL);
         requestMap.put("sdk_token",sdk_token);
 
-
 //        requestMap.put("payment_option","AMEX");
 //        requestMap.put("eci",ECI);
 //        requestMap.put("order_description",command);

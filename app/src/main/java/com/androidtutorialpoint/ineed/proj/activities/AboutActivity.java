@@ -45,7 +45,10 @@ String language;
         tinyDB = new TinyDB(getApplicationContext());
         language = tinyDB.getString("language_id");
         setuptoolbar();
-        //jkil
+        //Abc
+
+        String ac= "abccccc";//
+        //
     }
 
     private void setuptoolbar() {
