@@ -3,24 +3,45 @@ package com.androidtutorialpoint.ineed.proj.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
+import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
+import com.androidtutorialpoint.ineed.proj.activities.AboutActivity;
 import com.androidtutorialpoint.ineed.proj.activities.HomeActivity;
+import com.androidtutorialpoint.ineed.proj.models.JobseekerDashBoardModel;
+import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
+import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
+import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
+import com.google.gson.Gson;
+import com.mukesh.tinydb.TinyDB;
+
+import org.json.JSONObject;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
 
 
 public class JobseekerDashboardFragment extends Fragment implements View.OnClickListener{
     TextView txtMyProfile, txtExpiry, txtViewedProfile, txtPlan;
-
+    TinyDB sharpref;
+    Gson gson = new Gson();
+    View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_jobseeker_dashboard, container, false);
+        view = inflater.inflate(R.layout.fragment_jobseeker_dashboard, container, false);
 
 //        find id
         txtMyProfile = (TextView) view.findViewById(R.id.jobseekerdash_txtMyProfile);
@@ -40,5 +61,70 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
         DashboardJobseeker dashboardJobseeker = new DashboardJobseeker();
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, dashboardJobseeker).addToBackStack(null).commit();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getdetails();
+    }
+
+    private void getdetails() {
+        if(Utillity.isNetworkConnected(getContext())) {
+            Utillity.showloadingpopup(getActivity());
+            HashMap<String, String> params = new HashMap<>();
+            params.put("user_id", "29");
+            RequestQueue requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
+
+            CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_DASHBOARD, params, this.sucess(), this.error());
+            requestQueue.add(customRequest);
+        }
+        else
+        {
+            Snackbar snackbar=Snackbar.make(view.findViewById(android.R.id.content),getResources().getString(R.string.internetConnection),Snackbar.LENGTH_LONG);
+            View snackbarview=snackbar.getView();
+            snackbarview.setBackgroundColor(getResources().getColor(R.color.appbasecolor));
+            snackbar.show();
+        }
+    }
+    private Response.Listener<JSONObject> sucess()
+    {
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Utillity.hidepopup();
+
+                JobseekerDashBoardModel dashBoardModel=null;
+                try {
+                dashBoardModel=new JobseekerDashBoardModel();
+                dashBoardModel=gson.fromJson(response.toString(),JobseekerDashBoardModel.class);
+                boolean status=dashBoardModel.isStatus();
+                if(status==true)
+                {
+                    txtExpiry.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_expire_date());
+                    txtPlan.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_id());
+                    int id=dashBoardModel.getJobseeker_dashboard().getUser_viewed();
+                    txtViewedProfile.setText(String.valueOf(id));
+                }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("Error",""+e);
+                    Utillity.message(getContext(),"Error");
+
+                }
+
+            }
+        };
+    }
+    private Response.ErrorListener error()
+    {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("TAG", "onErrorResponse: "+error.toString());
+                Utillity.message(getContext(), getResources().getString(R.string.internetConnection));
+                Utillity.hidepopup();
+            }
+        };
     }
 }

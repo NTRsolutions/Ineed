@@ -83,12 +83,11 @@ String language;
         }
         else
         {
-            Snackbar snackbar= Snackbar.make(findViewById(android.R.id.content),"Check Your Internet Connection",Snackbar.LENGTH_LONG);
+            Snackbar snackbar= Snackbar.make(findViewById(android.R.id.content),getResources().getString(R.string.internetConnection),Snackbar.LENGTH_LONG);
             View snackbarView=snackbar.getView();
             snackbarView.setBackgroundColor(getResources().getColor(R.color.appbasecolor));
             snackbar.show();
         }
-
     }
 
     @Override
