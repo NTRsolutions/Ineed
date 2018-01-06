@@ -17,6 +17,7 @@ public interface ApiList {
     String TERM=BASE_URL+"term";
     String CONTACT_US =BASE_URL+"contact_us";
     String JOBSEEKER_DASHBOARD=BASE_URL+"jobseeker_dashboard";
+    String HELP_CATEGORY=BASE_URL+"helpcategory";
 
 
 }

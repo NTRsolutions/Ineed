@@ -37,6 +37,7 @@ public class JobseekerDashBoardModel {
          */
 
         private int user_viewed;
+
         private String user_package_id;
         private String user_package_expire_date;
 
