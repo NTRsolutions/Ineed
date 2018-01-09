@@ -1,5 +1,6 @@
 package com.androidtutorialpoint.ineed.proj.activities;
 
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -145,6 +146,11 @@ public class HelpActivity extends AppCompatActivity implements HelpAdapter.Click
 
     @Override
     public void itemclick(View v, int pos) {
-        Utillity.message(getApplication(),"Hi");
+             int id= Integer.parseInt(listhelp.get(pos).getHelpcat_id());
+            Intent intent=new Intent(HelpActivity.this,HelpDetailActivity.class);
+            intent.putExtra("idd",""+id);
+            startActivity(intent);
+            Utillity.message(getApplication(),""+id);
+          //  startActivity(new Intent(HelpActivity.this,HelpDetailActivity.class));
     }
 }

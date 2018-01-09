@@ -30,7 +30,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
                     android:padding="3dp"
-                    android:text="03"
+                    android:text=""
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/extra_large_size"
                     android:textStyle="bold" />
@@ -62,7 +62,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
                     android:padding="3dp"
-                    android:text="Premium"
+                    android:text=""
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/extra_large_size"
                     android:textStyle="bold" />
@@ -94,7 +94,7 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
                     android:padding="3dp"
-                    android:text="03/02/2018"
+                    android:text=""
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/extra_large_size"
                     android:textStyle="bold" />
@@ -108,7 +108,6 @@
                     android:text="@string/txtExpiryDate"
                     android:textColor="@color/black"
                     android:textSize="@dimen/extra_small_size" />
-
             </LinearLayout>
 
             <LinearLayout

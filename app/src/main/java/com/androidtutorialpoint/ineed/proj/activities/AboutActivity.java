@@ -100,7 +100,6 @@ String language;
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     private Response.Listener<JSONObject> sucesslistener() {
@@ -108,8 +107,7 @@ String language;
             @Override
             public void onResponse(JSONObject response) {
                 Utillity.hidepopup();
-
-                    //Utillity.message(getApplicationContext(),""+response);
+                //Utillity.message(getApplicationContext(),""+response);
                 Gson gson=new Gson();
                 AboutUsModel aboutUsModel=null;
                 try

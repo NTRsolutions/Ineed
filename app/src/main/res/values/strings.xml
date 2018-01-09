@@ -137,7 +137,7 @@
     <string name="txtIndustry">Industry</string>
     <string name="txtDepartment">Department</string>
     <string name="txtAdd">Add</string>
-<!--education course title -->
+    <!--education course title -->
     <string name="edu_course_title">Course Title </string>
     <string name="edu_Specialization">Specialization </string>
     <string name="edu_institute">Institute </string>

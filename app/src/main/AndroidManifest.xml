@@ -63,7 +63,8 @@
 
         <activity android:name=".proj.activities.PayActivity" />
         <activity android:name=".proj.activities.TestActivity" />
-        <activity android:name=".proj.activities.HelpActivity"></activity>
+        <activity android:name=".proj.activities.HelpActivity" />
+        <activity android:name=".proj.activities.HelpDetailActivity"></activity>
     </application>
 
 </manifest>
