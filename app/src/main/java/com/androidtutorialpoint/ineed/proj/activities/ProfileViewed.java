@@ -22,8 +22,8 @@ public class ProfileViewed extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         setuptoolbar();
-
     }
+
     private void setuptoolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
         TextView textView= (TextView)toolbar.findViewById(R.id.toolbar_txt);

@@ -47,7 +47,6 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     @Override
