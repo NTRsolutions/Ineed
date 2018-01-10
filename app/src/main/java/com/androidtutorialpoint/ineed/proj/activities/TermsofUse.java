@@ -42,7 +42,7 @@ public class TermsofUse extends AppCompatActivity {
         setuptoolbar();
         tinyDB = new TinyDB(getApplicationContext());
         language = tinyDB.getString("language_id");
-        txtTerms = (TextView) findViewById(R.id.terms_of_use);
+        txtTerms =  findViewById(R.id.terms_of_use);
     }
 
     private void setuptoolbar() {

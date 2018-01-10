@@ -19,6 +19,7 @@ public interface ApiList {
     String JOBSEEKER_DASHBOARD=BASE_URL+"jobseeker_dashboard";
     String HELP_CATEGORY=BASE_URL+"helpcategory";
     String HELP=BASE_URL+"help";
+    String COUNTRY=BASE_URL+"country";
 
 
 }

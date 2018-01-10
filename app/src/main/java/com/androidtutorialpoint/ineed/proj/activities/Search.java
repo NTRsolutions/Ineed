@@ -2,41 +2,147 @@ package com.androidtutorialpoint.ineed.proj.activities;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
+import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
+import com.androidtutorialpoint.ineed.proj.models.CountryList;
+import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
+import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
+import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Search extends AppCompatActivity implements View.OnClickListener {
     String set;
     LinearLayout linearLayout;
     ActionBar actionBar;
-
+    Spinner select_country;
+    List<CountryList.CountryListBean> countrylst=new ArrayList<>();
+    ArrayList<String> Cname,Cid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         linearLayout= (LinearLayout) findViewById(R.id.ll_linear);
+        select_country=findViewById(R.id.sp_selectCountry);
         linearLayout.setOnClickListener(this);
         Intent it=getIntent();
         set=it.getStringExtra("Login");
+        getcountrylist();
+    }
 
+    private void getcountrylist() {
+        if(Utillity.isNetworkConnected(this)) {
+            Utillity.showloadingpopup(Search.this);
+            HashMap<String,String> params=new HashMap<>();
+            RequestQueue requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
+            CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.COUNTRY,params,this.sucesslistener(),this.errorlistener());
+            requestQueue.add(customRequest);
+
+        }
+        else
+    {
+        Snackbar snackbar= Snackbar.make(findViewById(android.R.id.content),getResources().getString(R.string.internetConnection),Snackbar.LENGTH_LONG);
+        View snackbarView=snackbar.getView();
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.appbasecolor));
+        snackbar.show();
+    }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setuptoolbar();
+    }
+    private Response.Listener<JSONObject> sucesslistener()
+    {
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Utillity.hidepopup();
+                Gson gson=new Gson();
+                CountryList countryList=null;
 
+                try {
+                    countryList=new CountryList();
+                    countryList=gson.fromJson(response.toString(),CountryList.class);
+                    boolean status=countryList.isStatus();
+                    if(status==true)
+                    {
+                        countrylst=countryList.getCountry_list();
+                        Log.d("List",""+countrylst);
+                        Cname=new ArrayList<>();
+                        Cid=new ArrayList<>();
+                        for(int i=0;i<countrylst.size();i++)
+                        {
+                            String CName=countrylst.get(i).getCountry_name();
+                            String CId=countrylst.get(i).getCountry_id();
+                            Cname.add(CName);
+                            Cid.add(CId);
+                        }
+                        handlespinner();
+                    }
+                } catch (Exception e) {
+                    Utillity.message(getApplicationContext(),""+e);
+                }
+
+
+            }
+        };
+    }
+
+    private void handlespinner() {
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerdesign,Cname);
+        arrayAdapter.setDropDownViewResource(R.layout.spinnerdesign);
+        select_country.setAdapter(arrayAdapter);
+        select_country.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private Response.ErrorListener errorlistener()
+    {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Utillity.hidepopup();
+                Utillity.message(getApplicationContext(),""+error);
+                Log.d("Error Respons",""+error);
+            }
+        };
     }
 
     private void setupoverlay() {

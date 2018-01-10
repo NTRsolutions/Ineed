@@ -48,9 +48,6 @@ public class HelpDetailActivity extends AppCompatActivity {
         setuptoolbar();
         rview=(RecyclerView) findViewById(R.id.recy_helpdetail);
         intent=getIntent();
-        //Bundle extra=getIntent().getExtras();
-       // Id=extra.getString("id");
-       // Intent extras = getIntent().getExtras();
         intent=getIntent();
         if(intent.hasExtra("idd"))
         {
@@ -58,7 +55,6 @@ public class HelpDetailActivity extends AppCompatActivity {
             Log.d("Muhib",Id);
         }
         getTitles();
-
     }
 
     private void getTitles() {
@@ -121,7 +117,6 @@ public class HelpDetailActivity extends AppCompatActivity {
                     {
                         String msg=response.getString("msg");
                         Utillity.message(HelpDetailActivity.this,msg);
-                        //Log.d("staus",""+staus);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
