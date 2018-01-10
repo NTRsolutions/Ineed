@@ -28,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
+import com.androidtutorialpoint.ineed.proj.activities.DialogActivity;
 import com.androidtutorialpoint.ineed.proj.activities.ProfileViewed;
 import com.androidtutorialpoint.ineed.proj.models.EmployerProfileData;
 import com.androidtutorialpoint.ineed.proj.models.ImageInputHelper;
@@ -57,11 +58,12 @@ import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 public class DashboardEmpFragment extends Fragment implements ImageInputHelper.ImageActionListener{
     EditText etEmail,etName,etcontact,etcompany;
-    TextView txt_proftitle,txt_personal, txtProfileView, txtPackage, txtExpired, txtCredit, txtLeft, txtUsed;
+    TextView txt_proftitle,txt_personal,txtSave,txtCancle, txtProfileView, txtPackage, txtExpired, txtCredit,
+            txtUpgrade, txtLeft;
     LinearLayout ll_savecancel;
     private ImageInputHelper imageInputHelper;
     ImageView imgUser, imgCamera;
-    String img,language, userId;
+    String img,language, userId, name, company, email, phone;
     TinyDB tinyDB;
     LoginData loginData;
     EmployerProfileData profileDetailMOdel = new EmployerProfileData();
@@ -81,6 +83,9 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
 
 //             find id
         txtCredit = view.findViewById(R.id.credit_point);
+        txtUpgrade = view.findViewById(R.id.txtUpgradePlan);
+        txtCancle = view.findViewById(R.id.txt_cancel);
+        txtSave = view.findViewById(R.id.txt_save);
         txtExpired = view.findViewById(R.id.et_expired);
         txtPackage = view.findViewById(R.id.et_package);
         txtLeft = view.findViewById(R.id.credit_left);
@@ -151,7 +156,66 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
             }
         });
 
+        txtUpgrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), DialogActivity.class));
+            }
+        });
+
+        txtCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                etEmail.setEnabled(false);
+                etcontact.setEnabled(false);
+                etcompany.setEnabled(false);
+                etName.setEnabled(false);
+                ll_savecancel.setVisibility(View.GONE);
+                getProfile();
+            }
+        });
+
+        txtSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                email = etEmail.getText().toString();
+                name = etName.getText().toString();
+                phone = etcontact.getText().toString();
+                company = etcompany.getText().toString();
+                if (Utillity.CheckEmail(email)){
+                    if (Utillity.CheckPhone(phone)){
+                        if (!company.isEmpty()){
+                            if (!name.isEmpty()){
+                                updateProfile();
+                            } else {
+                                Utillity.message(getActivity(),"Please enter name");
+                            }
+                        } else {
+                            Utillity.message(getActivity(),"Please enter company name");
+                        }
+                    } else {
+                        Utillity.message(getActivity(),"Please enter valid mobile");
+                    }
+                } else {
+                    Utillity.message(getActivity(),"Please enter valid email");
+                }
+            }
+        });
         return view;
+    }
+
+    public void updateProfile(){
+
+        HashMap<String,String> params=new HashMap<>();
+        params.put("fname",name);
+        params.put("company",company);
+        params.put("email",email);
+        params.put("user_id",userId);
+        params.put("phone",phone);
+
+        CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.EMPLOYER_PROFILE_EDIT,params,
+                this.successProfile(),this.error());
+        requestQueue.add(customRequest);
     }
 
     void clickonDrawable(View v, MotionEvent event) {
@@ -166,6 +230,7 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 etcompany.setEnabled(true);
                 etName.setEnabled(true);
                 ll_savecancel.setVisibility(View.VISIBLE);
+
             }
         }
     }
@@ -226,6 +291,39 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
     }
 
 
+    private Response.Listener<JSONObject> successProfile()
+    {
+        Utillity.showloadingpopup(getActivity());
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Utillity.hidepopup();
+                Log.d(TAG, "onResponse:data "+response.toString());
+                if (response!=null){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.toString());
+                        if (jsonObject.getString("status").equals("true")){
+                            Utillity.message(getContext(), "Profile updated successfully");
+                            etEmail.setEnabled(false);
+                            etcontact.setEnabled(false);
+                            etcompany.setEnabled(false);
+                            etName.setEnabled(false);
+                            ll_savecancel.setVisibility(View.GONE);
+                            getProfile();
+
+                        } else {
+                            Utillity.message(getContext(), "Profile not updated");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        };
+    }
+
+
     private Response.Listener<JSONObject> success()
     {
         Utillity.showloadingpopup(getActivity());
@@ -268,7 +366,6 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 Log.d("TAG", "onErrorResponse: "+error.toString());
                 Utillity.message(getContext(), getResources().getString(R.string.internetConnection));
                 Utillity.hidepopup();
-
             }
         };
     }
