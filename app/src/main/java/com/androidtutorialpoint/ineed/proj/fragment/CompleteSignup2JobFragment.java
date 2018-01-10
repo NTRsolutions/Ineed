@@ -93,7 +93,7 @@ public class CompleteSignup2JobFragment extends Fragment implements PackageAdapt
         txtlogin.setMovementMethod(LinkMovementMethod.getInstance());
         txtlogin.setText(noAccount, TextView.BufferType.SPANNABLE);
         Spannable spannable = (Spannable) txtlogin.getText();
-        txtlogin.setVisibility(View.GONE);
+        txtlogin.setVisibility(View.VISIBLE);
         final ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View view) {

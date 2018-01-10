@@ -66,6 +66,7 @@
         <activity android:name=".proj.activities.HelpActivity" />
         <activity android:name=".proj.activities.HelpDetailActivity" />
         <activity android:name=".proj.activities.FilterActivity"></activity>
+        <activity android:name=".proj.activities.UpgradePlanActivity"></activity>
     </application>
 
 </manifest>

@@ -95,7 +95,8 @@ public class CompleteSignup2EmpFragment extends Fragment implements EmpPackageAd
         final ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(),LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                startActivity(new Intent(getActivity(),LoginActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
                 sharpref.remove("login_data");
                 getActivity().finish();
             }

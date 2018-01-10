@@ -28,6 +28,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
+import com.androidtutorialpoint.ineed.proj.activities.DialogActivity;
+import com.androidtutorialpoint.ineed.proj.activities.ProfileViewed;
+import com.androidtutorialpoint.ineed.proj.models.EmployerProfileData;
 import com.androidtutorialpoint.ineed.proj.models.ImageInputHelper;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
 import com.androidtutorialpoint.ineed.proj.models.ProfileDetailMOdel;
@@ -55,13 +58,16 @@ import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 public class DashboardEmpFragment extends Fragment implements ImageInputHelper.ImageActionListener{
     EditText etEmail,etName,etcontact,etcompany;
-    TextView txt_proftitle,txt_personal;
+    TextView txt_proftitle,txt_personal,txtSave,txtCancle, txtProfileView, txtPackage, txtExpired, txtCredit,
+            txtUpgrade, txtLeft;
     LinearLayout ll_savecancel;
     private ImageInputHelper imageInputHelper;
     ImageView imgUser, imgCamera;
-    String img,language, userId;
+    String img,language, userId, name, company, email, phone;
     TinyDB tinyDB;
     LoginData loginData;
+    EmployerProfileData profileDetailMOdel = new EmployerProfileData();
+
     RequestQueue requestQueue;
 
     @Override
@@ -72,12 +78,19 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         imageInputHelper = new ImageInputHelper(this);
         imageInputHelper.setImageActionListener(this);
         loginData = new LoginData();
-//        profileDetailMOdel = new ProfileDetailMOdel();
         tinyDB = new TinyDB(getContext());
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
 
 //             find id
+        txtCredit = view.findViewById(R.id.credit_point);
+        txtUpgrade = view.findViewById(R.id.txtUpgradePlan);
+        txtCancle = view.findViewById(R.id.txt_cancel);
+        txtSave = view.findViewById(R.id.txt_save);
+        txtExpired = view.findViewById(R.id.et_expired);
+        txtPackage = view.findViewById(R.id.et_package);
+        txtLeft = view.findViewById(R.id.credit_left);
         ll_savecancel= (LinearLayout)view.findViewById(R.id.ll_savecancel);
+        txtProfileView = (TextView) view.findViewById(R.id.txt_profileViewed);
         etName = (EditText) view.findViewById(R.id.et_name);
         etcompany = (EditText) view.findViewById(R.id.et_company);
         etEmail = (EditText) view.findViewById(R.id.et_email);
@@ -87,6 +100,12 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         imgUser = (ImageView) view.findViewById(R.id.emp_img_profilew) ;
         imgCamera = (ImageView) view.findViewById(R.id.emp_img_camera);
 
+        txtProfileView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), ProfileViewed.class));
+            }
+        });
 
         imgCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +156,66 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
             }
         });
 
+        txtUpgrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), DialogActivity.class));
+            }
+        });
+
+        txtCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                etEmail.setEnabled(false);
+                etcontact.setEnabled(false);
+                etcompany.setEnabled(false);
+                etName.setEnabled(false);
+                ll_savecancel.setVisibility(View.GONE);
+                getProfile();
+            }
+        });
+
+        txtSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                email = etEmail.getText().toString();
+                name = etName.getText().toString();
+                phone = etcontact.getText().toString();
+                company = etcompany.getText().toString();
+                if (Utillity.CheckEmail(email)){
+                    if (Utillity.CheckPhone(phone)){
+                        if (!company.isEmpty()){
+                            if (!name.isEmpty()){
+                                updateProfile();
+                            } else {
+                                Utillity.message(getActivity(),"Please enter name");
+                            }
+                        } else {
+                            Utillity.message(getActivity(),"Please enter company name");
+                        }
+                    } else {
+                        Utillity.message(getActivity(),"Please enter valid mobile");
+                    }
+                } else {
+                    Utillity.message(getActivity(),"Please enter valid email");
+                }
+            }
+        });
         return view;
+    }
+
+    public void updateProfile(){
+
+        HashMap<String,String> params=new HashMap<>();
+        params.put("fname",name);
+        params.put("company",company);
+        params.put("email",email);
+        params.put("user_id",userId);
+        params.put("phone",phone);
+
+        CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.EMPLOYER_PROFILE_EDIT,params,
+                this.successProfile(),this.error());
+        requestQueue.add(customRequest);
     }
 
     void clickonDrawable(View v, MotionEvent event) {
@@ -152,6 +230,7 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 etcompany.setEnabled(true);
                 etName.setEnabled(true);
                 ll_savecancel.setVisibility(View.VISIBLE);
+
             }
         }
     }
@@ -203,19 +282,45 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
     }
 
     public void getProfile(){
-          /*  if (jobSeekerPackage!=null){
-                jobSeekerPackage.clear();
-            }*/
-        if (!language.isEmpty()){
-            HashMap<String,String> params=new HashMap<>();
-            params.put("user_id",userId);
-            params.put("language",language);
-            CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.VIEW_JOBSEEKER_PROFILE,params,
-                    this.success(),this.error());
-            requestQueue.add(customRequest);
-        } else {
-            Utillity.message(getContext(),getResources().getString(R.string.language_select));
-        }
+
+        HashMap<String,String> params=new HashMap<>();
+        params.put("user_id",userId);
+        CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.EMPLOYER_PROFILE,params,
+                this.success(),this.error());
+        requestQueue.add(customRequest);
+    }
+
+
+    private Response.Listener<JSONObject> successProfile()
+    {
+        Utillity.showloadingpopup(getActivity());
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Utillity.hidepopup();
+                Log.d(TAG, "onResponse:data "+response.toString());
+                if (response!=null){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.toString());
+                        if (jsonObject.getString("status").equals("true")){
+                            Utillity.message(getContext(), "Profile updated successfully");
+                            etEmail.setEnabled(false);
+                            etcontact.setEnabled(false);
+                            etcompany.setEnabled(false);
+                            etName.setEnabled(false);
+                            ll_savecancel.setVisibility(View.GONE);
+                            getProfile();
+
+                        } else {
+                            Utillity.message(getContext(), "Profile not updated");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        };
     }
 
 
@@ -230,19 +335,18 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 if (response!=null){
                     try {
                         if (!response.getString("status").equals("false")){
-                            /*profileDetailMOdel = gson.fromJson(response.toString(), ProfileDetailMOdel.class);
+
+                            profileDetailMOdel = gson.fromJson(response.toString(), EmployerProfileData.class);
                             if (profileDetailMOdel.getProfile_detail() != null) {
+                                etName.setText(profileDetailMOdel.getProfile_detail().getUser_fname());
                                 etEmail.setText(profileDetailMOdel.getProfile_detail().getUser_email());
                                 etcontact.setText(profileDetailMOdel.getProfile_detail().getUser_phone());
-                                etcompany.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_companyname());
-                                etdesignation.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_dept());
-                                etexperience.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_totalexp());
-                                etresume.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_resume());
-                                etdob.setText(profileDetailMOdel.getProfile_detail().getUser_dob());
-                                etgender.setText(profileDetailMOdel.getProfile_detail().getUser_gender());
-                                etlocation.setText(profileDetailMOdel.getProfile_detail().getUser_address());
-                                etskills.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_job_title());
-                            }*/
+                                etcompany.setText(profileDetailMOdel.getProfile_detail().getUser_company());
+                                txtExpired.setText(profileDetailMOdel.getProfile_detail().getUser_package_expire_date());
+                                txtCredit.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_package_credit()));
+                                txtLeft.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_credit_use()));
+                                txt_proftitle.setText(profileDetailMOdel.getProfile_detail().getUser_fname());
+                            }
                         } else {
                             Utillity.message(getContext(), "No data found");
                         }
@@ -262,7 +366,6 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 Log.d("TAG", "onErrorResponse: "+error.toString());
                 Utillity.message(getContext(), getResources().getString(R.string.internetConnection));
                 Utillity.hidepopup();
-
             }
         };
     }

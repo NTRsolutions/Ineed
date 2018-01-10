@@ -37,10 +37,9 @@
         >
         <Button
             android:id="@+id/bt_next"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SIGN UP"
+            android:text=" Complete SIGN UP"
             android:onClick="signUp"
             android:padding="10dp"
             android:background="@color/appbasecolor"

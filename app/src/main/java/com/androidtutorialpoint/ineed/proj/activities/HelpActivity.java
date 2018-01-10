@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -67,6 +68,7 @@ public class HelpActivity extends AppCompatActivity implements HelpAdapter.Click
                 params.put("language", "en");
                 CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.HELP_CATEGORY, params, this.success(), this.errorListener());
                 queue.add(customRequest);
+                customRequest.setRetryPolicy(new DefaultRetryPolicy(30000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             }
         }
         else
