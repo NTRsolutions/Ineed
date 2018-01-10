@@ -47,10 +47,11 @@ public class ProfileViewdAdapter extends RecyclerView.Adapter<ProfileViewdAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         if (viewedProflie !=null){
-          holder.txtWorkPermit.setText(viewedProflie.get(position).getUser_workpermit());
+          holder.txtAge.setText(viewedProflie.get(position).getUser_age());
           holder.txtCurrentLocation.setText(viewedProflie.get(position).getUser_permitcountry());
           holder.txtDegree.setText(viewedProflie.get(position).getDesignation());
-          holder.txtExp.setText(viewedProflie.get(position).getYear()+" year");
+          holder.txtExp.setText(viewedProflie.get(position).getTotalExperience()+" year");
+          holder.txtName.setText(viewedProflie.get(position).getUser_name());
 
 
             Log.d(TAG, "onBindViewHolder: "+ApiList.IMG_BASE+viewedProflie.get(position).getUser_image());
@@ -75,7 +76,7 @@ public class ProfileViewdAdapter extends RecyclerView.Adapter<ProfileViewdAdapte
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView txtName, txtExp, txtDegree , txtCurrentLocation, txtWorkPermit;
+        TextView txtName, txtExp, txtDegree , txtCurrentLocation, txtAge;
         ImageView imgProfile;
 
 
@@ -85,7 +86,7 @@ public class ProfileViewdAdapter extends RecyclerView.Adapter<ProfileViewdAdapte
             txtName = (TextView) itemView.findViewById(R.id.txtName);
             txtDegree = (TextView) itemView.findViewById(R.id.txtDegree);
             txtCurrentLocation = (TextView) itemView.findViewById(R.id.txtNationality);
-            txtWorkPermit = itemView.findViewById(R.id.txtWorkPermit);
+            txtAge = itemView.findViewById(R.id.txtAge);
             imgProfile = itemView.findViewById(R.id.driver_image);
             itemView.setOnClickListener(this);
         }

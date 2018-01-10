@@ -31,7 +31,6 @@
                 android:weightSum="1"
                 >
                 <TextView
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/appbasecolor"
@@ -62,8 +61,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#000"
-                    android:drawableLeft="@drawable/bag"
-                    android:drawableStart="@drawable/bag"
+                    android:drawableLeft="@drawable/ic_exp"
+                    android:drawableStart="@drawable/ic_exp"
                     android:id="@+id/txtExp"
                     android:drawablePadding="7dp"
                     android:text="2-10 Years"/>
@@ -74,7 +73,7 @@
                     android:drawableLeft="@drawable/ic_age"
                     android:drawableStart="@drawable/ic_age"
                     android:drawablePadding="7dp"
-                    android:id="@+id/txtWorkPermit"
+                    android:id="@+id/txtAge"
                     android:textColor="#000"
                     android:text="Age"/>
             </LinearLayout>
@@ -95,8 +94,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#000"
-                android:drawableLeft="@drawable/location2"
-                android:drawableStart="@drawable/location2"
+                android:drawableLeft="@drawable/ic_placeholder"
+                android:drawableStart="@drawable/ic_placeholder"
                 android:drawablePadding="7dp"
                 android:text="UAE Dubai"/>
         </LinearLayout>
