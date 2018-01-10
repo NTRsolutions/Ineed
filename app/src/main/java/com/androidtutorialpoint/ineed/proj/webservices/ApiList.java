@@ -6,6 +6,7 @@ package com.androidtutorialpoint.ineed.proj.webservices;
  */
 public interface ApiList {
     String BASE_URL="http://www.ineed.biz/webservice/";
+    String IMG_BASE = "http://www.ineed.biz/upload/";
     String ABOUT=BASE_URL+"about";
     String SIGNUP=BASE_URL+"signup";
     String FORGETPASSWORD=BASE_URL+"forgetpassword";
@@ -19,6 +20,6 @@ public interface ApiList {
     String JOBSEEKER_DASHBOARD=BASE_URL+"jobseeker_dashboard";
     String HELP_CATEGORY=BASE_URL+"helpcategory";
     String HELP=BASE_URL+"help";
-
-
+    String EMPLOYER_VIEWED =BASE_URL+"employer_viewed";
+    String EMPLOYER_PROFILE  =BASE_URL+"employer_profile";
 }

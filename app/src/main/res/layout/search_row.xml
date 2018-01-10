@@ -35,10 +35,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/appbasecolor"
-                    android:id="@+id/email"
+                    android:id="@+id/txtName"
                     android:textStyle="bold"
                     android:textSize="18sp"
-                    android:text="Cook"/>
+                    android:text="John "/>
                 <TextView
                     android:id="@+id/driver_email"
                     android:layout_width="match_parent"
@@ -46,6 +46,7 @@
                     android:gravity="end|right"
                     android:layout_gravity="end|right"
                     android:textSize="13sp"
+                    android:visibility="gone"
                     android:text="17 August 2017"/>
             </LinearLayout>
 
@@ -63,29 +64,33 @@
                     android:textColor="#000"
                     android:drawableLeft="@drawable/bag"
                     android:drawableStart="@drawable/bag"
+                    android:id="@+id/txtExp"
                     android:drawablePadding="7dp"
                     android:text="2-10 Years"/>
                 <TextView
                     android:layout_weight="0.70"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/yes"
-                    android:drawableStart="@drawable/yes"
+                    android:drawableLeft="@drawable/ic_age"
+                    android:drawableStart="@drawable/ic_age"
                     android:drawablePadding="7dp"
+                    android:id="@+id/txtWorkPermit"
                     android:textColor="#000"
-                    android:text="Yes"/>
+                    android:text="Age"/>
             </LinearLayout>
             <TextView
                 android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#000"
+                android:id="@+id/txtDegree"
                 android:drawableLeft="@drawable/degree"
                 android:drawableStart="@drawable/degree"
                 android:drawablePadding="7dp"
-                android:text="Bachelors Degree"/>
+                android:text="Php Developer"/>
 
             <TextView
+                android:id="@+id/txtNationality"
                 android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

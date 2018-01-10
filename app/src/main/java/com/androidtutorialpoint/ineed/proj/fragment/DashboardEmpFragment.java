@@ -28,6 +28,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
+import com.androidtutorialpoint.ineed.proj.activities.ProfileViewed;
+import com.androidtutorialpoint.ineed.proj.models.EmployerProfileData;
 import com.androidtutorialpoint.ineed.proj.models.ImageInputHelper;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
 import com.androidtutorialpoint.ineed.proj.models.ProfileDetailMOdel;
@@ -55,13 +57,15 @@ import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 public class DashboardEmpFragment extends Fragment implements ImageInputHelper.ImageActionListener{
     EditText etEmail,etName,etcontact,etcompany;
-    TextView txt_proftitle,txt_personal;
+    TextView txt_proftitle,txt_personal, txtProfileView, txtPackage, txtExpired, txtCredit, txtLeft, txtUsed;
     LinearLayout ll_savecancel;
     private ImageInputHelper imageInputHelper;
     ImageView imgUser, imgCamera;
     String img,language, userId;
     TinyDB tinyDB;
     LoginData loginData;
+    EmployerProfileData profileDetailMOdel = new EmployerProfileData();
+
     RequestQueue requestQueue;
 
     @Override
@@ -72,12 +76,16 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         imageInputHelper = new ImageInputHelper(this);
         imageInputHelper.setImageActionListener(this);
         loginData = new LoginData();
-//        profileDetailMOdel = new ProfileDetailMOdel();
         tinyDB = new TinyDB(getContext());
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
 
 //             find id
+        txtCredit = view.findViewById(R.id.credit_point);
+        txtExpired = view.findViewById(R.id.et_expired);
+        txtPackage = view.findViewById(R.id.et_package);
+        txtLeft = view.findViewById(R.id.credit_left);
         ll_savecancel= (LinearLayout)view.findViewById(R.id.ll_savecancel);
+        txtProfileView = (TextView) view.findViewById(R.id.txt_profileViewed);
         etName = (EditText) view.findViewById(R.id.et_name);
         etcompany = (EditText) view.findViewById(R.id.et_company);
         etEmail = (EditText) view.findViewById(R.id.et_email);
@@ -87,6 +95,12 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         imgUser = (ImageView) view.findViewById(R.id.emp_img_profilew) ;
         imgCamera = (ImageView) view.findViewById(R.id.emp_img_camera);
 
+        txtProfileView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), ProfileViewed.class));
+            }
+        });
 
         imgCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,19 +217,12 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
     }
 
     public void getProfile(){
-          /*  if (jobSeekerPackage!=null){
-                jobSeekerPackage.clear();
-            }*/
-        if (!language.isEmpty()){
-            HashMap<String,String> params=new HashMap<>();
-            params.put("user_id",userId);
-            params.put("language",language);
-            CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.VIEW_JOBSEEKER_PROFILE,params,
-                    this.success(),this.error());
-            requestQueue.add(customRequest);
-        } else {
-            Utillity.message(getContext(),getResources().getString(R.string.language_select));
-        }
+
+        HashMap<String,String> params=new HashMap<>();
+        params.put("user_id",userId);
+        CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.EMPLOYER_PROFILE,params,
+                this.success(),this.error());
+        requestQueue.add(customRequest);
     }
 
 
@@ -230,19 +237,18 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 if (response!=null){
                     try {
                         if (!response.getString("status").equals("false")){
-                            /*profileDetailMOdel = gson.fromJson(response.toString(), ProfileDetailMOdel.class);
+
+                            profileDetailMOdel = gson.fromJson(response.toString(), EmployerProfileData.class);
                             if (profileDetailMOdel.getProfile_detail() != null) {
+                                etName.setText(profileDetailMOdel.getProfile_detail().getUser_fname());
                                 etEmail.setText(profileDetailMOdel.getProfile_detail().getUser_email());
                                 etcontact.setText(profileDetailMOdel.getProfile_detail().getUser_phone());
-                                etcompany.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_companyname());
-                                etdesignation.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_dept());
-                                etexperience.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_totalexp());
-                                etresume.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_resume());
-                                etdob.setText(profileDetailMOdel.getProfile_detail().getUser_dob());
-                                etgender.setText(profileDetailMOdel.getProfile_detail().getUser_gender());
-                                etlocation.setText(profileDetailMOdel.getProfile_detail().getUser_address());
-                                etskills.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_job_title());
-                            }*/
+                                etcompany.setText(profileDetailMOdel.getProfile_detail().getUser_company());
+                                txtExpired.setText(profileDetailMOdel.getProfile_detail().getUser_package_expire_date());
+                                txtCredit.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_package_credit()));
+                                txtLeft.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_credit_use()));
+                                txt_proftitle.setText(profileDetailMOdel.getProfile_detail().getUser_fname());
+                            }
                         } else {
                             Utillity.message(getContext(), "No data found");
                         }

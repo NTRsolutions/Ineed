@@ -272,12 +272,6 @@
                             android:text="@string/credituse"
                             android:padding="4dp"
                             />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/creditleft"
-                            android:padding="4dp"
-                            />
                     </LinearLayout>
                     <LinearLayout
                         android:padding="5dp"
@@ -290,7 +284,7 @@
                             android:id="@+id/et_package"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Harish Kumar"
+                            android:text="Premium"
                             android:textColor="@color/black"
                             android:padding="4dp"
                             android:textSize="14sp"

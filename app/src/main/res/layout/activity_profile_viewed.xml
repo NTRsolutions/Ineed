@@ -14,13 +14,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/background">
-        <include layout="@layout/search_row"/>
-        <!--  <android.support.v7.widget.RecyclerView
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:id="@+id/search_recy">
-
-          </android.support.v7.widget.RecyclerView>-->
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/viewed_recycler"/>
 
     </LinearLayout>
 
