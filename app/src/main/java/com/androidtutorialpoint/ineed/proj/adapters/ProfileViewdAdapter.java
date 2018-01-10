@@ -87,7 +87,6 @@ public class ProfileViewdAdapter extends RecyclerView.Adapter<ProfileViewdAdapte
             txtDegree = (TextView) itemView.findViewById(R.id.txtDegree);
             txtCurrentLocation = (TextView) itemView.findViewById(R.id.txtNationality);
             txtAge = itemView.findViewById(R.id.txtAge);
-            imgProfile = itemView.findViewById(R.id.driver_image);
             imgProfile = itemView.findViewById(R.id.img_profile);
             itemView.setOnClickListener(this);
         }
