@@ -79,7 +79,6 @@ public class ProfileViewdAdapter extends RecyclerView.Adapter<ProfileViewdAdapte
         TextView txtName, txtExp, txtDegree , txtCurrentLocation, txtAge;
         ImageView imgProfile;
 
-
         public MyViewHolder(View itemView) {
             super(itemView);
             txtExp = (TextView) itemView.findViewById(R.id.txtExp);
