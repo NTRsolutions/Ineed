@@ -20,6 +20,5 @@ public interface ApiList {
     String HELP_CATEGORY=BASE_URL+"helpcategory";
     String HELP=BASE_URL+"help";
     String COUNTRY=BASE_URL+"country";
-
-
+    String SEARCH=BASE_URL+"search";
 }

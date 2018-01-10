@@ -30,6 +30,7 @@
 
 
     <EditText
+        android:id="@+id/et_search"
         android:textColor="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,6 +40,8 @@
         android:maxLines="1"
         android:textSize="14sp"
         android:layout_marginLeft="5dp"
+        android:inputType="text"
+        android:imeOptions="actionSearch"
         android:hint="Cook"/>
 </LinearLayout>
 
@@ -48,13 +51,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/background">
+<!--
         <include layout="@layout/search_row"/>
-      <!--  <android.support.v7.widget.RecyclerView
+-->
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/search_recy">
 
-        </android.support.v7.widget.RecyclerView>-->
+        </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
 
