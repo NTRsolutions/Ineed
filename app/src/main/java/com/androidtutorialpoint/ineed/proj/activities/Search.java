@@ -77,7 +77,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             RequestQueue requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
             CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.COUNTRY,params,this.sucesslistener(),this.errorlistener());
             requestQueue.add(customRequest);
-
         }
         else
     {
