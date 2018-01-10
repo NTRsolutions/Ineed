@@ -35,7 +35,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/appbasecolor"
-                    android:id="@+id/txt_tech"
+                    android:id="@+id/txtName"
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:text="John "/>
@@ -68,7 +68,6 @@
                     android:drawablePadding="7dp"
                     android:text="2-10 Years"/>
                 <TextView
-                    android:visibility="gone"
                     android:layout_weight="0.70"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

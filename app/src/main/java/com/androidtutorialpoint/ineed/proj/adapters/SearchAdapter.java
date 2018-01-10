@@ -49,10 +49,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Viewholder
         public Viewholder(View itemView) {
             super(itemView);
             profimg=itemView.findViewById(R.id.img_profile);
-            txt_tech=itemView.findViewById(R.id.txt_tech);
-            txt_exper=itemView.findViewById(R.id.txt_exper);
-            txt_wrkpermit=itemView.findViewById(R.id.txt_wrkpermit);
-            txt_country=itemView.findViewById(R.id.txt_country);
+            txt_tech=itemView.findViewById(R.id.txtName);
+            txt_exper=itemView.findViewById(R.id.txtExp);
+            txt_wrkpermit=itemView.findViewById(R.id.txtWorkPermit);
+            txt_country=itemView.findViewById(R.id.txtNationality);
         }
     }
 }
