@@ -8,6 +8,8 @@ import java.util.List;
 
 public class JobseekerProileData {
 
+
+
     private boolean status;
     private UserListBean user_list;
     private List<WorksListBean> works_list;
@@ -47,43 +49,43 @@ public class JobseekerProileData {
 
     public static class UserListBean {
         /**
-         * user_id : 29
-         * user_fname : Brijesh chauhan
-         * user_username : brijesh
-         * user_email : brijesh@askonlinesolutions.com
-         * user_phone : 12345678
-         * user_age : 29
+         * user_id : 206
+         * user_fname : Rakhi
+         * user_username : pq
+         * user_email : p@g.in
+         * user_phone : 9958187463
+         * user_age : 23
          * user_country_id : 101
          * user_country_name : India
          * user_workpermit : Yes
          * user_permitcountry_id : 101
          * user_permitcountry : India
-         * user_nationality : indian
-         * user_image : brijesh3.jpg
-         * user_resume : website-text1.docx
+         * user_nationality : India
+         * user_image :
+         * user_resume :
          * user_payment_id : 8
-         * user_package_price : 50000
+         * user_package_price : 100
          * user_package_credit : 0
-         * user_package_startdate : 2017-12-27
-         * user_package_expire_date : 2018-02-27
-         * user_package_id : STANDARD
-         * user_gender : Male
-         * user_dob : 1989-12-01
-         * profile_summary_id : 2
-         * profile_summary_seekerid : 29
-         * profile_summary_totalyear : 2.1
-         * profile_summary_currentsalary : 5
-         * profile_summary_companyname : ask online solutions
-         * profile_summary_positions : php developer
-         * profile_summary_currentcountry_id : 95
-         * profile_summary_currentcountry : Haiti
+         * user_package_startdate : 2017-12-26
+         * user_package_expire_date : 2018-01-26
+         * user_package_id : Basic
+         * user_gender : Female
+         * user_dob : 1995-01-12
+         * profile_summary_id : 19
+         * profile_summary_seekerid : 206
+         * profile_summary_totalyear : 1.6
+         * profile_summary_currentsalary : 7
+         * profile_summary_companyname : Ask Online
+         * profile_summary_positions : Android
+         * profile_summary_currentcountry_id : 101
+         * profile_summary_currentcountry : India
          * profile_summary_jobtype_id : 1
          * profile_summary_jobtype : Full- Time
-         * profile_summary_noticeperiod_id : 2
-         * profile_summary_noticeperiod : 5 Days
-         * profile_summary_resumeheadline : I have 3 year experience of php and  codeigniter
-         * profile_summary_skills : html,php
-         * profile_summary_exp : 1,3
+         * profile_summary_noticeperiod_id : 6
+         * profile_summary_noticeperiod : 25 Days
+         * profile_summary_resumeheadline :
+         * profile_summary_skills : android
+         * profile_summary_exp : 1
          */
 
         private String user_id;
@@ -423,25 +425,27 @@ public class JobseekerProileData {
 
     public static class WorksListBean {
         /**
-         * jobseeker_workexp_id : 72
-         * jobseeker_workexp_seekerid : 29
-         * positions : html designer
-         * jobseeker_workexp_totalyear : 7.11
-         * jobseeker_workexp_noticeperiod_id : null
-         * jobseeker_workexp_noticeperiod : null
-         * jobseeker_workexp_companyname : infosys   a
-         * jobseeker_workexp_companyindus_id : 6
-         * jobseeker_workexp_companyindus : Electricals / Switchgears
-         * jobseeker_workexp_dept_id : 6
-         * jobseeker_workexp_dept : Project Manager IT /Software
+         * jobseeker_workexp_id : 90
+         * jobseeker_workexp_seekerid : 206
+         * jobseeker_workexp_employertype : p
+         * positions : Android
+         * jobseeker_workexp_totalyear : 1.4
+         * jobseeker_workexp_noticeperiod_id :
+         * jobseeker_workexp_noticeperiod :
+         * jobseeker_workexp_companyname : ASK
+         * jobseeker_workexp_companyindus_id : 10
+         * jobseeker_workexp_companyindus : IT-Software/Software Services/Web Services
+         * jobseeker_workexp_dept_id : null
+         * jobseeker_workexp_dept : null
          */
 
         private String jobseeker_workexp_id;
         private String jobseeker_workexp_seekerid;
+        private String jobseeker_workexp_employertype;
         private String positions;
         private String jobseeker_workexp_totalyear;
-        private Object jobseeker_workexp_noticeperiod_id;
-        private Object jobseeker_workexp_noticeperiod;
+        private String jobseeker_workexp_noticeperiod_id;
+        private String jobseeker_workexp_noticeperiod;
         private String jobseeker_workexp_companyname;
         private String jobseeker_workexp_companyindus_id;
         private String jobseeker_workexp_companyindus;
@@ -464,6 +468,14 @@ public class JobseekerProileData {
             this.jobseeker_workexp_seekerid = jobseeker_workexp_seekerid;
         }
 
+        public String getJobseeker_workexp_employertype() {
+            return jobseeker_workexp_employertype;
+        }
+
+        public void setJobseeker_workexp_employertype(String jobseeker_workexp_employertype) {
+            this.jobseeker_workexp_employertype = jobseeker_workexp_employertype;
+        }
+
         public String getPositions() {
             return positions;
         }
@@ -480,19 +492,19 @@ public class JobseekerProileData {
             this.jobseeker_workexp_totalyear = jobseeker_workexp_totalyear;
         }
 
-        public Object getJobseeker_workexp_noticeperiod_id() {
+        public String getJobseeker_workexp_noticeperiod_id() {
             return jobseeker_workexp_noticeperiod_id;
         }
 
-        public void setJobseeker_workexp_noticeperiod_id(Object jobseeker_workexp_noticeperiod_id) {
+        public void setJobseeker_workexp_noticeperiod_id(String jobseeker_workexp_noticeperiod_id) {
             this.jobseeker_workexp_noticeperiod_id = jobseeker_workexp_noticeperiod_id;
         }
 
-        public Object getJobseeker_workexp_noticeperiod() {
+        public String getJobseeker_workexp_noticeperiod() {
             return jobseeker_workexp_noticeperiod;
         }
 
-        public void setJobseeker_workexp_noticeperiod(Object jobseeker_workexp_noticeperiod) {
+        public void setJobseeker_workexp_noticeperiod(String jobseeker_workexp_noticeperiod) {
             this.jobseeker_workexp_noticeperiod = jobseeker_workexp_noticeperiod;
         }
 
@@ -520,7 +532,7 @@ public class JobseekerProileData {
             this.jobseeker_workexp_companyindus = jobseeker_workexp_companyindus;
         }
 
-        public String getJobseeker_workexp_dept_id() {
+        public Object getJobseeker_workexp_dept_id() {
             return jobseeker_workexp_dept_id;
         }
 
@@ -539,14 +551,14 @@ public class JobseekerProileData {
 
     public static class EducationsListBean {
         /**
-         * jobseeker_education_id : 44
-         * jobseeker_education_seekerid : 29
+         * jobseeker_education_id : 51
+         * jobseeker_education_seekerid : 206
          * jobseeker_education_seekertype : 2
-         * jobseeker_education_course : Diploma
-         * jobseeker_education_special : Information technology
-         * jobseeker_education_institute : shanti institute of technology meerut
+         * jobseeker_education_course : B.tech
+         * jobseeker_education_special : IT
+         * jobseeker_education_institute : SUS Eng
          * jobseeker_education_coursetype : 1
-         * jobseeker_education_year : 2011
+         * jobseeker_education_year : 2016
          */
 
         private String jobseeker_education_id;

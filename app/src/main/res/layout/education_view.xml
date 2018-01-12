@@ -32,7 +32,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/edu_course_title"
             android:id="@+id/txt_edu_course_title"/>
 
     </LinearLayout>
@@ -54,7 +53,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/edu_Specialization"
             android:id="@+id/txt_Specialization"/>
 
     </LinearLayout>
@@ -74,7 +72,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/edu_institute"
             android:id="@+id/txt_institute"/>
 
     </LinearLayout>
@@ -83,6 +80,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp">
         <TextView
             android:layout_width="0dp"
@@ -95,52 +93,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/edu_year"
             android:id="@+id/txt_edu_year"/>
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="8dp">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/black"
-            android:text="@string/txtIndustry"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/txtIndustry"
-            android:id="@+id/txt_work_experiencetxtIndustry"/>
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/black"
-            android:text="@string/txtDepartment"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/txtDepartment"
-            android:id="@+id/txt_work_experiencetxtDepartment"/>
-
-    </LinearLayout>
-
+=
 
 </LinearLayout>

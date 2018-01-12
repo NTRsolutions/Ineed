@@ -43,7 +43,11 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
@@ -57,15 +61,19 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     ImageView imgUser, imgCamera;
     Gson gson;
     LoginData loginData;
-    String img,language, userId;
+    String img,language, userId, obj;
     RequestQueue requestQueue;
     private ImageInputHelper imageInputHelper;
     JobseekerProileData jobseekerProileData;
+    List<JobseekerProileData.EducationsListBean>educationsListBeans ;
+    List<JobseekerProileData.WorksListBean>worksListBeans;
+
     View view;
     TinyDB tinyDB;
-    LinearLayout workLayout,workview, eduLayout;
-    TextView txt_proftitle, txt_personal, txtName, txtAge, txtDesignation, txtNationaliaty,txtWorkPermit,
-            txtExp, txtCurrentLocation, txtSalary, txtMobile, txtEmail, txtSkills;
+    LinearLayout workLayout,workview, eduLayout, eduView, noticeLayout, toLayout;
+    TextView txt_proftitle,txtSave, txtCancle, txt_personal, txtName, txtAge, txtDesignation, txtNationaliaty,
+            txtExp, txtCurrentLocation, txtSalary, txtMobile, txtEmail, txtSkills, txtWorkingexp,txtJobTitle, txtCompanyName, txtJobHeading, txtWorkingFrom, txtWrokingTo,
+    txtNotice, txtIndustry, txtDepartment, txtTo,txtCoursetype, txtSpecilization, txtInstitute, txtYear, txtDepartMent;
     EditText edtobjective;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -85,6 +93,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
 
         workLayout = (LinearLayout)view.findViewById(R.id.work_exp);
         workview = view.findViewById(R.id.layout_work_exp);
+        eduLayout = view.findViewById(R.id.edu_exp);
+        eduView = view.findViewById(R.id.layout_edu_exp);
 
 //        find id
         imgCamera = (ImageView) view.findViewById(R.id.edt_img_camera);
@@ -101,25 +111,35 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         txtEmail = view.findViewById(R.id.jobseerker_profileEmail);
         txtSkills = view.findViewById(R.id.txt_skills_value);
         edtobjective = view.findViewById(R.id.txt_objective);
-
-        eduLayout = view.findViewById(R.id.layout_edu_exp);
-
+        txtCancle = view.findViewById(R.id.txt_cancel);
+        txtSave = view.findViewById(R.id.txt_save);
         ll_savecancel = (LinearLayout) view.findViewById(R.id.ll_savecancel);
         txt_personal = (TextView) view.findViewById(R.id.txt_objective_heading);
+
+
+
         txt_personal.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //    Toast.makeText(getApplication(),"Hello",Toast.LENGTH_SHORT).show();
+            public void onClick(View view) {
+                edtobjective.setEnabled(true);
+                ll_savecancel.setVisibility(View.VISIBLE);
             }
         });
 
-        txt_personal.setOnTouchListener(new View.OnTouchListener() {
+        txtSave.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                clickonDrawable(v, event);
-                return false;
+            public void onClick(View view) {
+                obj = edtobjective.getText().toString();
+
+                if (!obj.isEmpty()){
+                    updateObj();
+
+                } else {
+                    Utillity.message(getActivity(),"Please enter company name");
+                }
             }
         });
+
 
         imgCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +172,45 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         return view;
     }
 
+    public void updateObj(){
+        HashMap<String,String> params=new HashMap<>();
+        params.put("objective",obj);
+        params.put("user_id",userId);
+        CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_OBJECTIVE,params,
+                this.successObj(),this.error());
+        requestQueue.add(customRequest);
+    }
+
+    private Response.Listener<JSONObject> successObj()
+    {
+        Utillity.showloadingpopup(getActivity());
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Utillity.hidepopup();
+                Log.d(TAG, "onResponse:data "+response.toString());
+                if (response!=null){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.toString());
+                        if (jsonObject.getString("status").equals("true")){
+                            edtobjective.setEnabled(false);
+                            Utillity.message(getContext(), "Objective updated successfully");
+                            ll_savecancel.setVisibility(View.GONE);
+                            getProfile();
+                        } else {
+                            Utillity.message(getContext(), "Connection wrong");
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        };
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -163,20 +222,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         language = tinyDB.getString("language_id");
         getProfile();
 
-    }
-
-    boolean clickonDrawable(View v, MotionEvent event) {
-        final int DRAWABLE_LEFT = 0;
-        final int DRAWABLE_TOP = 1;
-        final int DRAWABLE_RIGHT = 2;
-        final int DRAWABLE_BOTTOM = 3;
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (event.getRawX() >= (txt_personal.getRight() - txt_personal.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-
-                ll_savecancel.setVisibility(View.VISIBLE);
-            }
-        }
-        return true;
     }
 
     @Override
@@ -213,12 +258,17 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     }
 
     public void getProfile(){
-          /*  if (jobSeekerPackage!=null){
-                jobSeekerPackage.clear();
-            }*/
+            educationsListBeans = new ArrayList<>();
+            worksListBeans = new ArrayList<>();
+            workLayout.removeAllViews();
+            eduLayout.removeAllViews();
+
+            if (worksListBeans!=null){
+                worksListBeans.clear();
+            }
             if (!language.isEmpty()){
                 HashMap<String,String> params=new HashMap<>();
-                params.put("user_id","29");
+                params.put("user_id",userId);
                 CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_PROFILE,params,
                         this.success(),this.error());
                 requestQueue.add(customRequest);
@@ -230,6 +280,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
 
         private Response.Listener<JSONObject> success()
         {
+
             Utillity.showloadingpopup(getActivity());
             return new Response.Listener<JSONObject>() {
                 @Override
@@ -241,43 +292,109 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                         try {
                             if (!response.getString("status").equals("false")){
                                 JSONObject jsonObject = response.getJSONObject("user_list");
+                                jobseekerProileData = gson.fromJson(response.toString(), JobseekerProileData.class);
                                 if (jsonObject.getString("user_fname")!=null && jsonObject.getString("user_fname").length()>1){
-                                    jobseekerProileData = gson.fromJson(response.toString(), JobseekerProileData.class);
                                     txtName.setText(jobseekerProileData.getUser_list().getUser_fname());
-                                    txtAge.setText(" " +jobseekerProileData.getUser_list().getUser_age()+" year");
-                                    txtDesignation.setText(jobseekerProileData.getUser_list().getProfile_summary_positions());
+                                  }
+                                if (jsonObject.getString("user_email").length()>1&&jsonObject.getString("user_email").length()>1){
+                                    txtEmail.setText(jobseekerProileData.getUser_list().getUser_email());
+                                }
+                                if (jsonObject.getString("user_phone").length()>1&&jsonObject.getString("user_phone").length()>1){
+                                    txtMobile.setText(jobseekerProileData.getUser_list().getUser_phone());
+                                }
+                                if (jsonObject.getString("user_age").length()>1&&jsonObject.getString("user_age").length()>1){
+                                    txtAge.setText(jobseekerProileData.getUser_list().getUser_age()+" year");
+                                }
+                                if (!jsonObject.getString("user_nationality").equals("0") &&jsonObject.getString("user_nationality").length()>1){
                                     txtNationaliaty.setText(jobseekerProileData.getUser_list().getUser_nationality()
                                             +", "+" with "+jobseekerProileData.getUser_list().getUser_permitcountry()+" work permit");
-                                    txtExp.setText(jobseekerProileData.getUser_list().getProfile_summary_totalyear()+" year");
-                                    txtCurrentLocation.setText(jobseekerProileData.getUser_list().getProfile_summary_currentcountry());
-                                    txtSalary.setText(jobseekerProileData.getUser_list().getProfile_summary_currentsalary());
-                                    txtMobile.setText(jobseekerProileData.getUser_list().getUser_phone());
-                                    txtEmail.setText(jobseekerProileData.getUser_list().getUser_email());
-                                    txtSkills.setText(jobseekerProileData.getUser_list().getProfile_summary_skills());
+                                }
+                                if (jsonObject.getString("profile_summary_resumeheadline").length()>1&&jsonObject.getString("profile_summary_resumeheadline").length()>1){
                                     edtobjective.setText(jobseekerProileData.getUser_list().getProfile_summary_resumeheadline());
                                 }
+                                if (jsonObject.getString("profile_summary_skills").length()>1&&jsonObject.getString("profile_summary_skills").length()>1){
+                                    txtSkills.setText(jobseekerProileData.getUser_list().getProfile_summary_skills());
+                                }
+                                if (jsonObject.getString("profile_summary_currentsalary").length()>1&&jsonObject.getString("profile_summary_currentsalary").length()>1){
+                                    txtSalary.setText(jobseekerProileData.getUser_list().getProfile_summary_currentsalary());
+                                }
+                                if (jsonObject.getString("profile_summary_positions").length()>1&&jsonObject.getString("profile_summary_positions").length()>1){
+                                    txtDesignation.setText(jobseekerProileData.getUser_list().getProfile_summary_positions());
+                                }
+                                if (jsonObject.getString("profile_summary_totalyear").length()>1&&jsonObject.getString("profile_summary_totalyear").length()>1){
+                                    txtExp.setText(jobseekerProileData.getUser_list().getProfile_summary_totalyear()+" year");
+                                }
+                                if (jsonObject.getString("profile_summary_currentcountry").length()>1&&jsonObject.getString("profile_summary_currentcountry").length()>1){
+                                    txtCurrentLocation.setText(jobseekerProileData.getUser_list().getProfile_summary_currentcountry());
+                                }
+                                worksListBeans.addAll(jobseekerProileData.getWorks_list());
+                                educationsListBeans.addAll(jobseekerProileData.getEducations_list());
 
-                                if (jobseekerProileData.getWorks_list() != null && jobseekerProileData.getWorks_list().size()>1) {
-                                    Log.d(TAG, "onResponse: sssd"+jobseekerProileData.getWorks_list().size());
+                                if (worksListBeans != null && worksListBeans.size()>0) {
                                     workLayout.setVisibility(View.VISIBLE);
-                                    for (int i = 0; i < jobseekerProileData.getWorks_list().size(); i++) {
+                                    Log.d(TAG, "onResponse: "+worksListBeans.size());
+                                    for (int i = 0; i <worksListBeans.size(); i++) {
                                         workview = (LinearLayout) View.inflate(getContext(), R.layout.work_experience_view, null);
-                                        ((TextView) workview.findViewById(R.id.txt_work_experience_heading))
-                                                .setText(jobseekerProileData.getEducations_list().get(i).getJobseeker_education_id()+ (i + 1));
+                                        txtJobHeading = workview.findViewById(R.id.txt_work_experience_heading);
+                                        txtJobTitle = workview.findViewById(R.id.txt_work_experienceJobtitle);
+                                        txtCompanyName = workview.findViewById(R.id.txt_CompanyName);
+                                        txtWorkingexp = workview.findViewById(R.id.txt_work_experienceWorkFrom);
+//                                        txtWorkingFrom = workview.findViewById(R.id.txt_work_experienceWorkFrom);
+                                        txtNotice = workview.findViewById(R.id.txt_work_experienceNotice);
+                                        txtIndustry = workview.findViewById(R.id.txt_work_experiencetxtIndustry);
+                                        txtDepartment = workview.findViewById(R.id.txt_work_experiencetxtDepartment);
+                                        txtTo = workview.findViewById(R.id.txt_work_experienceTo);
+                                        noticeLayout = workview.findViewById(R.id.notice_layout);
+                                        toLayout = workview.findViewById(R.id.to_layout);
+                                        Collections.sort(worksListBeans, new Comparator<JobseekerProileData.WorksListBean>() {
+                                            @Override
+                                            public int compare(JobseekerProileData.WorksListBean worksListBean, JobseekerProileData.WorksListBean t1) {
+                                                return worksListBean.getJobseeker_workexp_employertype().compareToIgnoreCase(t1.getJobseeker_workexp_employertype());
+                                            }
+                                        });
+
+                                        if (worksListBeans.get(i).getJobseeker_workexp_employertype().equals("c")){
+                                            txtJobHeading.setText("Current");
+                                            noticeLayout.setVisibility(View.VISIBLE);
+//                                            toLayout.setVisibility(View.GONE);
+                                               txtNotice.setText(jobseekerProileData.getWorks_list().get(i).getJobseeker_workexp_noticeperiod() + " days");
+                                        } else {
+                                            txtJobHeading.setText("Previous");
+//                                            noticeLayout.setVisibility(View.GONE);
+//                                            toLayout.setVisibility(View.VISIBLE);
+//                                            txtTo.setText(" 12/2/2019");
+                                        }
+                                        txtIndustry.setText(worksListBeans.get(i).getJobseeker_workexp_companyindus());
+                                        txtWorkingexp.setText(worksListBeans.get(i).getJobseeker_workexp_totalyear()+" year");
+                                        txtJobTitle.setText(worksListBeans.get(i).getPositions());
+                                        txtCompanyName.setText(worksListBeans.get(i).getJobseeker_workexp_companyname());
+                                        txtDepartment.setText(worksListBeans.get(i).getJobseeker_workexp_dept());
                                         workLayout.addView(workview);
                                     }
-
-
                                 } else {
-                                    Log.d(TAG, "onResponse: "+"No data");
                                     workLayout.setVisibility(View.GONE);
                                 }
 
-                                if (jobseekerProileData.getWorks_list()!=null && jobseekerProileData.getWorks_list().size()>1){
-                                    Log.d(TAG, "onResponse: "+jobseekerProileData.getEducations_list());
+                                if (educationsListBeans!=null && educationsListBeans.size()>0){
+                                    Log.d(TAG, "onResponse: "+jobseekerProileData.getWorks_list());
                                     eduLayout.setVisibility(View.VISIBLE);
+                                    int x =jobseekerProileData.getEducations_list().size();
+                                    for (int i=0; i<x;i++){
+                                        eduView = (LinearLayout) View.inflate(getContext(), R.layout.education_view, null);
+                                        txtCoursetype = eduView.findViewById(R.id.txt_edu_course_title);
+                                        txtSpecilization = eduView.findViewById(R.id.txt_Specialization);
+                                        txtInstitute = eduView.findViewById(R.id.txt_institute);
+                                        txtYear = eduView.findViewById(R.id.txt_edu_year);
+                                        txtYear.setText(jobseekerProileData.getEducations_list().get(i).getJobseeker_education_year());
+                                        txtCoursetype.setText(jobseekerProileData.getEducations_list().get(i).getJobseeker_education_course());
+                                        txtInstitute.setText(jobseekerProileData.getEducations_list().get(i).getJobseeker_education_institute());
+                                        txtSpecilization.setText(jobseekerProileData.getEducations_list().get(i).getJobseeker_education_special());
+
+                                        eduLayout.addView(eduView);
+
+                                    }
+
                                 } else {
-                                    Log.d(TAG, "onResponse: "+"no data");
                                     eduLayout.setVisibility(View.GONE);
                                 }
                             } else {
