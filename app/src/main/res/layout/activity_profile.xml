@@ -655,7 +655,7 @@
                             android:drawablePadding="5dp"
                             android:drawableLeft="@drawable/ic_plus"
                             android:layout_alignParentRight="true"
-                            android:id="@+id/btnAdd"/>
+                            android:id="@+id/btnAddwk"/>
 
                     </RelativeLayout>
                     <include layout="@layout/work_experience_view"/>

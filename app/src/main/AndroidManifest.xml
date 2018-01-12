@@ -65,8 +65,10 @@
         <activity android:name=".proj.activities.TestActivity" />
         <activity android:name=".proj.activities.HelpActivity" />
         <activity android:name=".proj.activities.HelpDetailActivity" />
-        <activity android:name=".proj.activities.FilterActivity"></activity>
-        <activity android:name=".proj.activities.UpgradePlanActivity"></activity>
+        <activity android:name=".proj.activities.FilterActivity" />
+        <activity android:name=".proj.activities.UpgradePlanActivity" />
+        <activity android:name=".proj.activities.WorkExperience" />
+        <activity android:name=".proj.activities.EducationAdd"></activity>
     </application>
 
 </manifest>

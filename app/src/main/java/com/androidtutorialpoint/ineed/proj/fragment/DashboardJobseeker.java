@@ -35,6 +35,7 @@ import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.HomeActivity;
+import com.androidtutorialpoint.ineed.proj.activities.WorkExperience;
 import com.androidtutorialpoint.ineed.proj.models.ImageInputHelper;
 import com.androidtutorialpoint.ineed.proj.models.JobSeekerPackage;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
@@ -66,8 +67,8 @@ import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
  * Created by Muhib.
  * Contact Number : +91 9796173066
  */
-public class DashboardJobseeker extends Fragment implements ImageInputHelper.ImageActionListener{
-    TextView txt_proftitle, txt_personal;
+public class DashboardJobseeker extends Fragment implements ImageInputHelper.ImageActionListener, View.OnClickListener {
+    TextView txt_proftitle, txt_personal,txt_addwk;
     EditText etEmail, etcontact, etcompany, etdesignation, etexperience, etresume, etdob, etgender, etlocation,
             etskills;
     LinearLayout ll_savecancel;
@@ -113,6 +114,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         ll_savecancel = (LinearLayout) view.findViewById(R.id.ll_savecancel);
         txt_proftitle = (TextView) view.findViewById(R.id.txt_proftitle);
         txt_personal = (TextView) view.findViewById(R.id.txt_objective_heading);
+        txt_addwk=view.findViewById(R.id.btnAddwk);
+        txt_addwk.setOnClickListener(this);
         txt_personal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -307,4 +310,14 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.btnAddwk:
+                startActivity(new Intent(getActivity(), WorkExperience.class));
+                break;
+
+        }
+    }
 }

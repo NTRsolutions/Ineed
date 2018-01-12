@@ -25,4 +25,5 @@ public interface ApiList {
     String EMPLOYER_VIEWED =BASE_URL+"employer_viewed";
     String EMPLOYER_PROFILE  =BASE_URL+"employer_profile";
     String EMPLOYER_PROFILE_EDIT = BASE_URL+"employer_edit_profile";
+    String FILTERS = BASE_URL+"filters";
 }
