@@ -649,7 +649,7 @@
                             android:drawablePadding="5dp"
                             android:drawableLeft="@drawable/ic_plus"
                             android:layout_alignParentRight="true"
-                            android:id="@+id/btnAdd"/>
+                            android:id="@+id/btnAddwk"/>
 
                     </RelativeLayout>
 

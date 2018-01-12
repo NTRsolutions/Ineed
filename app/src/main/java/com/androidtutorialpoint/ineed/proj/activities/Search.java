@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -31,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
+import com.androidtutorialpoint.ineed.proj.adapters.SearchAdapter;
 import com.androidtutorialpoint.ineed.proj.models.CountryList;
 import com.androidtutorialpoint.ineed.proj.models.SearchModel;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
@@ -44,7 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Search extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener {
+public class Search extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener, SearchAdapter.Clickitem {
     String set,CountryId;
     LinearLayout linearLayout;
     ActionBar actionBar;
@@ -55,12 +57,16 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     RecyclerView recsearch;
     EditText et_search;
     Gson gson;
+    SearchAdapter searchAdapte;
+    Button txt_filter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         recsearch=findViewById(R.id.search_recy);
         et_search=findViewById(R.id.et_search);
+        txt_filter=findViewById(R.id.txt_filter);
+        txt_filter.setOnClickListener(this);
         et_search.setOnEditorActionListener(this);
        // linearLayout= (LinearLayout) findViewById(R.id.ll_linear);
         select_country=findViewById(R.id.sp_selectCountry);
@@ -68,6 +74,11 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         Intent it=getIntent();
         set=it.getStringExtra("Login");
         getcountrylist();
+        searchAdapte = new SearchAdapter(getApplicationContext(), searchlist);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        recsearch.setLayoutManager(layoutManager);
+        recsearch.setAdapter(searchAdapte);
+        searchAdapte.setclick(this);
     }
 
     private void getcountrylist() {
@@ -76,6 +87,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             HashMap<String,String> params=new HashMap<>();
             RequestQueue requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
             CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.COUNTRY,params,this.sucesslistener(),this.errorlistener());
+            customRequest.setRetryPolicy(new DefaultRetryPolicy(30000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             requestQueue.add(customRequest);
         }
         else
@@ -225,6 +237,12 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
 
     @Override
     public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.txt_filter:
+                startActivity(new Intent(Search.this,FilterActivity.class));
+                break;
+        }
         //setupoverlay();
 
     }
@@ -258,8 +276,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if(v.getId()==R.id.et_search)
         {
-            InputMethodManager inputMethodManager= (InputMethodManager) getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromInputMethod(v.getWindowToken(),0);
+            InputMethodManager inputMethodManager= (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromInputMethod(getCurrentFocus().getWindowToken(),0);
             search();
 
         }
@@ -288,26 +306,51 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     }
     private Response.Listener<JSONObject> sucess()
     {
+
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                if(searchlist!=null)
+                {
+                    searchlist.clear();
+                }
                 Utillity.hidepopup();
                 Gson gson=new Gson();
                 SearchModel sModel=null;
-
                 try {
                     sModel=new SearchModel();
                     sModel=gson.fromJson(response.toString(),SearchModel.class);
                     boolean status=sModel.isStatus();
                     if(status==true);
                     {
-                        searchlist=sModel.getProfile_list();
-                        Log.d("List",searchlist.toString());
+                        searchlist.addAll(sModel.getProfile_list());
+                        Log.d("List", searchlist.toString());
+                        if(searchlist.size()>0) {
+                            txt_filter.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            Utillity.message(getApplicationContext(),"No Record Found");
+                        }
                     }
+                    searchAdapte.notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
+    }
+
+    @Override
+    public void itemclick(View v, int position) {
+        if(set.equalsIgnoreCase("login")) {
+         setupoverlay();
+        }
+        else
+        {
+            int idd = Integer.parseInt(searchlist.get(position).getUser_id());
+            Utillity.message(getApplication(), "" + idd);
+        }
+
     }
 }

@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 <LinearLayout
+    android:layout_above="@+id/txt_filter"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/appbasecolor">
     <include layout="@layout/toolbar"></include>
 <LinearLayout
@@ -48,15 +54,16 @@
     <LinearLayout
         android:id="@+id/ll_linear"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
+
         android:background="@drawable/background">
 <!--
         <include layout="@layout/search_row"/>
 -->
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/search_recy">
 
         </android.support.v7.widget.RecyclerView>
@@ -64,3 +71,20 @@
     </LinearLayout>
 
 </LinearLayout>
+    <Button
+        android:visibility="gone"
+        android:paddingLeft="5dp"
+        android:paddingRight="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:id="@+id/txt_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="Filters"
+        android:background="@color/appbasecolor"
+        android:textColor="@color/white"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="5dp"/>
+</RelativeLayout>

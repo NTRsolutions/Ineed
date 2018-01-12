@@ -62,14 +62,14 @@ public class HelpActivity extends AppCompatActivity implements HelpAdapter.Click
     private void setupApi() {
         if(Utillity.isNetworkConnected(HelpActivity.this)) {
             Utillity.showloadingpopup(HelpActivity.this);
-            {
+
                 RequestQueue queue = VolleySingelton.getsInstance().getmRequestQueue();
                 HashMap<String, String> params = new HashMap<>();
                 params.put("language", "en");
                 CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.HELP_CATEGORY, params, this.success(), this.errorListener());
                 queue.add(customRequest);
                 customRequest.setRetryPolicy(new DefaultRetryPolicy(30000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            }
+
         }
         else
         {

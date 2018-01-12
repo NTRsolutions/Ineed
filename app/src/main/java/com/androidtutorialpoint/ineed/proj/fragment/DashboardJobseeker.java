@@ -26,7 +26,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
+import com.androidtutorialpoint.ineed.proj.activities.EducationAdd;
 import com.androidtutorialpoint.ineed.proj.activities.HomeActivity;
+import com.androidtutorialpoint.ineed.proj.activities.PersonalAdd;
+import com.androidtutorialpoint.ineed.proj.activities.WorkExperience;
 import com.androidtutorialpoint.ineed.proj.models.ImageInputHelper;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
 import com.androidtutorialpoint.ineed.proj.models.JobseekerProileData;
@@ -55,10 +58,12 @@ import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
  * Created by Muhib.
  * Contact Number : +91 9796173066
  */
-public class DashboardJobseeker extends Fragment implements ImageInputHelper.ImageActionListener{
+public class DashboardJobseeker extends Fragment implements ImageInputHelper.ImageActionListener, View.OnClickListener {
+    EditText etEmail, etcontact, etcompany, etdesignation, etexperience, etresume, etdob, etgender, etlocation,
+            etskills;
 
     LinearLayout ll_savecancel;
-    ImageView imgUser, imgCamera;
+    ImageView imgUser, imgCamera,imgedit;
     Gson gson;
     LoginData loginData;
     String img,language, userId, obj;
@@ -99,6 +104,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
 //        find id
         imgCamera = (ImageView) view.findViewById(R.id.edt_img_camera);
         imgUser = (ImageView) view.findViewById(R.id.edt_img_profile);
+        imgedit=view.findViewById(R.id.edt_img_edit);
+        imgedit.setOnClickListener(this);
         txtName = view.findViewById(R.id.jobseerker_profileName);
         txtAge = view.findViewById(R.id.jobseeker_profileAge);
         txtDesignation = view.findViewById(R.id.jobseeker_profileDesi);
@@ -113,11 +120,17 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         edtobjective = view.findViewById(R.id.txt_objective);
         txtCancle = view.findViewById(R.id.txt_cancel);
         txtSave = view.findViewById(R.id.txt_save);
+        txtaddeduc = view.findViewById(R.id.btnAddEducation);
+        txtaddeduc.setOnClickListener(this);
+        eduLayout = view.findViewById(R.id.layout_edu_exp);
+
         ll_savecancel = (LinearLayout) view.findViewById(R.id.ll_savecancel);
         txt_personal = (TextView) view.findViewById(R.id.txt_objective_heading);
 
 
 
+        txt_addwk=view.findViewById(R.id.btnAddwk);
+        txt_addwk.setOnClickListener(this);
         txt_personal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -404,7 +417,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                             e.printStackTrace();
                         }
 
-
                     }
                 }
             };
@@ -418,10 +430,24 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                 Log.d("TAG", "onErrorResponse: "+error.toString());
                 Utillity.message(getContext(), getResources().getString(R.string.internetConnection));
                 Utillity.hidepopup();
-
             }
         };
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.btnAddwk:
+                startActivity(new Intent(getActivity(), WorkExperience.class));
+                break;
+            case R.id.btnAddEducation:
+                startActivity(new Intent(getActivity(), EducationAdd.class));
+                break;
+            case R.id.edt_img_edit:
+                startActivity(new Intent(getActivity(), PersonalAdd.class));
+                break;
+        }
+    }
 }
