@@ -48,7 +48,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".proj.activities.ProfileViewed" />
-        <activity android:name=".proj.activities.Profile" />
         <activity
             android:name=".proj.activities.DialogActivity"
             android:excludeFromRecents="true"

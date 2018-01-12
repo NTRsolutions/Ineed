@@ -80,7 +80,7 @@ public class Signup3frag extends Fragment {
 //        initialize
         sharpref=new TinyDB(getContext());
 //        loginData = new LoginData();
-//        String data = sharpref.getString("login_data");
+//        String data = tinyDB.getString("login_data");
 //        loginData = gson.fromJson(data, LoginData.class);
 //        email = loginData.getUser_detail().getUser_email();
 //        userId = loginData.getUser_detail().getUser_id();

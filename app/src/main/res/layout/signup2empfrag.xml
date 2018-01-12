@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:text="NEXT"
             android:visibility="gone"
-
             android:padding="10dp"
             android:background="@color/appbasecolor"
             android:textColor="@color/white"/>
@@ -39,7 +38,6 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="dsfadsfdsf"
                 android:textSize="14sp"
                 android:gravity="right"/>
             <TextView

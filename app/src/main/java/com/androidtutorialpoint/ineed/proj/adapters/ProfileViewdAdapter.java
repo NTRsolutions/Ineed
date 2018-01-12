@@ -47,17 +47,15 @@ public class ProfileViewdAdapter extends RecyclerView.Adapter<ProfileViewdAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         if (viewedProflie !=null){
-          holder.txtAge.setText(viewedProflie.get(position).getUser_age());
+          holder.txtAge.setText(viewedProflie.get(position).getUser_age()+" Year");
           holder.txtCurrentLocation.setText(viewedProflie.get(position).getUser_permitcountry());
           holder.txtDegree.setText(viewedProflie.get(position).getDesignation());
-          holder.txtExp.setText(viewedProflie.get(position).getTotalExperience()+" year");
+          holder.txtExp.setText(viewedProflie.get(position).getTotalExperience()+" Year");
           holder.txtName.setText(viewedProflie.get(position).getUser_name());
-
-
-            Log.d(TAG, "onBindViewHolder: "+ApiList.IMG_BASE+viewedProflie.get(position).getUser_image());
-          if (viewedProflie.get(position).getUser_image()!=null&&viewedProflie.get(position).getUser_image().length()>0){
+            if (viewedProflie.get(position).getUser_image()!=null&&viewedProflie.get(position).getUser_image().length()>0){
               Glide.with(context).load(ApiList.IMG_BASE+viewedProflie.get(position).getUser_image())
-                      .apply(RequestOptions.circleCropTransform()).into(holder.imgProfile);
+                      .apply(RequestOptions.circleCropTransform())
+                      .into(holder.imgProfile);
           } else {
               Glide.with(context).load(R.drawable.gfgf)
                       .apply(RequestOptions.circleCropTransform()).into(holder.imgProfile);

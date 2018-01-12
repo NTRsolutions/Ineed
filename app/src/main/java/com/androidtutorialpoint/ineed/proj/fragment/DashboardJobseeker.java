@@ -1,17 +1,11 @@
 package com.androidtutorialpoint.ineed.proj.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,12 +15,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -36,9 +28,8 @@ import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.HomeActivity;
 import com.androidtutorialpoint.ineed.proj.models.ImageInputHelper;
-import com.androidtutorialpoint.ineed.proj.models.JobSeekerPackage;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
-import com.androidtutorialpoint.ineed.proj.models.ProfileDetailMOdel;
+import com.androidtutorialpoint.ineed.proj.models.JobseekerProileData;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
 import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
 import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
@@ -51,15 +42,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 
-import static android.app.Activity.RESULT_OK;
-import static com.androidtutorialpoint.ineed.proj.activities.DialogActivity.user_type;
-import static com.androidtutorialpoint.ineed.proj.activities.HomeActivity.toolbar;
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 /**
@@ -67,9 +52,7 @@ import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
  * Contact Number : +91 9796173066
  */
 public class DashboardJobseeker extends Fragment implements ImageInputHelper.ImageActionListener{
-    TextView txt_proftitle, txt_personal;
-    EditText etEmail, etcontact, etcompany, etdesignation, etexperience, etresume, etdob, etgender, etlocation,
-            etskills;
+
     LinearLayout ll_savecancel;
     ImageView imgUser, imgCamera;
     Gson gson;
@@ -77,9 +60,13 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     String img,language, userId;
     RequestQueue requestQueue;
     private ImageInputHelper imageInputHelper;
-    ProfileDetailMOdel profileDetailMOdel;
+    JobseekerProileData jobseekerProileData;
     View view;
     TinyDB tinyDB;
+    LinearLayout workLayout,workview, eduLayout;
+    TextView txt_proftitle, txt_personal, txtName, txtAge, txtDesignation, txtNationaliaty,txtWorkPermit,
+            txtExp, txtCurrentLocation, txtSalary, txtMobile, txtEmail, txtSkills;
+    EditText edtobjective;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -89,29 +76,35 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
 
         gson = new Gson();
         loginData = new LoginData();
-        profileDetailMOdel = new ProfileDetailMOdel();
+        jobseekerProileData = new JobseekerProileData();
         tinyDB = new TinyDB(getContext());
         imageInputHelper = new ImageInputHelper(this);
         imageInputHelper.setImageActionListener(this);
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Profile");
 
+        workLayout = (LinearLayout)view.findViewById(R.id.work_exp);
+        workview = view.findViewById(R.id.layout_work_exp);
+
 //        find id
         imgCamera = (ImageView) view.findViewById(R.id.edt_img_camera);
         imgUser = (ImageView) view.findViewById(R.id.edt_img_profile);
-        etEmail = (EditText) view.findViewById(R.id.et_email);
-        etcontact = (EditText) view.findViewById(R.id.et_contact);
-        etcompany = (EditText) view.findViewById(R.id.et_company);
-        etdesignation = (EditText) view.findViewById(R.id.et_designation);
-        etexperience = (EditText) view.findViewById(R.id.et_experience);
-        etresume = (EditText) view.findViewById(R.id.et_resume);
-        etdob = (EditText) view.findViewById(R.id.et_dob);
-        etgender = (EditText) view.findViewById(R.id.et_gender);
-        etlocation = (EditText) view.findViewById(R.id.et_loc);
-        etskills = (EditText) view.findViewById(R.id.et_skills);
+        txtName = view.findViewById(R.id.jobseerker_profileName);
+        txtAge = view.findViewById(R.id.jobseeker_profileAge);
+        txtDesignation = view.findViewById(R.id.jobseeker_profileDesi);
+        txtNationaliaty = view.findViewById(R.id.jobseeker_profileNationality);
+//        txtWorkPermit = view.findViewById(R.id.jobseerker_profileName);
+        txtExp = view.findViewById(R.id.jobseeker_profileExp);
+        txtCurrentLocation = view.findViewById(R.id.jobseeker_profileLoca);
+        txtSalary = view.findViewById(R.id.jobseeker_profileSalary);
+        txtMobile = view.findViewById(R.id.jobseerker_profileMobile);
+        txtEmail = view.findViewById(R.id.jobseerker_profileEmail);
+        txtSkills = view.findViewById(R.id.txt_skills_value);
+        edtobjective = view.findViewById(R.id.txt_objective);
+
+        eduLayout = view.findViewById(R.id.layout_edu_exp);
 
         ll_savecancel = (LinearLayout) view.findViewById(R.id.ll_savecancel);
-        txt_proftitle = (TextView) view.findViewById(R.id.txt_proftitle);
         txt_personal = (TextView) view.findViewById(R.id.txt_objective_heading);
         txt_personal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,16 +156,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     public void onResume() {
         super.onResume();
 //        toolbar.setTitle("Dash board");
-        etEmail.setEnabled(false);
-        etcontact.setEnabled(false);
-        etcompany.setEnabled(false);
-        etdesignation.setEnabled(false);
-        etexperience.setEnabled(false);
-        etresume.setEnabled(false);
-        etdob.setEnabled(false);
-        etgender.setEnabled(false);
-        etlocation.setEnabled(false);
-        etskills.setEnabled(false);
 
         String loginPrefData = tinyDB.getString("login_data");
         loginData = gson.fromJson(loginPrefData, LoginData.class);
@@ -189,16 +172,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         final int DRAWABLE_BOTTOM = 3;
         if (event.getAction() == MotionEvent.ACTION_UP) {
             if (event.getRawX() >= (txt_personal.getRight() - txt_personal.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                etEmail.setEnabled(true);
-                etcontact.setEnabled(true);
-                etcompany.setEnabled(true);
-                etdesignation.setEnabled(true);
-                etexperience.setEnabled(true);
-                etresume.setEnabled(true);
-                etdob.setEnabled(true);
-                etgender.setEnabled(true);
-                etlocation.setEnabled(true);
-                etskills.setEnabled(true);
+
                 ll_savecancel.setVisibility(View.VISIBLE);
             }
         }
@@ -244,9 +218,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             }*/
             if (!language.isEmpty()){
                 HashMap<String,String> params=new HashMap<>();
-                params.put("user_id",userId);
-                params.put("language",language);
-                CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.VIEW_JOBSEEKER_PROFILE,params,
+                params.put("user_id","29");
+                CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_PROFILE,params,
                         this.success(),this.error());
                 requestQueue.add(customRequest);
             } else {
@@ -264,21 +237,48 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                     Utillity.hidepopup();
                     Log.d(TAG, "onResponse:data "+response.toString());
                     if (response!=null){
+                        Log.d(TAG, "onResponse: "+response.toString());
                         try {
                             if (!response.getString("status").equals("false")){
-                                profileDetailMOdel = gson.fromJson(response.toString(), ProfileDetailMOdel.class);
-                                if (profileDetailMOdel.getProfile_detail() != null) {
-                                    etEmail.setText(profileDetailMOdel.getProfile_detail().getUser_email());
-                                    etcontact.setText(profileDetailMOdel.getProfile_detail().getUser_phone());
-                                    etcompany.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_companyname());
-                                    etdesignation.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_dept());
-                                    etexperience.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_totalexp());
-                                    etresume.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_resume());
-                                    etdob.setText(profileDetailMOdel.getProfile_detail().getUser_dob());
-                                    etgender.setText(profileDetailMOdel.getProfile_detail().getUser_gender());
-                                    etlocation.setText(profileDetailMOdel.getProfile_detail().getUser_address());
-                                    etskills.setText(profileDetailMOdel.getProfile_detail().getJobseeker_workexp_job_title());
+                                JSONObject jsonObject = response.getJSONObject("user_list");
+                                if (jsonObject.getString("user_fname")!=null && jsonObject.getString("user_fname").length()>1){
+                                    jobseekerProileData = gson.fromJson(response.toString(), JobseekerProileData.class);
+                                    txtName.setText(jobseekerProileData.getUser_list().getUser_fname());
+                                    txtAge.setText(" " +jobseekerProileData.getUser_list().getUser_age()+" year");
+                                    txtDesignation.setText(jobseekerProileData.getUser_list().getProfile_summary_positions());
+                                    txtNationaliaty.setText(jobseekerProileData.getUser_list().getUser_nationality()
+                                            +", "+" with "+jobseekerProileData.getUser_list().getUser_permitcountry()+" work permit");
+                                    txtExp.setText(jobseekerProileData.getUser_list().getProfile_summary_totalyear()+" year");
+                                    txtCurrentLocation.setText(jobseekerProileData.getUser_list().getProfile_summary_currentcountry());
+                                    txtSalary.setText(jobseekerProileData.getUser_list().getProfile_summary_currentsalary());
+                                    txtMobile.setText(jobseekerProileData.getUser_list().getUser_phone());
+                                    txtEmail.setText(jobseekerProileData.getUser_list().getUser_email());
+                                    txtSkills.setText(jobseekerProileData.getUser_list().getProfile_summary_skills());
+                                    edtobjective.setText(jobseekerProileData.getUser_list().getProfile_summary_resumeheadline());
+                                }
 
+                                if (jobseekerProileData.getWorks_list() != null && jobseekerProileData.getWorks_list().size()>1) {
+                                    Log.d(TAG, "onResponse: sssd"+jobseekerProileData.getWorks_list().size());
+                                    workLayout.setVisibility(View.VISIBLE);
+                                    for (int i = 0; i < jobseekerProileData.getWorks_list().size(); i++) {
+                                        workview = (LinearLayout) View.inflate(getContext(), R.layout.work_experience_view, null);
+                                        ((TextView) workview.findViewById(R.id.txt_work_experience_heading))
+                                                .setText(jobseekerProileData.getEducations_list().get(i).getJobseeker_education_id()+ (i + 1));
+                                        workLayout.addView(workview);
+                                    }
+
+
+                                } else {
+                                    Log.d(TAG, "onResponse: "+"No data");
+                                    workLayout.setVisibility(View.GONE);
+                                }
+
+                                if (jobseekerProileData.getWorks_list()!=null && jobseekerProileData.getWorks_list().size()>1){
+                                    Log.d(TAG, "onResponse: "+jobseekerProileData.getEducations_list());
+                                    eduLayout.setVisibility(View.VISIBLE);
+                                } else {
+                                    Log.d(TAG, "onResponse: "+"no data");
+                                    eduLayout.setVisibility(View.GONE);
                                 }
                             } else {
                                 Utillity.message(getContext(), "No data found");

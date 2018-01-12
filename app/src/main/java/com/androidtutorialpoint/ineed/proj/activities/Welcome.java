@@ -75,7 +75,7 @@ Button btabout,btTermsofUse,btUpdate,btChange,bt_search,bt_resetpass,bt_contactu
             startActivity(new Intent(Welcome.this,ProfileViewed.class));
             break;
             case  R.id.bt_prof:
-            startActivity(new Intent(Welcome.this,Profile.class));
+//            startActivity(new Intent(Welcome.this,Profile.class));
             break;
         }
     }

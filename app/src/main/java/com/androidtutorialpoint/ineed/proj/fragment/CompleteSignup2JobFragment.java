@@ -98,7 +98,7 @@ public class CompleteSignup2JobFragment extends Fragment implements PackageAdapt
             @Override
             public void onClick(View view) {
               /*  startActivity(new Intent(getActivity(),LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                sharpref.remove("login_data");
+                tinyDB.remove("login_data");
                 getActivity().finish();*/
             }
 

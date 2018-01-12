@@ -54,11 +54,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:weightSum="1"
                 android:orientation="horizontal">
                 <TextView
-                    android:layout_weight="0.30"
-                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="#000"
                     android:drawableLeft="@drawable/ic_exp"
@@ -67,8 +66,8 @@
                     android:drawablePadding="7dp"
                     android:text="2-10 Years"/>
                 <TextView
-                    android:layout_weight="0.70"
-                    android:layout_width="match_parent"
+                    android:layout_weight=".8"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_age"
                     android:drawableStart="@drawable/ic_age"
