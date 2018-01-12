@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="300dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp">
+
+        <Button
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pay by online"
+            android:padding="5dp"
+            android:id="@+id/plan_pay_online"
+            android:background="#fff"
+            android:onClick="planrequestPurchase"
+            android:drawablePadding="10dp"
+            android:gravity="left|center_vertical"
+            android:drawableLeft="@drawable/bluedot"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="3dp">
+
+        <Button
+            android:id="@+id/bt_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=" Upgrade package"
+            android:padding="10dp"
+            android:onClick="upgradePackage"
+            android:background="@color/appbasecolor"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+</RelativeLayout>

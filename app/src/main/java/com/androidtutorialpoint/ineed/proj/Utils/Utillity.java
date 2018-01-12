@@ -7,34 +7,58 @@ import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Base64;
+import android.util.Log;
 import android.util.Patterns;
 import android.widget.Toast;
 
 import com.androidtutorialpoint.ineed.R;
+import com.androidtutorialpoint.ineed.proj.models.TokenResponse;
+import com.google.gson.Gson;
+import com.payfort.fort.android.sdk.base.FortSdk;
+import com.payfort.fort.android.sdk.base.callbacks.FortCallBackManager;
+import com.payfort.fort.android.sdk.base.callbacks.FortCallback;
+import com.payfort.sdk.android.dependancies.base.FortInterfaces;
+import com.payfort.sdk.android.dependancies.models.FortRequest;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
+
+import static android.content.ContentValues.TAG;
+import static com.helpshift.util.HelpshiftContext.getApplicationContext;
 
 /**
  * Created by Muhib.
  * Contact Number : +91 9796173066
  */
 public class Utillity {
-   static ProgressDialog progressDialog=null;
-    public static void message(Context context,String Msg)
-    {
+    static ProgressDialog progressDialog=null;
+
+    public static void message(Context context,String Msg) {
         Toast.makeText(context,Msg,Toast.LENGTH_SHORT).show();
     }
-    public static Boolean isNetworkConnected(Context context)
-    {
+
+    public static Boolean isNetworkConnected(Context context) {
         ConnectivityManager connectivityManager= (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo=connectivityManager.getActiveNetworkInfo();
         if(networkInfo!=null && networkInfo.isConnectedOrConnecting())
             return true;
         return false;
     }
+
     public static String BitMapToString(Bitmap bitmap){
         String temp="";
         if(bitmap!=null) {
@@ -73,8 +97,7 @@ public class Utillity {
         }
     }
 
-    public static void showloadingpopup(Activity activity)
-    {
+    public static void showloadingpopup(Activity activity) {
         if(progressDialog!=null)
         {
             progressDialog.dismiss();
@@ -84,16 +107,16 @@ public class Utillity {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
     }
-    public static void hidepopup()
-    {
+
+    public static void hidepopup() {
         if(progressDialog!=null)
         {
             progressDialog.dismiss();
         }
         progressDialog=null;
     }
-    public static Boolean CheckEmail(String email)
-    {
+
+    public static Boolean CheckEmail(String email) {
         if (email!=null)
         {
             Pattern pattern= Patterns.EMAIL_ADDRESS;
@@ -105,8 +128,7 @@ public class Utillity {
         return false;
     }
 
-    public static Boolean CheckPhone(String phone)
-    {
+    public static Boolean CheckPhone(String phone) {
         if (phone!=null)
         {
             Pattern pattern= Patterns.PHONE;

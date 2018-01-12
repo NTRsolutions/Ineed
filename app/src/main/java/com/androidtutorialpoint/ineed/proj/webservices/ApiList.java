@@ -14,10 +14,10 @@ public interface ApiList {
     String GET_PACKAGE=BASE_URL+"get_package";
     String MAKE_PAYMENT =BASE_URL+"makepayment";
     String UPDATE_PASSWORD = BASE_URL+"change_pass";
-    String VIEW_JOBSEEKER_PROFILE = BASE_URL+"view";
     String TERM=BASE_URL+"term";
     String CONTACT_US =BASE_URL+"contact_us";
     String JOBSEEKER_DASHBOARD=BASE_URL+"jobseeker_dashboard";
+    String JOBSEEKER_PROFILE = BASE_URL+"jobseeker_profile";
     String HELP_CATEGORY=BASE_URL+"helpcategory";
     String HELP=BASE_URL+"help";
     String COUNTRY=BASE_URL+"country";

@@ -131,8 +131,9 @@ ActionBar actionBar;
     @Override
     protected void onResume() {
         super.onResume();
-        getSDKToken();
         language=tinyDB.getString("language_id");
+        getSDKToken(language);
+
     }
 
     @Override
@@ -170,7 +171,7 @@ ActionBar actionBar;
 
     }
 
-    private void requestSDKToken() {
+    private void requestSDKToken(String language) {
         createFORTMobileSDKToken();
     }
 
@@ -179,7 +180,8 @@ ActionBar actionBar;
         final String CUSTOMER_EMAIL = "a@s.in";
         final String LANGUAGE = language;
         final String CURRENCY = "SAR";
-        final String AMOUNT = price;
+        int amt = Integer.parseInt(price)*100;
+        final String AMOUNT = String.valueOf(amt);
         final String MERCHANT_REFERENCE = Utillity.getRandomString(40) ;
         FortRequest fortRequest = new FortRequest();
         fortRequest.setShowResponsePage(true);
@@ -310,8 +312,8 @@ ActionBar actionBar;
         fortCallback.onActivityResult(requestCode,resultCode,data);
     }
 
-    public void getSDKToken() {
-        requestSDKToken() ;
+    public void getSDKToken(String language) {
+        requestSDKToken(language) ;
     }
 
     public void requestAuthorization() {
@@ -324,19 +326,23 @@ ActionBar actionBar;
 
 
     public void signUp(View view){
-        if (!transaction_id.isEmpty()){
-
-            HashMap<String,String> params=new HashMap<>();
-            params.put("user_type",selection);
-            params.put("language",language);
-            params.put("transaction_id",transaction_id);
-            params.put("package_id",packageId);
-            params.put("user_id", userid);
-            CustomRequest customRequest=new CustomRequest(com.android.volley.Request.Method.POST, ApiList.MAKE_PAYMENT,params,
-                    this.success(),this.error());
-            requestQueue.add(customRequest);
-        } else {
+        if (transaction_id==null){
             Utillity.message(getApplicationContext(), "Please make payment before signup ");
+        } else {
+            if (!transaction_id.isEmpty()) {
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put("user_type", selection);
+                params.put("language", language);
+                params.put("transaction_id", transaction_id);
+                params.put("package_id", packageId);
+                params.put("user_id", userid);
+                CustomRequest customRequest = new CustomRequest(com.android.volley.Request.Method.POST, ApiList.MAKE_PAYMENT, params,
+                        this.success(), this.error());
+                requestQueue.add(customRequest);
+            } else {
+                Utillity.message(getApplicationContext(), "Please make payment before signup ");
+            }
         }
     }
 

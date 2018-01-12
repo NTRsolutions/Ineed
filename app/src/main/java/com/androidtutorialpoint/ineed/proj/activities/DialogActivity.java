@@ -121,7 +121,8 @@ public class DialogActivity extends AppCompatActivity {
         final String CUSTOMER_EMAIL = email;
         final String LANGUAGE = language;
         final String CURRENCY = "SAR";
-        final String AMOUNT = price;
+        int amt = Integer.parseInt(price)*100;
+        final String AMOUNT = String.valueOf(amt);
         final String MERCHANT_REFERENCE = Utillity.getRandomString(40) ;
         FortRequest fortRequest = new FortRequest();
         fortRequest.setShowResponsePage(true);
@@ -267,19 +268,24 @@ public class DialogActivity extends AppCompatActivity {
 
 
     public void signUp(View view){
-        if (!transaction_id.isEmpty()){
-
-            HashMap<String,String> params=new HashMap<>();
-            params.put("user_type",user_type);
-            params.put("language",language);
-            params.put("transaction_id",transaction_id);
-            params.put("package_id",package_id);
-            params.put("user_id", userId);
-            CustomRequest customRequest=new CustomRequest(com.android.volley.Request.Method.POST, ApiList.MAKE_PAYMENT,params,
-                    this.success(),this.error());
-            requestQueue.add(customRequest);
-        } else {
+        if (transaction_id==null){
             Utillity.message(getApplicationContext(), "Please make payment before signup ");
+
+        }else {
+            if (!transaction_id.isEmpty()){
+
+                HashMap<String,String> params=new HashMap<>();
+                params.put("user_type",user_type);
+                params.put("language",language);
+                params.put("transaction_id",transaction_id);
+                params.put("package_id",package_id);
+                params.put("user_id", userId);
+                CustomRequest customRequest=new CustomRequest(com.android.volley.Request.Method.POST, ApiList.MAKE_PAYMENT,params,
+                        this.success(),this.error());
+                requestQueue.add(customRequest);
+            } else {
+                Utillity.message(getApplicationContext(), "Please make payment before signup ");
+            }
         }
     }
 

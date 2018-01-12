@@ -20,6 +20,7 @@ import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.AboutActivity;
 import com.androidtutorialpoint.ineed.proj.activities.HomeActivity;
 import com.androidtutorialpoint.ineed.proj.models.JobseekerDashBoardModel;
+import com.androidtutorialpoint.ineed.proj.models.LoginData;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
 import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
 import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
@@ -31,17 +32,27 @@ import org.json.JSONObject;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+import static android.content.ContentValues.TAG;
+
 
 public class JobseekerDashboardFragment extends Fragment implements View.OnClickListener{
     TextView txtMyProfile, txtExpiry, txtViewedProfile, txtPlan;
-    TinyDB sharpref;
+    TinyDB tinyDB;
     Gson gson = new Gson();
     View view;
+    String userId;
+    LoginData loginData = new LoginData();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_jobseeker_dashboard, container, false);
+
+        tinyDB = new TinyDB(getContext());
+        String data = tinyDB.getString("login_data");
+        loginData= gson.fromJson(data, LoginData.class);
+        userId = loginData.getUser_detail().getUser_id();
 
 //        find id
         txtMyProfile = (TextView) view.findViewById(R.id.jobseekerdash_txtMyProfile);
@@ -58,8 +69,12 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
 
     @Override
     public void onClick(View view) {
-        DashboardJobseeker dashboardJobseeker = new DashboardJobseeker();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, dashboardJobseeker).addToBackStack(null).commit();
+        switch (view.getId()){
+            case R.id.jobseekerdash_txtMyProfile:
+                DashboardJobseeker dashboardJobseeker = new DashboardJobseeker();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, dashboardJobseeker).addToBackStack(null).commit();
+                break;
+        }
 
     }
 
@@ -73,9 +88,8 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
         if(Utillity.isNetworkConnected(getContext())) {
             Utillity.showloadingpopup(getActivity());
             HashMap<String, String> params = new HashMap<>();
-            params.put("user_id", "29");
+            params.put("user_id", userId);
             RequestQueue requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
-
             CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_DASHBOARD, params, this.sucess(), this.error());
             requestQueue.add(customRequest);
         }
@@ -93,7 +107,7 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
             @Override
             public void onResponse(JSONObject response) {
                 Utillity.hidepopup();
-
+                Log.d(TAG, "onResponse: "+response.toString());
                 JobseekerDashBoardModel dashBoardModel=null;
                 try {
                 dashBoardModel=new JobseekerDashBoardModel();

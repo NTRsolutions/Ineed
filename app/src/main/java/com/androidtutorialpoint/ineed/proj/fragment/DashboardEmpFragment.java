@@ -1,14 +1,10 @@
 package com.androidtutorialpoint.ineed.proj.fragment;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -28,12 +24,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
-import com.androidtutorialpoint.ineed.proj.activities.DialogActivity;
 import com.androidtutorialpoint.ineed.proj.activities.ProfileViewed;
+import com.androidtutorialpoint.ineed.proj.activities.UpgradePlanActivity;
 import com.androidtutorialpoint.ineed.proj.models.EmployerProfileData;
 import com.androidtutorialpoint.ineed.proj.models.ImageInputHelper;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
-import com.androidtutorialpoint.ineed.proj.models.ProfileDetailMOdel;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
 import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
 import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
@@ -46,13 +41,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 
-import static android.app.Activity.RESULT_OK;
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 
@@ -148,6 +139,7 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 //    Toast.makeText(getApplication(),"Hello",Toast.LENGTH_SHORT).show();
             }
         });
+
         txt_personal.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -159,7 +151,7 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         txtUpgrade.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), DialogActivity.class));
+                startActivity(new Intent(getActivity(), UpgradePlanActivity.class));
             }
         });
 

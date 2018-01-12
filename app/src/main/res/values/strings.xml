@@ -147,4 +147,7 @@
     <string name="resume_view">View </string>
     <string name="resume_download">Download </string>
     <string name="my_resume">My Resume </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

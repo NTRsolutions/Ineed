@@ -63,7 +63,6 @@ public class Signup2EmpFragment extends Fragment implements EmpPackageAdapter.Cl
     EmpPackageAdapter packageAdapter;
     TinyDB sharpref;
     String language, usertype;
-
     TextView txtlogin;
     Button bt_next;
 
