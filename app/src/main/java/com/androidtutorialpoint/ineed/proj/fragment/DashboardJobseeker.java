@@ -61,7 +61,7 @@ import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 public class DashboardJobseeker extends Fragment implements ImageInputHelper.ImageActionListener, View.OnClickListener {
     EditText etEmail, etcontact, etcompany, etdesignation, etexperience, etresume, etdob, etgender, etlocation,
             etskills;
-
+    TextView txtaddeduc;
     LinearLayout ll_savecancel;
     ImageView imgUser, imgCamera,imgedit;
     Gson gson;
@@ -78,7 +78,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     LinearLayout workLayout,workview, eduLayout, eduView, noticeLayout, toLayout;
     TextView txt_proftitle,txtSave, txtCancle, txt_personal, txtName, txtAge, txtDesignation, txtNationaliaty,
             txtExp, txtCurrentLocation, txtSalary, txtMobile, txtEmail, txtSkills, txtWorkingexp,txtJobTitle, txtCompanyName, txtJobHeading, txtWorkingFrom, txtWrokingTo,
-    txtNotice, txtIndustry, txtDepartment, txtTo,txtCoursetype, txtSpecilization, txtInstitute, txtYear, txtDepartMent;
+    txtNotice, txtIndustry, txtDepartment, txtTo,txtCoursetype, txtSpecilization, txtInstitute, txtYear, txtDepartMent,txt_addwk;
     EditText edtobjective;
 
     @SuppressLint("ClickableViewAccessibility")
