@@ -276,8 +276,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if(v.getId()==R.id.et_search)
         {
-            InputMethodManager inputMethodManager= (InputMethodManager) getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromInputMethod(v.getWindowToken(),0);
+            InputMethodManager inputMethodManager= (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromInputMethod(getCurrentFocus().getWindowToken(),0);
             search();
 
         }
@@ -325,7 +325,13 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                     {
                         searchlist.addAll(sModel.getProfile_list());
                         Log.d("List", searchlist.toString());
-                        txt_filter.setVisibility(View.VISIBLE);
+                        if(searchlist.size()>0) {
+                            txt_filter.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            Utillity.message(getApplicationContext(),"No Record Found");
+                        }
                     }
                     searchAdapte.notifyDataSetChanged();
                 } catch (Exception e) {

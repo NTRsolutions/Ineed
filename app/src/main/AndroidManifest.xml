@@ -67,7 +67,8 @@
         <activity android:name=".proj.activities.FilterActivity" />
         <activity android:name=".proj.activities.UpgradePlanActivity" />
         <activity android:name=".proj.activities.WorkExperience" />
-        <activity android:name=".proj.activities.EducationAdd"></activity>
+        <activity android:name=".proj.activities.EducationAdd" />
+        <activity android:name=".proj.activities.PersonalAdd"></activity>
     </application>
 
 </manifest>

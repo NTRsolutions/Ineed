@@ -26,7 +26,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
+import com.androidtutorialpoint.ineed.proj.activities.EducationAdd;
 import com.androidtutorialpoint.ineed.proj.activities.HomeActivity;
+import com.androidtutorialpoint.ineed.proj.activities.PersonalAdd;
 import com.androidtutorialpoint.ineed.proj.activities.WorkExperience;
 import com.androidtutorialpoint.ineed.proj.models.ImageInputHelper;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
@@ -57,7 +59,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             etskills;
 
     LinearLayout ll_savecancel;
-    ImageView imgUser, imgCamera;
+    ImageView imgUser, imgCamera,imgedit;
     Gson gson;
     LoginData loginData;
     String img,language, userId;
@@ -67,7 +69,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     View view;
     TinyDB tinyDB;
     LinearLayout workLayout,workview, eduLayout;
-    TextView txt_proftitle,txt_addwk, txt_personal, txtName, txtAge, txtDesignation, txtNationaliaty,txtWorkPermit,
+    TextView txt_proftitle,txt_addwk, txt_personal, txtName, txtAge, txtDesignation, txtNationaliaty,txtWorkPermit,txtaddeduc,
             txtExp, txtCurrentLocation, txtSalary, txtMobile, txtEmail, txtSkills;
     EditText edtobjective;
 
@@ -92,6 +94,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
 //        find id
         imgCamera = (ImageView) view.findViewById(R.id.edt_img_camera);
         imgUser = (ImageView) view.findViewById(R.id.edt_img_profile);
+        imgedit=view.findViewById(R.id.edt_img_edit);
+        imgedit.setOnClickListener(this);
         txtName = view.findViewById(R.id.jobseerker_profileName);
         txtAge = view.findViewById(R.id.jobseeker_profileAge);
         txtDesignation = view.findViewById(R.id.jobseeker_profileDesi);
@@ -104,7 +108,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         txtEmail = view.findViewById(R.id.jobseerker_profileEmail);
         txtSkills = view.findViewById(R.id.txt_skills_value);
         edtobjective = view.findViewById(R.id.txt_objective);
-
+        txtaddeduc = view.findViewById(R.id.btnAddEducation);
+        txtaddeduc.setOnClickListener(this);
         eduLayout = view.findViewById(R.id.layout_edu_exp);
 
         ll_savecancel = (LinearLayout) view.findViewById(R.id.ll_savecancel);
@@ -292,7 +297,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                             e.printStackTrace();
                         }
 
-
                     }
                 }
             };
@@ -306,7 +310,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                 Log.d("TAG", "onErrorResponse: "+error.toString());
                 Utillity.message(getContext(), getResources().getString(R.string.internetConnection));
                 Utillity.hidepopup();
-
             }
         };
     }
@@ -319,7 +322,12 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             case R.id.btnAddwk:
                 startActivity(new Intent(getActivity(), WorkExperience.class));
                 break;
-
+            case R.id.btnAddEducation:
+                startActivity(new Intent(getActivity(), EducationAdd.class));
+                break;
+            case R.id.edt_img_edit:
+                startActivity(new Intent(getActivity(), PersonalAdd.class));
+                break;
         }
     }
 }

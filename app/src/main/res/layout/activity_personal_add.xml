@@ -8,16 +8,18 @@
     >
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         >
-        <include layout="@layout/toolbar"
-            ></include>
+    <include layout="@layout/toolbar"
+       ></include>
+
     <ScrollView
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:paddingTop="10dp"
+            android:paddingTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -33,7 +35,7 @@
                     android:gravity="center_vertical"
                     android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:text="@string/txtJobTitle"/>
+                    android:text="@string/name"/>
 
                 <EditText
                     android:layout_weight="1"
@@ -41,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:hint="@string/txtJobTitle"
+                    android:hint="@string/name"
                     android:id="@+id/txt_work_experienceJobtitle"/>
 
             </LinearLayout>
@@ -58,7 +60,7 @@
                     android:gravity="center_vertical"
                     android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:text="@string/txtCompanyName"/>
+                    android:text="@string/age"/>
 
                 <EditText
                     android:layout_weight="1"
@@ -66,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:hint="@string/txtCompanyName"
+                    android:hint="@string/age"
                     android:id="@+id/txt_CompanyName"/>
 
             </LinearLayout>
@@ -81,7 +83,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:textColor="@color/black"
-                    android:text="@string/txtWorkingFrom"/>
+                    android:text="@string/designation"/>
 
                 <EditText
                     android:layout_weight="1"
@@ -89,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:hint="@string/txtWorkingFrom"
+                    android:hint="@string/designation"
                     android:id="@+id/txt_work_experienceWorkFrom"/>
 
             </LinearLayout>
@@ -105,7 +107,7 @@
                     android:gravity="center_vertical"
                     android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:text="@string/txtNotice"/>
+                    android:text="@string/workpermit"/>
 
                 <EditText
                     android:layout_weight="1"
@@ -113,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:hint="30 days"
+                    android:hint="@string/workpermit"
                     android:id="@+id/txt_work_experienceNotice"/>
 
             </LinearLayout>
@@ -128,7 +130,7 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:textColor="@color/black"
-                    android:text="@string/txtIndustry"/>
+                    android:text="@string/experience"/>
 
 
                 <EditText
@@ -137,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:hint="@string/txtIndustry"
+                    android:hint="@string/experience"
                     android:id="@+id/txt_work_experiencetxtIndustry"/>
 
             </LinearLayout>
@@ -154,7 +156,84 @@
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:textColor="@color/black"
-                    android:text="@string/txtDepartment"/>
+                    android:text="@string/location"/>
+
+
+                <EditText
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:hint="@string/location"
+                    android:id="@+id/txt_work_experiencetxtDepartment"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="@string/salary"/>
+
+
+                <EditText
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:hint="@string/salary"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="@string/phonenumber"/>
+
+
+                <EditText
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:hint="@string/phonenumber"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="Email"/>
 
 
                 <EditText
@@ -164,11 +243,11 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:hint="@string/txtDepartment"
-                    android:id="@+id/txt_work_experiencetxtDepartment"/>
+                    />
 
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
-<include layout="@layout/bottom_toolbar"></include>
-    </RelativeLayout>
+    </LinearLayout>
+   <include layout="@layout/bottom_toolbar"></include>
+</RelativeLayout>
