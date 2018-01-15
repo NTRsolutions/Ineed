@@ -30,6 +30,7 @@ public interface ApiList {
     String EMP_PROFILE_PIC = BASE_URL+"jobseeker_image";
     String JOBSEEKER_SKILLS = BASE_URL+"jobseekers_skills";
     String JOBSEEKER_PERSONAL_EDIT= BASE_URL+"jobseeker_edit_personal";
+    String JOBSEEKER_ADD_EDU = BASE_URL+"jobseeker_add_education";
 
     String FILTERS = BASE_URL+"filters";
 }

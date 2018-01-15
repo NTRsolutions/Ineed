@@ -4,7 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -12,7 +16,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -44,8 +47,14 @@ import com.mukesh.tinydb.TinyDB;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,27 +68,25 @@ import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
  * Contact Number : +91 9796173066
  */
 public class DashboardJobseeker extends Fragment implements ImageInputHelper.ImageActionListener, View.OnClickListener {
-    EditText etEmail, etcontact, etcompany, etdesignation, etexperience, etresume, etdob, etgender, etlocation,
-            etskills;
+
     TextView txtaddeduc;
     LinearLayout ll_savecancel;
     ImageView imgUser, imgCamera,imgedit;
     Gson gson;
     LoginData loginData;
-    String img,language, userId, obj;
+    String img,language, userId, obj, skills;
     RequestQueue requestQueue;
     private ImageInputHelper imageInputHelper;
     JobseekerProileData jobseekerProileData;
     List<JobseekerProileData.EducationsListBean>educationsListBeans ;
     List<JobseekerProileData.WorksListBean>worksListBeans;
-
     View view;
     TinyDB tinyDB;
-    LinearLayout workLayout,workview, eduLayout, eduView, noticeLayout, toLayout;
-    TextView txt_proftitle,txtSave, txtCancle, txt_personal, txtName, txtAge, txtDesignation, txtNationaliaty,
+    LinearLayout workLayout,workview, eduLayout, eduView, skillsLayout, noticeLayout, toLayout;
+    TextView txt_proftitle, txtSkillsEditHeading, txtSaveObj, txtCancle, txt_personal, txtName, txtAge, txtDesignation, txtNationaliaty,
             txtExp, txtCurrentLocation, txtSalary, txtMobile, txtEmail, txtSkills, txtWorkingexp,txtJobTitle, txtCompanyName, txtJobHeading, txtWorkingFrom, txtWrokingTo,
-    txtNotice, txtIndustry, txtDepartment, txtTo,txtCoursetype, txtSpecilization, txtInstitute, txtYear, txtDepartMent,txt_addwk;
-    EditText edtobjective;
+    txtNotice, txtIndustry, txtDepartment,txtSaveSkills, txtCancelSkill, txtTo,txtCoursetype, txtSpecilization, txtInstitute, txtYear, txtDepartMent,txt_addwk;
+    EditText edtobjective, edtSkills;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -97,6 +104,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Profile");
 
         workLayout = (LinearLayout)view.findViewById(R.id.work_exp);
+        skillsLayout = view.findViewById(R.id.ll_savecancelskills);
         workview = view.findViewById(R.id.layout_work_exp);
         eduLayout = view.findViewById(R.id.edu_exp);
         eduView = view.findViewById(R.id.layout_edu_exp);
@@ -118,18 +126,23 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         txtEmail = view.findViewById(R.id.jobseerker_profileEmail);
         txtSkills = view.findViewById(R.id.txt_skills_value);
         edtobjective = view.findViewById(R.id.txt_objective);
+        edtSkills = view.findViewById(R.id.txt_skills_value);
         txtCancle = view.findViewById(R.id.txt_cancel);
-        txtSave = view.findViewById(R.id.txt_save);
+        txtSaveObj = view.findViewById(R.id.txt_save);
         txtaddeduc = view.findViewById(R.id.btnAddEducation);
         txtaddeduc.setOnClickListener(this);
         eduLayout = view.findViewById(R.id.layout_edu_exp);
+        txtSkillsEditHeading = view.findViewById(R.id.txt_skills_heading);
+        txtSaveSkills = view.findViewById(R.id.txt_saveskills);
+        txtCancelSkill = view.findViewById(R.id.txt_cancelskills);
 
         ll_savecancel = (LinearLayout) view.findViewById(R.id.ll_savecancel);
         txt_personal = (TextView) view.findViewById(R.id.txt_objective_heading);
-
-
-
         txt_addwk=view.findViewById(R.id.btnAddwk);
+        txtSkillsEditHeading.setOnClickListener(this);
+        txtSaveSkills.setOnClickListener(this);
+        txtCancelSkill.setOnClickListener(this);
+
         txt_addwk.setOnClickListener(this);
         txt_personal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +152,26 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             }
         });
 
-        txtSave.setOnClickListener(new View.OnClickListener() {
+        if (imgUser.getDrawable()!=null){
+            Drawable drawable= imgUser.getDrawable();
+            BitmapDrawable bitmapDrawable = ((BitmapDrawable) drawable);
+            Bitmap bitmap = bitmapDrawable .getBitmap();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            byte[] imageInByte = stream.toByteArray();
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
+            img = Utillity.BitMapToString(bitmap);
+        }
+
+        txtCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edtobjective.setEnabled(false);
+                ll_savecancel.setVisibility(View.GONE);
+                getProfile();
+            }
+        });
+        txtSaveObj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 obj = edtobjective.getText().toString();
@@ -152,6 +184,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                 }
             }
         });
+
+
 
 
         imgCamera.setOnClickListener(new View.OnClickListener() {
@@ -194,8 +228,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         requestQueue.add(customRequest);
     }
 
-    private Response.Listener<JSONObject> successObj()
-    {
+    private Response.Listener<JSONObject> successObj() {
         Utillity.showloadingpopup(getActivity());
         return new Response.Listener<JSONObject>() {
             @Override
@@ -227,6 +260,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     @Override
     public void onResume() {
         super.onResume();
+
 //        toolbar.setTitle("Dash board");
 
         String loginPrefData = tinyDB.getString("login_data");
@@ -264,6 +298,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
 //            imgUser.setImageBitmap(bitmap);
             Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(imgUser);
 
+            img = Utillity.BitMapToString(bitmap);
+            uploading(img);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -290,9 +326,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             }
         }
 
-
-        private Response.Listener<JSONObject> success()
-        {
+    private Response.Listener<JSONObject> success() {
 
             Utillity.showloadingpopup(getActivity());
             return new Response.Listener<JSONObject>() {
@@ -316,7 +350,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                     txtMobile.setText(jobseekerProileData.getUser_list().getUser_phone());
                                 }
                                 if (jsonObject.getString("user_age").length()>1&&jsonObject.getString("user_age").length()>1){
-                                    txtAge.setText(jobseekerProileData.getUser_list().getUser_age()+" year");
+                                    txtAge.setText(" "+jobseekerProileData.getUser_list().getUser_age()+" year");
                                 }
                                 if (!jsonObject.getString("user_nationality").equals("0") &&jsonObject.getString("user_nationality").length()>1){
                                     txtNationaliaty.setText(jobseekerProileData.getUser_list().getUser_nationality()
@@ -328,7 +362,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                 if (jsonObject.getString("profile_summary_skills").length()>1&&jsonObject.getString("profile_summary_skills").length()>1){
                                     txtSkills.setText(jobseekerProileData.getUser_list().getProfile_summary_skills());
                                 }
-                                if (jsonObject.getString("profile_summary_currentsalary").length()>1&&jsonObject.getString("profile_summary_currentsalary").length()>1){
+                                if (jsonObject.getString("profile_summary_currentsalary")!=null){
+                                    Log.d(TAG, "onResponse: "+jobseekerProileData.getUser_list().getProfile_summary_currentsalary());
                                     txtSalary.setText(jobseekerProileData.getUser_list().getProfile_summary_currentsalary());
                                 }
                                 if (jsonObject.getString("profile_summary_positions").length()>1&&jsonObject.getString("profile_summary_positions").length()>1){
@@ -339,6 +374,15 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                 }
                                 if (jsonObject.getString("profile_summary_currentcountry").length()>1&&jsonObject.getString("profile_summary_currentcountry").length()>1){
                                     txtCurrentLocation.setText(jobseekerProileData.getUser_list().getProfile_summary_currentcountry());
+                                }
+                                if (jsonObject.getString("user_image")!=null && jsonObject.getString("user_image").length()>0){
+                                    String url = ApiList.IMG_BASE+jobseekerProileData.getUser_list().getUser_image();
+                                    GetImage task = new GetImage();
+                                    // Execute the task
+                                    task.execute(new String[] { url });
+                                } else {
+                                    Glide.with(getContext()).load(R.drawable.gfgf)
+                                            .apply(RequestOptions.circleCropTransform()).into(imgUser);
                                 }
                                 worksListBeans.addAll(jobseekerProileData.getWorks_list());
                                 educationsListBeans.addAll(jobseekerProileData.getEducations_list());
@@ -422,8 +466,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             };
         }
 
-    private Response.ErrorListener error()
-    {
+    private Response.ErrorListener error() {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -433,7 +476,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             }
         };
     }
-
 
     @Override
     public void onClick(View v) {
@@ -448,6 +490,139 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             case R.id.edt_img_edit:
                 startActivity(new Intent(getActivity(), PersonalAdd.class));
                 break;
+            case R.id.txt_skills_heading:
+                edtSkills.setEnabled(true);
+                skillsLayout.setVisibility(View.VISIBLE);
+                break;
+            case R.id.txt_saveskills:
+                skills = edtSkills.getText().toString();
+
+                if (!skills.isEmpty()){
+                    updateSkill();
+
+                } else {
+                    Utillity.message(getActivity(),"Please enter company name");
+                }
+                break;
+            case R.id.txt_cancelskills:
+                edtSkills.setEnabled(false);
+                skillsLayout.setVisibility(View.GONE);
+                getProfile();
+                break;
         }
     }
+
+    public void updateSkill(){
+        HashMap<String,String> params=new HashMap<>();
+        params.put("skills",skills);
+        params.put("user_id",userId);
+        CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_SKILLS,params,
+                this.successSkills(),this.error());
+        requestQueue.add(customRequest);
+    }
+
+    private Response.Listener<JSONObject> successSkills() {
+        Utillity.showloadingpopup(getActivity());
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Utillity.hidepopup();
+                Log.d(TAG, "onResponse:data "+response.toString());
+                if (response!=null){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.toString());
+                        if (jsonObject.getString("status").equals("true")){
+                            edtSkills.setEnabled(false);
+                            Utillity.message(getContext(), "Objective updated successfully");
+                            skillsLayout.setVisibility(View.GONE);
+                            getProfile();
+                        } else {
+                            Utillity.message(getContext(), "Connection error");
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        };
+    }
+
+    public void uploading(String img){
+        HashMap<String,String> params=new HashMap<>();
+        params.put("user_image",img);
+        params.put("user_id",userId);
+        CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_PROFILE_PIC,params,
+                this.successSkills(),this.error());
+        requestQueue.add(customRequest);
+    }
+    public class GetImage extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Utillity.showloadingpopup(getActivity());
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            Bitmap map = null;
+            for (String url : urls) {
+                map = downloadImage(url);
+            }
+            return map;
+        }
+
+        // Sets the Bitmap returned by doInBackground
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            Utillity.hidepopup();
+            imgUser.setImageBitmap(result);
+            img = Utillity.BitMapToString(result);
+
+            Glide.with(getActivity()).load(result)
+                    .apply(RequestOptions.circleCropTransform()).into(imgUser);
+        }
+
+        // Creates Bitmap from InputStream and returns it
+        private Bitmap downloadImage(String url) {
+            Bitmap bitmap = null;
+            InputStream stream = null;
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inSampleSize = 1;
+
+            try {
+                stream = getHttpConnection(url);
+                bitmap = BitmapFactory.
+                        decodeStream(stream, null, bmOptions);
+                stream.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        // Makes HttpURLConnection and returns InputStream
+        private InputStream getHttpConnection(String urlString)
+                throws IOException {
+            InputStream stream = null;
+            URL url = new URL(urlString);
+            URLConnection connection = url.openConnection();
+
+            try {
+                HttpURLConnection httpConnection = (HttpURLConnection) connection;
+                httpConnection.setRequestMethod("GET");
+                httpConnection.connect();
+
+                if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    stream = httpConnection.getInputStream();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return stream;
+        }
+    }
+
+
 }

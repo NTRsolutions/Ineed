@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,9 +19,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
+import com.androidtutorialpoint.ineed.proj.models.LoginData;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
 import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
 import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
+import com.google.gson.Gson;
+import com.mukesh.tinydb.TinyDB;
 
 import org.json.JSONObject;
 
@@ -30,6 +34,12 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
     ActionBar actionBar;
     LinearLayout bottom_toolbar;
     TextView txt_save,txt_cancel;
+    EditText edtCourseTitle, edtSpeci, edtyear, edtInsti;
+    String courseTitle, speci, year, insti, userid;
+    TinyDB tinyDB;
+    LoginData loginData = new LoginData();
+    Gson gson = new Gson();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,20 +47,37 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         setuptoolbar();
         setupbottomtoolbar();
 
+        tinyDB = new TinyDB(getApplicationContext());
+        String loginPrefData = tinyDB.getString("login_data");
+        loginData = gson.fromJson(loginPrefData, LoginData.class);
+        userid = loginData.getUser_detail().getUser_id();
+
+
+//        find id
+        edtCourseTitle = findViewById(R.id.txt_edu_course_title);
+        edtInsti = findViewById(R.id.txt_institute);
+        edtSpeci = findViewById(R.id.txt_Specialization);
+        edtyear = findViewById(R.id.txt_edu_year);
+
+        txt_cancel.setOnClickListener(this);
+        txt_save.setOnClickListener(this);
+
+
     }
+
     private void setuptoolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
         TextView textView= (TextView)toolbar.findViewById(R.id.toolbar_txt);
         textView.setText("Education");
         setSupportActionBar(toolbar);
         actionBar=getSupportActionBar();
-        if(actionBar!=null)
-        {
+        if(actionBar!=null) {
             actionBar.setHomeAsUpIndicator(R.drawable.back);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle("");
         }
     }
+
     private void setupbottomtoolbar() {
         bottom_toolbar=findViewById(R.id.bottom_toolbar);
         txt_save=bottom_toolbar.findViewById(R.id.txt_save);
@@ -58,6 +85,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         txt_save.setOnClickListener(this);
         txt_cancel.setOnClickListener(this);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
@@ -75,24 +103,46 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         switch (v.getId())
         {
             case R.id.txt_save:
-                // saveApi();
-                Utillity.message(getApplicationContext(),"Successfully Added");
-                finish();
+                year = edtyear.getText().toString();
+                courseTitle = edtCourseTitle.getText().toString();
+                insti = edtInsti.getText().toString();
+                speci = edtSpeci.getText().toString();
+
+                if (!year.isEmpty()){
+                    if (!courseTitle.isEmpty()){
+                        if (!insti.isEmpty()){
+                            if (!speci.isEmpty()){
+                                addEdu(userid, courseTitle,speci,insti,year);
+                            }else {
+                                Utillity.message(getApplicationContext(), "Please enter specilization");
+                            }
+                        } else {
+                            Utillity.message(getApplicationContext(), "Please enter institute name");
+                        }
+                    } else {
+                        Utillity.message(getApplicationContext(), "Please enter course");
+                    }
+                } else {
+                    Utillity.message(getApplicationContext(), "Please enter year");
+                }
                 break;
             case R.id.txt_cancel:
                 finish();
                 break;
         }
     }
-    private void saveApi() {
+    private void addEdu(String userId, String courseTitle, String speci, String insti, String year) {
         if(Utillity.isNetworkConnected(EducationAdd.this)) {
             Utillity.showloadingpopup(EducationAdd.this);
             RequestQueue queue = VolleySingelton.getsInstance().getmRequestQueue();
             HashMap<String, String> params = new HashMap<>();
-            params.put("language", "en");
-            CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.HELP_CATEGORY, params, this.success(), this.errorListener());
+            params.put("user_id", userId);
+            params.put("course_title", courseTitle);
+            params.put("specilization", speci);
+            params.put("institute ", insti);
+            params.put("year", year);
+            CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_EDU, params, this.success(), this.errorListener());
             queue.add(customRequest);
-            customRequest.setRetryPolicy(new DefaultRetryPolicy(30000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         }
         else
@@ -119,6 +169,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.d("TAG", "onResponse: edu"+response.toString());
                 Utillity.hidepopup();
 
             }
