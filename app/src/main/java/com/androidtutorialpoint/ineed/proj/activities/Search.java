@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Search extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener, SearchAdapter.Clickitem {
+    private static final int FILTER_REQUEST = 222 ;
     String set,CountryId;
     LinearLayout linearLayout;
     ActionBar actionBar;
@@ -240,12 +241,114 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         switch (view.getId())
         {
             case R.id.txt_filter:
-                startActivity(new Intent(Search.this,FilterActivity.class));
+              //  startActivity(new Intent(Search.this,FilterActivity.class));
+                startActivityForResult(new Intent(Search.this,FilterActivity.class),FILTER_REQUEST);
                 break;
         }
         //setupoverlay();
-
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==FILTER_REQUEST)
+        {
+        /*    String Gender=data.getStringExtra("gender");
+            Log.d("gender",Gender);
+            searchAdapte.getFilter().filter(Gender);*/
+            ArrayList<SearchModel.ProfileListBean> filtserch=new ArrayList<>();
+
+            String experi=data.getStringExtra("experi");
+        String ctc=data.getStringExtra("ctc");
+        String Age=data.getStringExtra("age");
+        String Gender=data.getStringExtra("gender");
+
+      /*  String[] exp=experi.split("-");
+        String Efirst=exp[0];
+        String Esecong=exp[1];
+        Log.d("first",Efirst);
+        Log.d("last",Esecong);
+        Log.d("exp",experi);
+            int startExp= Integer.parseInt(Efirst);
+            int endExp= Integer.parseInt(Esecong);
+            for(int i=0;i<searchlist.size();i++)
+            {
+                SearchModel.ProfileListBean sModel=searchlist.get(i);
+                if(!experi.isEmpty())
+                {
+                    String ex=sModel.getTotalExperience();
+                    float exps= Float.parseFloat(ex);
+                    if(exps>startExp && exps<endExp)
+                    {
+                        filtserch.add(sModel);
+                    }
+                }
+            }
+       */
+        String[] ctcs=ctc.split("-");
+        String Cfirst=ctcs[0];
+        String Csecong=ctcs[1];
+        Log.d("first",Cfirst);
+        Log.d("last",Csecong);
+        Log.d("ctc",ctc);
+        int startCtc= Integer.parseInt(Cfirst);
+        int endCtc= Integer.parseInt(Csecong);
+        for(int i=0;i<searchlist.size();i++)
+            {
+                SearchModel.ProfileListBean sModel=searchlist.get(i);
+                if(!ctc.isEmpty())
+                {
+                    String ex=sModel.getUser_ctc();
+                   // int ctcss= Integer.parseInt(ex);
+                  //  if(ctcss>startCtc && ctcss<endCtc)
+                    if(ctc.equalsIgnoreCase(ex))
+                    {
+                        filtserch.add(sModel);
+                    }
+                }
+            }
+
+         /*AGE Filter*/
+        String[] sp=Age.split("-");
+        String first=sp[0];
+        String secong=sp[1];
+        Log.d("Ages",first);
+        Log.d("Ages",secong);
+        Log.d("age",Age);
+        int startAge= Integer.parseInt(first);
+        int endAge= Integer.parseInt(secong);
+            for(int i=0;i<searchlist.size();i++)
+            {
+                SearchModel.ProfileListBean sModel=searchlist.get(i);
+                if(!Age.isEmpty())
+                {
+                    String ag=sModel.getUser_age();
+                    int age= Integer.parseInt(ag);
+                    if(age>startAge && age<endAge)
+                    {
+                        filtserch.add(sModel);
+                    }
+                }
+            }
+
+           /* String Gender=data.getStringExtra("gender");
+            Log.d("gender",Gender);
+            ArrayList<SearchModel.ProfileListBean> filtserch=new ArrayList<>();
+            for(int i=0;i<searchlist.size();i++)
+            {
+                SearchModel.ProfileListBean sModel=searchlist.get(i);
+                if(!Gender.isEmpty())
+                {
+                  String gen=sModel.getUser_gender();
+                  if(gen.equalsIgnoreCase(Gender))
+                  {
+                      filtserch.add(sModel);
+                  }
+                }
+            }*/
+        }
+    }
+
     private void setuptoolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
         TextView textView= (TextView)toolbar.findViewById(R.id.toolbar_txt);
@@ -286,10 +389,15 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
 
     private void search() {
         if(Utillity.isNetworkConnected(this)) {
+            if(searchlist!=null)
+            {
+                searchlist.clear();
+            }
+            String searchval=et_search.getText().toString();
             Utillity.showloadingpopup(Search.this);
             HashMap<String,String> params=new HashMap<>();
             params.put("country",CountryId);
-            params.put("key","php");
+            params.put("key",searchval);
             RequestQueue requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
             CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.SEARCH,params,this.sucess(),this.errorlistener());
             customRequest.setRetryPolicy(new DefaultRetryPolicy(30000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -306,7 +414,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     }
     private Response.Listener<JSONObject> sucess()
     {
-
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

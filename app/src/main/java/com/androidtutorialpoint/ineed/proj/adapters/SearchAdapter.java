@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,11 +26,50 @@ import static android.content.ContentValues.TAG;
  * Created by Muhib.
  * Contact Number : +91 9796173066
  */
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Viewholder>
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Viewholder> implements Filterable
 {
     public Context context;
     List<SearchModel.ProfileListBean> searchlist=new ArrayList();
+    List<SearchModel.ProfileListBean> searchlistFilterd=new ArrayList();
+
     Clickitem clickitem;
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String gen=constraint.toString();
+                if(gen.isEmpty())
+                {
+                    searchlistFilterd=searchlist;
+                }
+                else
+                {
+                    List<SearchModel.ProfileListBean> fillist=new ArrayList<>();
+                    for(SearchModel.ProfileListBean row:searchlist)
+                    {
+                        String mygen=row.getUser_gender();
+                        if(mygen.equalsIgnoreCase(gen.toLowerCase()))
+                        {
+                            fillist.add(row);
+                        }
+                    }
+                    searchlistFilterd=fillist;
+                }
+                FilterResults filterResults=new FilterResults();
+                filterResults.values=searchlistFilterd;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+            searchlistFilterd= (List<SearchModel.ProfileListBean>) results.values;
+            notifyDataSetChanged();
+            }
+        };
+    }
+
     public interface Clickitem
     {
         void itemclick(View v,int position);
@@ -36,6 +77,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Viewholder
     public SearchAdapter(Context context, List<SearchModel.ProfileListBean> searchlist) {
         this.context = context;
         this.searchlist = searchlist;
+        this.searchlistFilterd=searchlist;
     }
 
 
@@ -47,13 +89,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Viewholder
 
     @Override
     public void onBindViewHolder(Viewholder holder, int position) {
-        holder.txt_tech.setText(searchlist.get(position).getDesignation());
-        holder.txt_exper.setText(searchlist.get(position).getTotalExperience()+" Year");
-        holder.txt_age.setText(searchlist.get(position).getUser_age()+" Year");
-        holder.txt_country.setText(searchlist.get(position).getUser_nationality());
-        Log.d(TAG, "onBindViewHolder: "+ ApiList.IMG_BASE+searchlist.get(position).getUser_image());
-        if (searchlist.get(position).getUser_image()!=null&&searchlist.get(position).getUser_image().length()>0){
-            Glide.with(context).load(ApiList.IMG_BASE+searchlist.get(position).getUser_image())
+        holder.txt_tech.setText(searchlistFilterd.get(position).getDesignation());
+        holder.txt_exper.setText(searchlistFilterd.get(position).getTotalExperience()+" Year");
+        holder.txt_age.setText(searchlistFilterd.get(position).getUser_age()+" Year");
+        holder.txt_country.setText(searchlistFilterd.get(position).getUser_nationality());
+        holder.txt_gender.setText(searchlistFilterd.get(position).getUser_gender());
+        Log.d(TAG, "onBindViewHolder: "+ ApiList.IMG_BASE+searchlistFilterd.get(position).getUser_image());
+        if (searchlist.get(position).getUser_image()!=null&&searchlistFilterd.get(position).getUser_image().length()>0){
+            Glide.with(context).load(ApiList.IMG_BASE+searchlistFilterd.get(position).getUser_image())
                     .apply(RequestOptions.circleCropTransform()).into(holder.profimg);
         } else {
             Glide.with(context).load(R.drawable.gfgf)
@@ -63,7 +106,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Viewholder
 
     @Override
     public int getItemCount() {
-        return searchlist.size();
+        return searchlistFilterd.size();
     }
     public void setclick(Clickitem clickitem)
     {
@@ -72,7 +115,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Viewholder
 
     public class Viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView profimg;
-        TextView txt_tech,txt_exper,txt_age,txt_country,txtDegree;
+        TextView txt_tech,txt_exper,txt_age,txt_country,txtDegree,txt_gender;
 
         public Viewholder(View itemView) {
             super(itemView);
@@ -82,6 +125,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Viewholder
             txt_age=itemView.findViewById(R.id.txtAge);
             txtDegree=itemView.findViewById(R.id.txtDegree);
             txt_country=itemView.findViewById(R.id.txtNationality);
+            txt_gender=itemView.findViewById(R.id.txt_gender);
+            txt_gender.setVisibility(View.VISIBLE);
             txtDegree.setVisibility(View.GONE);
             itemView.setOnClickListener(this);
         }

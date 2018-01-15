@@ -98,6 +98,18 @@
                 android:drawableStart="@drawable/ic_placeholder"
                 android:drawablePadding="7dp"
                 android:text="UAE Dubai"/>
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/txt_gender"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:drawableLeft="@drawable/ic_gender"
+                android:drawableStart="@drawable/ic_gender"
+                android:drawablePadding="7dp"
+                android:text="UAE Dubai"/>
+
         </LinearLayout>
     </LinearLayout>
 
