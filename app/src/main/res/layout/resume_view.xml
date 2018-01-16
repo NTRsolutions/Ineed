@@ -24,6 +24,7 @@
             android:layout_weight="1"
             android:textColor="@color/white"
             android:padding="8dp"
+            android:autoLink="web"
             android:text="@string/resume_view"
             android:gravity="center_horizontal"
             android:id="@+id/txt_resume_view"
@@ -40,8 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:text="@string/resume_download"
-            android:id="@+id/txt_resume_download"/>
+            android:text="Upload"
+            android:id="@+id/txt_resume_upload"/>
 
 
     </LinearLayout>

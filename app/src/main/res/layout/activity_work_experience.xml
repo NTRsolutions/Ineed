@@ -11,8 +11,29 @@
         android:layout_height="500dp"
         android:orientation="vertical"
         >
-        <include layout="@layout/toolbar"
-            ></include>
+        <include layout="@layout/toolbar" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Current"
+                android:id="@+id/work_exp_radio_current"/>
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Previous"
+                android:id="@+id/work_exp_radio_pre"/>
+
+        </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -42,7 +63,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:hint="@string/txtJobTitle"
-                    android:id="@+id/txt_work_experienceJobtitle"/>
+                    android:id="@+id/edt_work_experienceJobtitle"/>
 
             </LinearLayout>
 
@@ -67,7 +88,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:hint="@string/txtCompanyName"
-                    android:id="@+id/txt_CompanyName"/>
+                    android:id="@+id/workexp_txt_CompanyName"/>
 
             </LinearLayout>
             <LinearLayout
@@ -83,12 +104,13 @@
                     android:textColor="@color/black"
                     android:text="@string/txtWorkingFrom"/>
 
-                <EditText
+                <TextView
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:imeOptions="actionNext"
                     android:inputType="text"
+                    android:gravity="center_vertical"
                     android:hint="@string/txtWorkingFrom"
                     android:id="@+id/txt_work_experienceWorkFrom"/>
 
@@ -97,8 +119,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:id="@+id/addexp_to_layout"
+                android:visibility="gone"
+                android:layout_margin="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="Working To"/>
+
+                <TextView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:hint="Working To"
+                    android:gravity="center_vertical"
+                    android:id="@+id/txt_work_experienceWorkTo"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp">
+                android:layout_marginRight="8dp"
+                android:visibility="gone"
+                android:id="@+id/addexp_notice_layout">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -107,14 +158,14 @@
                     android:textColor="@color/black"
                     android:text="@string/txtNotice"/>
 
-                <EditText
+                <Spinner
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:hint="30 days"
-                    android:id="@+id/txt_work_experienceNotice"/>
+                    android:id="@+id/work_experience_spin_Notice"/>
 
             </LinearLayout>
             <LinearLayout
@@ -131,14 +182,14 @@
                     android:text="@string/txtIndustry"/>
 
 
-                <EditText
+                <Spinner
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:hint="@string/txtIndustry"
-                    android:id="@+id/txt_work_experiencetxtIndustry"/>
+                    android:id="@+id/work_experience_spin_Industry"/>
 
             </LinearLayout>
             <LinearLayout
@@ -157,14 +208,11 @@
                     android:text="@string/txtDepartment"/>
 
 
-                <EditText
+                <Spinner
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:hint="@string/txtDepartment"
-                    android:id="@+id/txt_work_experiencetxtDepartment"/>
+                    android:layout_height="40dp"
+                    android:id="@+id/work_experience_spi_Department"/>
 
             </LinearLayout>
         </LinearLayout>

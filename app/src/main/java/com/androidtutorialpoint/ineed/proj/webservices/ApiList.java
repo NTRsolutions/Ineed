@@ -31,6 +31,10 @@ public interface ApiList {
     String JOBSEEKER_SKILLS = BASE_URL+"jobseekers_skills";
     String JOBSEEKER_PERSONAL_EDIT= BASE_URL+"jobseeker_edit_personal";
     String JOBSEEKER_ADD_EDU = BASE_URL+"jobseeker_add_education";
+    String JOBSEEKER_ADMIN_LIST = BASE_URL+"admin_list";
+    String JOBSEEKER_ADD_WORK = BASE_URL+"jobseekers_add_work_experience";
+    String JOBSEEKER_UPLOAD_RESUME = BASE_URL+"jobseeker_resume";
+
 
     String FILTERS = BASE_URL+"filters";
 }

@@ -6,7 +6,7 @@
     android:background="@drawable/buttoncurve_grey_border">
 
     <TextView
-        android:id="@+id/txt_work_experience_heading"
+        android:id="@+id/txt_edu_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableRight="@drawable/ic_pencil_edit_button"

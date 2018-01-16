@@ -4,18 +4,17 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:background="@drawable/background"
-    >
+    android:background="@drawable/background">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        >
-    <include layout="@layout/toolbar"
-       ></include>
+        android:layout_above="@+id/bottom">
+    <include layout="@layout/toolbar"/>
 
     <ScrollView
         android:id="@+id/title"
+        android:fillViewport="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -44,7 +43,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:hint="@string/name"
-                    android:id="@+id/txt_work_experienceJobtitle"/>
+                    android:id="@+id/txt_personal_edtname"/>
 
             </LinearLayout>
 
@@ -66,10 +65,10 @@
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:hint="Age"
                     android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:hint="@string/age"
-                    android:id="@+id/txt_CompanyName"/>
+                    android:inputType="number"
+                    android:id="@+id/edt_age"/>
 
             </LinearLayout>
             <LinearLayout
@@ -92,31 +91,55 @@
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:hint="@string/designation"
-                    android:id="@+id/txt_work_experienceWorkFrom"/>
+                    android:id="@+id/edt_personal_desi"/>
 
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp">
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp">
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:text="@string/workpermit"/>
+                    android:text="Work permit"/>
 
-                <EditText
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:hint="@string/workpermit"
-                    android:id="@+id/txt_work_experienceNotice"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RadioButton
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:text="Yes"
+                        android:id="@+id/radio_work_permit_yes"/>
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:id="@+id/permit_country_spinner"
+                        android:visibility="gone">
+
+                    </Spinner>
+                    <RadioButton
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:text="No"
+                        android:inputType="text"
+                        android:checked="true"
+                        android:hint="@string/txtDepartment"
+                        android:id="@+id/radio_work_permit_no"/>
+
+                </LinearLayout>
+
+
 
             </LinearLayout>
             <LinearLayout
@@ -136,11 +159,11 @@
                 <EditText
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:imeOptions="actionNext"
                     android:inputType="text"
                     android:hint="@string/experience"
-                    android:id="@+id/txt_work_experiencetxtIndustry"/>
+                    android:id="@+id/spinner_exp"/>
 
             </LinearLayout>
             <LinearLayout
@@ -159,16 +182,41 @@
                     android:text="@string/location"/>
 
 
+                <Spinner
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/spinner_location"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="Nationality"/>
+
+
                 <EditText
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:hint="@string/location"
-                    android:id="@+id/txt_work_experiencetxtDepartment"/>
+                    android:hint="Nationality"
+                    android:id="@+id/spinner_nationality"/>
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -188,11 +236,11 @@
                 <EditText
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:id="@+id/spinner_salary"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:hint="@string/salary"
-                    />
+                    android:hint="@string/salary"/>
 
             </LinearLayout>
             <LinearLayout
@@ -216,38 +264,63 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
-                    android:inputType="text"
+                    android:inputType="number"
+                    android:id="@+id/edt_personal_no"
                     android:hint="@string/phonenumber"/>
 
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp">
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:textColor="@color/black"
-                    android:text="Email"/>
+                    android:text="Gender"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <RadioButton
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:text="Male"
+                        android:checked="true"
+                        android:id="@+id/radio_gender_male"/>
+                    <RadioButton
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:text="Female"
+                        android:inputType="text"
+                        android:hint="@string/txtDepartment"
+                        android:id="@+id/radio_gender_female"/>
+
+                </LinearLayout>
 
 
-                <EditText
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:hint="@string/txtDepartment"
-                    />
 
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
     </LinearLayout>
-   <include layout="@layout/bottom_toolbar"></include>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottom">
+        <include layout="@layout/bottom_toolbar" />
+    </LinearLayout>
+
 </RelativeLayout>
+

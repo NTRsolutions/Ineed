@@ -85,7 +85,9 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone"
+        android:id="@+id/work_exp_to_layout"
         android:layout_marginRight="8dp">
         <TextView
             android:layout_width="0dp"

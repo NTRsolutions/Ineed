@@ -7,9 +7,6 @@ import java.util.List;
  */
 
 public class JobseekerProileData {
-
-
-
     private boolean status;
     private UserListBean user_list;
     private List<WorksListBean> works_list;

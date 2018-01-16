@@ -23,15 +23,15 @@
 
         <item
             android:id="@+id/nav_terms"
-            android:icon="@drawable/ic_logout"
+            android:icon="@drawable/ic_file"
             android:title="@string/terms" />
          <item
             android:id="@+id/nav_about"
-            android:icon="@drawable/ic_about_successful_man"
+            android:icon="@drawable/ic_info"
             android:title="@string/abouttitle" />
         <item
             android:id="@+id/nav_contact"
-            android:icon="@drawable/ic_business_cards"
+            android:icon="@drawable/ic_contact"
             android:title="@string/contactus" />
         <item
             android:id="@+id/nav_help"

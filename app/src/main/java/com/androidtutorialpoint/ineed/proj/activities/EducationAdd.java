@@ -26,6 +26,7 @@ import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
     LinearLayout bottom_toolbar;
     TextView txt_save,txt_cancel;
     EditText edtCourseTitle, edtSpeci, edtyear, edtInsti;
-    String courseTitle, speci, year, insti, userid;
+    String courseTitle="", speci="", year=" ", insti= " ", userid, eduId=" ";
     TinyDB tinyDB;
     LoginData loginData = new LoginData();
     Gson gson = new Gson();
@@ -52,12 +53,35 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         loginData = gson.fromJson(loginPrefData, LoginData.class);
         userid = loginData.getUser_detail().getUser_id();
 
-
 //        find id
         edtCourseTitle = findViewById(R.id.txt_edu_course_title);
         edtInsti = findViewById(R.id.txt_institute);
         edtSpeci = findViewById(R.id.txt_Specialization);
         edtyear = findViewById(R.id.txt_edu_year);
+
+       if (getIntent().hasExtra("title")){
+           courseTitle = getIntent().getStringExtra("title");
+       }
+
+        if (getIntent().hasExtra("speci")){
+            speci = getIntent().getStringExtra("speci");
+        }
+
+        if (getIntent().hasExtra("insti")){
+            insti = getIntent().getStringExtra("insti");
+        }
+
+        if (getIntent().hasExtra("year")){
+            year = getIntent().getStringExtra("year");
+        }
+        if (getIntent().hasExtra("eduId")){
+            eduId = getIntent().getStringExtra("eduId");
+        }
+
+        edtyear.setText(year);
+        edtSpeci.setText(speci);
+        edtInsti.setText(insti);
+        edtCourseTitle.setText(courseTitle);
 
         txt_cancel.setOnClickListener(this);
         txt_save.setOnClickListener(this);
@@ -112,7 +136,12 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
                     if (!courseTitle.isEmpty()){
                         if (!insti.isEmpty()){
                             if (!speci.isEmpty()){
-                                addEdu(userid, courseTitle,speci,insti,year);
+                                if (eduId==null){
+                                    addEdu(userid, courseTitle,speci,insti,year);
+                                } else {
+                                    editEdu(userid, courseTitle,speci,insti,year,eduId);
+                                }
+
                             }else {
                                 Utillity.message(getApplicationContext(), "Please enter specilization");
                             }
@@ -131,6 +160,31 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    private void editEdu(String userId, String courseTitle, String speci, String insti, String year, String eduId) {
+        if(Utillity.isNetworkConnected(EducationAdd.this)) {
+            Utillity.showloadingpopup(EducationAdd.this);
+            RequestQueue queue = VolleySingelton.getsInstance().getmRequestQueue();
+            HashMap<String, String> params = new HashMap<>();
+            params.put("user_id", userId);
+            params.put("course_title", courseTitle);
+            params.put("specilization", speci);
+            params.put("institute", insti);
+            params.put("year", year);
+            params.put("jobseeker_education_id", eduId);
+
+            CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_EDU, params, this.success(), this.errorListener());
+            queue.add(customRequest);
+
+        } else {
+            Snackbar snackbar=Snackbar.make(findViewById(android.R.id.content),getResources().getString(R.string.internetConnection),Snackbar.LENGTH_LONG);
+            View snackbarview=snackbar.getView();
+            snackbarview.setBackgroundColor(getResources().getColor(R.color.appbasecolor));
+            snackbar.show();
+        }
+    }
+
+
     private void addEdu(String userId, String courseTitle, String speci, String insti, String year) {
         if(Utillity.isNetworkConnected(EducationAdd.this)) {
             Utillity.showloadingpopup(EducationAdd.this);
@@ -139,20 +193,19 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
             params.put("user_id", userId);
             params.put("course_title", courseTitle);
             params.put("specilization", speci);
-            params.put("institute ", insti);
+            params.put("institute", insti);
             params.put("year", year);
             CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_EDU, params, this.success(), this.errorListener());
             queue.add(customRequest);
 
-        }
-        else
-        {
+        } else {
             Snackbar snackbar=Snackbar.make(findViewById(android.R.id.content),getResources().getString(R.string.internetConnection),Snackbar.LENGTH_LONG);
             View snackbarview=snackbar.getView();
             snackbarview.setBackgroundColor(getResources().getColor(R.color.appbasecolor));
             snackbar.show();
         }
     }
+
     private Response.ErrorListener errorListener()
     {
         return new Response.ErrorListener() {
@@ -170,6 +223,18 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("TAG", "onResponse: edu"+response.toString());
+                if (response!=null){
+                    try {
+                        if (response.getString("status").equals("true")){
+                            Utillity.message(getApplicationContext(), "Education added successfully");
+                            finish();
+                        } else {
+                            Utillity.message(getApplicationContext(), "Education not added");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
                 Utillity.hidepopup();
 
             }
