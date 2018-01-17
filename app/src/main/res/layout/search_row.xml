@@ -89,15 +89,27 @@
                 android:text="Php Developer"/>
 
             <TextView
-                android:id="@+id/txtNationality"
+                android:id="@+id/txt_salary"
                 android:layout_marginTop="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#000"
-                android:drawableLeft="@drawable/ic_placeholder"
-                android:drawableStart="@drawable/ic_placeholder"
+                android:drawableLeft="@drawable/ic_salary"
+                android:drawableStart="@drawable/ic_salary"
                 android:drawablePadding="7dp"
                 android:text="UAE Dubai"/>
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/txt_gender"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:drawableLeft="@drawable/ic_gender"
+                android:drawableStart="@drawable/ic_gender"
+                android:drawablePadding="7dp"
+                android:text="UAE Dubai"/>
+
         </LinearLayout>
     </LinearLayout>
 

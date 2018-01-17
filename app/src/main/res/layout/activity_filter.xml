@@ -3,92 +3,93 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
+    <include layout="@layout/toolbar"></include>
+    <ScrollView
+        android:layout_below="@+id/toolbar"
         android:id="@+id/filter_spin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp">
-    <TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Job Type"
-    android:textStyle="bold"
-    android:textSize="@dimen/pf_15_txt_size"/>
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/sp_jobtype"
-        android:layout_margin="3dp"
-        >
-    </Spinner>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Experience"
         android:textStyle="bold"
+        android:padding="5dp"
+        android:layout_marginBottom="2dp"
         android:textSize="@dimen/pf_15_txt_size"/>
     <Spinner
+        android:padding="7dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sp_experience"
+        style="@style/spinnerstyle"
         >
     </Spinner>
-    <TextView
-        android:id="@+id/nt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Notice Period"
-        android:textStyle="bold"
-        android:textSize="@dimen/pf_15_txt_size"/>
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/sp_noticeperiod"
-        >
-    </Spinner>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="CTC"
+        android:padding="5dp"
+        android:layout_marginBottom="2dp"
         android:textStyle="bold"
         android:textSize="@dimen/pf_15_txt_size"/>
     <Spinner
+        android:padding="7dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sp_ctc"
+        style="@style/spinnerstyle"
         >
     </Spinner>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Age"
+        android:padding="5dp"
+        android:layout_marginBottom="2dp"
         android:textStyle="bold"
         android:textSize="@dimen/pf_15_txt_size"/>
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sp_age"
+        android:padding="7dp"
+        style="@style/spinnerstyle"
         >
     </Spinner>
+
     <TextView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Gender"
+        android:padding="5dp"
+        android:layout_marginBottom="2dp"
         android:textStyle="bold"
         android:textSize="@dimen/pf_15_txt_size"/>
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sp_gender"
+        android:padding="7dp"
+        style="@style/spinnerstyle"
         >
     </Spinner>
     </LinearLayout>
+    </ScrollView>
     <Button
+        android:id="@+id/bt_fliteredSearch"
         android:layout_marginTop="@dimen/pf_15_txt_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/search1"
+        android:text="@string/filter"
         android:layout_below="@+id/filter_spin"
         android:gravity="center"
         android:background="@color/appbasecolor"
