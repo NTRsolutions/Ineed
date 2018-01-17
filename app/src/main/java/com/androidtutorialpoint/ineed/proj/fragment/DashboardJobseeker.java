@@ -576,7 +576,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 }
             };
