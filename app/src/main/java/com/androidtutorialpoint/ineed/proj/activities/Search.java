@@ -657,6 +657,5 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             int idd = Integer.parseInt(searchlist.get(position).getUser_id());
             Utillity.message(getApplication(), "" + idd);
         }
-
     }
 }
