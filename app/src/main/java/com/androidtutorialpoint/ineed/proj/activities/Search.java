@@ -347,7 +347,9 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                 }
                 filtserch.clear();
                 filtserch.addAll(tab);
-            } else {
+            }
+            else
+            {
                 for (int i = 0; i < searchlist.size(); i++) {
                     SearchModel.ProfileListBean sModel = searchlist.get(i);
                     if (!Gender.isEmpty()) {
