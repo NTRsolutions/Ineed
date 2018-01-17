@@ -151,16 +151,6 @@ public class UpgradePlanActivity extends AppCompatActivity {
         requestMap.put("sdk_token",sdk_token);
         Log.d(TAG, "requestOperation: "+requestMap);
 
-        /*requestMap.put("payment_option","AMEX");
-        requestMap.put("eci",ECI);
-        requestMap.put("order_description",command);
-        requestMap.put("customer_ip",command);
-        requestMap.put("customer_name",sdk_token);
-        if (mobile!=null){
-            requestMap.put("phone_number",mobile);
-        }
-        requestMap.put("settlement_reference",command);
-        requestMap.put("return_url",command);*/
 
         fortRequest.setRequestMap(requestMap);
         fortCallback = FortCallback.Factory.create();

@@ -66,7 +66,6 @@ public class Signup2JobFragment extends Fragment implements PackageAdapter.Click
     RecyclerView recyclerView;
     PackageAdapter packageAdapter;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

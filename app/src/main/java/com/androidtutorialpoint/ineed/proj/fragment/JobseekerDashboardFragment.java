@@ -1,14 +1,20 @@
 package com.androidtutorialpoint.ineed.proj.fragment;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -20,6 +26,9 @@ import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.AboutActivity;
 import com.androidtutorialpoint.ineed.proj.activities.HomeActivity;
+import com.androidtutorialpoint.ineed.proj.activities.Splash2Activity;
+import com.androidtutorialpoint.ineed.proj.activities.UpgradePlanActivity;
+import com.androidtutorialpoint.ineed.proj.adapters.LanguageAdapter;
 import com.androidtutorialpoint.ineed.proj.models.JobseekerDashBoardModel;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
@@ -37,10 +46,11 @@ import static android.content.ContentValues.TAG;
 
 
 public class JobseekerDashboardFragment extends Fragment implements View.OnClickListener{
-    TextView txtMyProfile, txtExpiry, txtViewedProfile, txtPlan;
+    TextView txtMyProfile, txtExpiry, txtViewedProfile, txtPlan, txtUpgrade;
     TinyDB tinyDB;
     Gson gson = new Gson();
     View view;
+    Dialog dialog;
     String userId;
     LoginData loginData = new LoginData();
 
@@ -60,9 +70,11 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
         txtExpiry = (TextView) view.findViewById(R.id.jobseekerdash_expiryDate);
         txtViewedProfile = (TextView) view.findViewById(R.id.jobseekerdash_viewNo);
         txtPlan = (TextView) view.findViewById(R.id.jobseekerdash_currentPlan);
-        ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Dashboard");
+        txtUpgrade = view.findViewById(R.id.jobseekerdash_upgrade);
 
+        ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Dashboard");
 //        set onclick
+        txtUpgrade.setOnClickListener(this);
         txtMyProfile.setOnClickListener(this);
 
         return view;
@@ -75,8 +87,12 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
                 DashboardJobseeker dashboardJobseeker = new DashboardJobseeker();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, dashboardJobseeker).addToBackStack(null).commit();
                 break;
-        }
 
+            case R.id.jobseekerdash_upgrade:
+                startActivity(new Intent(getActivity(), UpgradePlanActivity.class));
+
+                break;
+        }
     }
 
     @Override
@@ -117,10 +133,22 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
                 boolean status=dashBoardModel.isStatus();
                 if(status==true)
                 {
-                    txtExpiry.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_expire_date());
-                    txtPlan.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_id());
-                    int id=dashBoardModel.getJobseeker_dashboard().getUser_viewed();
-                    txtViewedProfile.setText(String.valueOf(id));
+                    if (dashBoardModel.getJobseeker_dashboard().getUser_package_id().equals("Expired")){
+                        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+                        LayoutInflater inflater=getActivity().getLayoutInflater();
+                        View view=inflater.inflate(R.layout.language_selector,null);
+                        builder.setView(view);
+
+                        builder.setCancelable(false);
+                        dialog=builder.create();
+                        dialog.show();
+                    } else {
+                        txtExpiry.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_expire_date());
+                        txtPlan.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_id());
+                        int id=dashBoardModel.getJobseeker_dashboard().getUser_viewed();
+                        txtViewedProfile.setText(String.valueOf(id));
+                    }
+
                 }
                 } catch (Exception e) {
                     e.printStackTrace();
