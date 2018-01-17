@@ -46,7 +46,7 @@ public class EmpPackageAdapter extends RecyclerView.Adapter<EmpPackageAdapter.My
             String pckgExpireDate = jobSeekerPackage.get(position).getEmployers_package_expire_date();
 
             holder.txtPrice.setText("$"+jobSeekerPackage.get(position).getEmployers_package_prize());
-            holder.txtValidity.setText("View up to "+jobSeekerPackage.get(position).getEmployers_package_time_frame()+" CV");
+            holder.txtValidity.setText("Valid for "+jobSeekerPackage.get(position).getEmployers_package_time_frame()+" months");
             holder.txtPckgType.setText(jobSeekerPackage.get(position).getEmployers_package_name().toUpperCase());
             holder.txtCredit.setText(jobSeekerPackage.get(position).getEmployers_package_credit() + " Credits");
 

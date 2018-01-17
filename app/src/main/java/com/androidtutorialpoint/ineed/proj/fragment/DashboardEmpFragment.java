@@ -3,7 +3,9 @@ package com.androidtutorialpoint.ineed.proj.fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -42,6 +44,10 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
@@ -254,7 +260,8 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
 
             // showing bitmap in image view
             Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(imgUser);
-
+            img = Utillity.BitMapToString(bitmap);
+            uploading(img);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -283,8 +290,7 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
     }
 
 
-    private Response.Listener<JSONObject> successProfile()
-    {
+    private Response.Listener<JSONObject> successProfile() {
         Utillity.showloadingpopup(getActivity());
         return new Response.Listener<JSONObject>() {
             @Override
@@ -316,8 +322,7 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
     }
 
 
-    private Response.Listener<JSONObject> success()
-    {
+    private Response.Listener<JSONObject> success() {
         Utillity.showloadingpopup(getActivity());
         return new Response.Listener<JSONObject>() {
             @Override
@@ -350,8 +355,7 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         };
     }
 
-    private Response.ErrorListener error()
-    {
+    private Response.ErrorListener error() {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -361,5 +365,82 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
             }
         };
     }
+
+
+    public void uploading(String img){
+        HashMap<String,String> params=new HashMap<>();
+        params.put("user_image",img);
+        params.put("user_id",userId);
+        CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.EMP_PROFILE_PIC,params,
+                this.success(),this.error());
+        requestQueue.add(customRequest);
+    }
+    public class GetImage extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Utillity.showloadingpopup(getActivity());
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            Bitmap map = null;
+            for (String url : urls) {
+                map = downloadImage(url);
+            }
+            return map;
+        }
+
+        // Sets the Bitmap returned by doInBackground
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            Utillity.hidepopup();
+            imgUser.setImageBitmap(result);
+            img = Utillity.BitMapToString(result);
+
+            Glide.with(getActivity()).load(result)
+                    .apply(RequestOptions.circleCropTransform()).into(imgUser);
+        }
+
+        // Creates Bitmap from InputStream and returns it
+        private Bitmap downloadImage(String url) {
+            Bitmap bitmap = null;
+            InputStream stream = null;
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inSampleSize = 1;
+
+            try {
+                stream = getHttpConnection(url);
+                bitmap = BitmapFactory.
+                        decodeStream(stream, null, bmOptions);
+                stream.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        // Makes HttpURLConnection and returns InputStream
+        private InputStream getHttpConnection(String urlString)
+                throws IOException {
+            InputStream stream = null;
+            URL url = new URL(urlString);
+            URLConnection connection = url.openConnection();
+
+            try {
+                HttpURLConnection httpConnection = (HttpURLConnection) connection;
+                httpConnection.setRequestMethod("GET");
+                httpConnection.connect();
+
+                if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    stream = httpConnection.getInputStream();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return stream;
+        }
+    }
+
 
 }

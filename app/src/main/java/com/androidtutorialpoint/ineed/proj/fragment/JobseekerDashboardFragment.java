@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -91,6 +92,7 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
             params.put("user_id", userId);
             RequestQueue requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
             CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_DASHBOARD, params, this.sucess(), this.error());
+            customRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             requestQueue.add(customRequest);
         }
         else
