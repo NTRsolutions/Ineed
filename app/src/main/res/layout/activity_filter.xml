@@ -28,23 +28,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sp_experience"
+        style="@style/spinnerstyle"
         >
     </Spinner>
-   <!-- <TextView
-        android:visibility="gone"
-        android:id="@+id/nt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Notice Period"
-        android:textStyle="bold"
-        android:textSize="@dimen/pf_15_txt_size"/>
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/sp_noticeperiod"
-        android:visibility="gone"
-        >
-    </Spinner>-->
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sp_ctc"
+        style="@style/spinnerstyle"
         >
     </Spinner>
     <TextView
@@ -73,26 +61,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/sp_age"
         android:padding="7dp"
-
+        style="@style/spinnerstyle"
         >
     </Spinner>
- <!--       <TextView
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Job Type"
-            android:textStyle="bold"
-            android:padding="5dp"
-            android:layout_marginBottom="2dp"
-            android:textSize="@dimen/pf_15_txt_size"/>
-        <Spinner
-            android:visibility="gone"
-            android:padding="7dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/sp_jobtype"
-            >
-        </Spinner>-->
+
     <TextView
 
         android:layout_width="match_parent"
@@ -106,7 +78,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sp_gender"
-        style="@style/simplerectangle"
+        android:padding="7dp"
+        style="@style/spinnerstyle"
         >
     </Spinner>
     </LinearLayout>

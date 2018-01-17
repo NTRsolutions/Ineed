@@ -48,7 +48,7 @@ public class ProfileViewdAdapter extends RecyclerView.Adapter<ProfileViewdAdapte
     public void onBindViewHolder(MyViewHolder holder, int position) {
         if (viewedProflie !=null){
           holder.txtAge.setText(viewedProflie.get(position).getUser_age()+" Year");
-          holder.txtCurrentLocation.setText(viewedProflie.get(position).getUser_permitcountry());
+          holder.txtCurrentLocation.setText(viewedProflie.get(position).getUser_ctc());
           holder.txtDegree.setText(viewedProflie.get(position).getDesignation());
           holder.txtExp.setText(viewedProflie.get(position).getTotalExperience()+" Year");
           holder.txtName.setText(viewedProflie.get(position).getUser_name());
@@ -82,7 +82,7 @@ public class ProfileViewdAdapter extends RecyclerView.Adapter<ProfileViewdAdapte
             txtExp = (TextView) itemView.findViewById(R.id.txtExp);
             txtName = (TextView) itemView.findViewById(R.id.txtName);
             txtDegree = (TextView) itemView.findViewById(R.id.txtDegree);
-            txtCurrentLocation = (TextView) itemView.findViewById(R.id.txtNationality);
+            txtCurrentLocation = (TextView) itemView.findViewById(R.id.txt_salary);
             txtAge = itemView.findViewById(R.id.txtAge);
             imgProfile = itemView.findViewById(R.id.img_profile);
             itemView.setOnClickListener(this);

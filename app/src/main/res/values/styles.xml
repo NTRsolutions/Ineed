@@ -71,7 +71,10 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:layout_margin">3dp</item>
     </style>
-
+    <style name="spinnerstyle">
+        <item name="android:background">@drawable/spinner_arrow</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
     <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

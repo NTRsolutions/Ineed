@@ -90,9 +90,23 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Viewholder
     @Override
     public void onBindViewHolder(Viewholder holder, int position) {
         holder.txt_tech.setText(searchlistFilterd.get(position).getDesignation());
-        holder.txt_exper.setText(searchlistFilterd.get(position).getTotalExperience()+" Year");
+        String fi=searchlistFilterd.get(position).getTotalExperienceyear();
+        String se=searchlistFilterd.get(position).getTotalExperiencemonths();
+        if(fi==null) {
+                fi = "0";
+        }
+        if(se==null) {
+                se = "0";
+        }
+        holder.txt_exper.setText(fi+"."+se+" Year");
         holder.txt_age.setText(searchlistFilterd.get(position).getUser_age()+" Year");
-        holder.txt_country.setText(searchlistFilterd.get(position).getUser_nationality());
+      //  holder.txt_country.setText(searchlistFilterd.get(position).getUser_nationality());
+        String ctc=searchlistFilterd.get(position).getUser_ctc();
+        if(ctc==null)
+        {
+            ctc="0";
+        }
+        holder.txt_ctc.setText(ctc);
         holder.txt_gender.setText(searchlistFilterd.get(position).getUser_gender());
         Log.d(TAG, "onBindViewHolder: "+ ApiList.IMG_BASE+searchlistFilterd.get(position).getUser_image());
         if (searchlist.get(position).getUser_image()!=null&&searchlistFilterd.get(position).getUser_image().length()>0){
@@ -115,7 +129,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Viewholder
 
     public class Viewholder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView profimg;
-        TextView txt_tech,txt_exper,txt_age,txt_country,txtDegree,txt_gender;
+        TextView txt_tech,txt_exper,txt_age,txt_country,txtDegree,txt_gender,txt_ctc;
 
         public Viewholder(View itemView) {
             super(itemView);
@@ -124,7 +138,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.Viewholder
             txt_exper=itemView.findViewById(R.id.txtExp);
             txt_age=itemView.findViewById(R.id.txtAge);
             txtDegree=itemView.findViewById(R.id.txtDegree);
-            txt_country=itemView.findViewById(R.id.txtNationality);
+            txt_ctc=itemView.findViewById(R.id.txt_salary);
             txt_gender=itemView.findViewById(R.id.txt_gender);
             txt_gender.setVisibility(View.VISIBLE);
             txtDegree.setVisibility(View.GONE);

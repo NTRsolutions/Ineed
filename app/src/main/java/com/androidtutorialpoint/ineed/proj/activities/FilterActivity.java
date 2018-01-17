@@ -126,6 +126,10 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
                 for (int i=0;i<ages.size();i++) {
                     age.add(ages.get(i).getAge_name());
                 }
+                age.add(0,"Select Age");
+                ctc.add(0,"Select CTC");
+                exp.add(0,"Select Experience");
+                gender.add(0,"Select Gender");
                 gender.add("Male");
                 gender.add("Female");
                 handelspinners();
@@ -144,12 +148,18 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         fl_age.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Age= (String) parent.getItemAtPosition(position);
+                if(position>0) {
+                    Age = (String) parent.getItemAtPosition(position);
+                }
+                else
+                {
+                    Age="";
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                Gender="";
             }
         });
         ArrayAdapter<String> ctcadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,ctc);
@@ -158,12 +168,18 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         fl_ctc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Ctc= String.valueOf(parent.getItemAtPosition(position));
+                if(position>0) {
+                    Ctc = String.valueOf(parent.getItemAtPosition(position));
+                }
+                else
+                {
+                    Ctc="";
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                Gender="";
             }
         });
         ArrayAdapter<String> expadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,exp);
@@ -172,12 +188,18 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         fl_experience.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Experience= String.valueOf(parent.getItemAtPosition(position));
+                if (position>0) {
+                    Experience = String.valueOf(parent.getItemAtPosition(position));
+                }
+                else
+                {
+                    Experience="";
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                Gender="";
             }
         });
         ArrayAdapter<String> genderadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,gender);
@@ -186,12 +208,15 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         fl_gender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position>0)
             Gender= (String) parent.getItemAtPosition(position);
+                else
+                    Gender="";
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                Gender="";
             }
         });
     }
