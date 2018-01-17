@@ -45,7 +45,7 @@ import com.mukesh.tinydb.TinyDB;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-        FrameLayout frameLayout;
+    FrameLayout frameLayout;
     TextView texttollbar;
     NavigationView navigationView;
     ActionBar actionBar;
@@ -141,7 +141,7 @@ public class HomeActivity extends AppCompatActivity
         dialog.setContentView(R.layout.error_overlay_popup);
         final TextView txtlogout = dialog.findViewById(R.id.txtLogout);
         final TextView txtMsg = dialog.findViewById(R.id.txt_msg);
-        txtMsg.setText("Your package expired please upgrade");
+        txtMsg.setText("Please upgrade your package");
         final Button upgrade=(Button)dialog.findViewById(R.id.overupgrade);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);

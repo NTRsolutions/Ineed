@@ -361,10 +361,14 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
                 jobtitle = edtJobtitle.getText().toString();
                 if (!companyName.isEmpty()){
                     if (!jobtitle.isEmpty()){
-                        if (id==null){
-                            saveApi();
+                        if (empType.length()>0){
+                            if (id==null){
+                                saveApi();
+                            } else {
+                                editsaveApi();
+                            }
                         } else {
-                            editsaveApi();
+                            Utillity.message(WorkExperience.this, "Please select job type");
                         }
                     } else {
                         Utillity.message(WorkExperience.this, "Please enter job title");
@@ -544,7 +548,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 salaryId = salaryListid.get(position);
-                Utillity.message(getApplicationContext(), salaryId);
+
             }
 
             @Override
@@ -568,7 +572,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 jobtypeid = jobTypeIdList.get(position);
-                Utillity.message(getApplicationContext(), jobtypeid);
+
             }
 
             @Override

@@ -86,8 +86,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     ImageView imgUser, imgCamera,imgedit;
     Gson gson;
     LoginData loginData;
-    String img,language, userId, obj, skills, name=" ", age = " ", desig = " ", nationality =  " ",
-            exp = " ", loc = " ", salary = " ", mobile =  " ", workpermit,workpermitid;
+    String img,language, userId, obj, skills, name=" ", age = " ", desig = " ", nationality = " ",
+            exp = " ", loc = " ", salary = " ", mobile =  " ", workpermit;
     RequestQueue requestQueue;
     private ImageInputHelper imageInputHelper;
     JobseekerProileData jobseekerProileData;
@@ -177,7 +177,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
             img = Utillity.BitMapToString(bitmap);
         }
-
 
         txtResumeUpload.setOnClickListener(this);
         txtCancle.setOnClickListener(new View.OnClickListener() {
@@ -375,10 +374,12 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                 }
                                 if (!jsonObject.getString("user_nationality").equals("0") &&jsonObject.getString("user_nationality").length()>1){
                                     nationality  = jobseekerProileData.getUser_list().getUser_nationality();
+                                    String workpc ;
+                                    workpc = (String) jobseekerProileData.getUser_list().getUser_permitcountry();
+
                                     txtNationaliaty.setText(jobseekerProileData.getUser_list().getUser_nationality()
-                                            +", "+" with "+jobseekerProileData.getUser_list().getUser_permitcountry()+" work permit");
+                                            +", "+" with "+workpc+" work permit");
                                     workpermit = jobseekerProileData.getUser_list().getUser_workpermit();
-                                    workpermitid = jobseekerProileData.getUser_list().getUser_permitcountry();
                                 }
                                 if (jsonObject.getString("profile_summary_resumeheadline").length()>1&&jsonObject.getString("profile_summary_resumeheadline").length()>1){
                                     edtobjective.setText(jobseekerProileData.getUser_list().getProfile_summary_resumeheadline());
@@ -457,21 +458,32 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                             txtJobHeading.setText("Current");
                                             noticeLayout.setVisibility(View.VISIBLE);
 //                                            toLayout.setVisibility(View.GONE);
-                                               txtNotice.setText(jobseekerProileData.getWorks_list().get(i).getJobseeker_workexp_noticeperiod() + " days");
-                                        } else {
+                                            txtNotice.setText(jobseekerProileData.getWorks_list().get(i).getJobseeker_workexp_noticeperiod() + " days");
+                                            txtIndustry.setText(worksListBeans.get(i).getJobseeker_workexp_companyindus());
+                                            txtWorkingexp.setText(worksListBeans.get(i).getJobseeker_workexp_totalyear()+" year");
+                                            txtJobTitle.setText(worksListBeans.get(i).getPositions());
+                                            txtCompanyName.setText(worksListBeans.get(i).getJobseeker_workexp_companyname());
+                                            txtDepartment.setText(worksListBeans.get(i).getJobseeker_workexp_dept());
+                                            //   txtWorkSalary.setText(worksListBeans.get(i).getJobseeker_workexp_companyindus());
+
+                                            workLayout.addView(workview);
+
+                                        } else if (worksListBeans.get(i).getJobseeker_workexp_employertype().equals("p")){
                                             txtJobHeading.setText("Previous");
+                                            txtIndustry.setText(worksListBeans.get(i).getJobseeker_workexp_companyindus());
+                                            txtWorkingexp.setText(worksListBeans.get(i).getJobseeker_workexp_totalyear()+" year");
+                                            txtJobTitle.setText(worksListBeans.get(i).getPositions());
+                                            txtCompanyName.setText(worksListBeans.get(i).getJobseeker_workexp_companyname());
+                                            txtDepartment.setText(worksListBeans.get(i).getJobseeker_workexp_dept());
+                                            //   txtWorkSalary.setText(worksListBeans.get(i).getJobseeker_workexp_companyindus());
+                                            workLayout.addView(workview);
+
 //                                            noticeLayout.setVisibility(View.GONE);
 //                                            toLayout.setVisibility(View.VISIBLE);
 //                                            txtTo.setText(" 12/2/2019");
+                                        } else {
+                                            workLayout.removeAllViews();
                                         }
-                                        txtIndustry.setText(worksListBeans.get(i).getJobseeker_workexp_companyindus());
-                                        txtWorkingexp.setText(worksListBeans.get(i).getJobseeker_workexp_totalyear()+" year");
-                                        txtJobTitle.setText(worksListBeans.get(i).getPositions());
-                                        txtCompanyName.setText(worksListBeans.get(i).getJobseeker_workexp_companyname());
-                                        txtDepartment.setText(worksListBeans.get(i).getJobseeker_workexp_dept());
-                                     //   txtWorkSalary.setText(worksListBeans.get(i).getJobseeker_workexp_companyindus());
-
-                                        workLayout.addView(workview);
 
                                         int count = workLayout.getChildCount();
                                         View v = null;
@@ -662,7 +674,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                         JSONObject jsonObject = new JSONObject(response.toString());
                         if (jsonObject.getString("status").equals("true")){
                             edtSkills.setEnabled(false);
-                            Utillity.message(getContext(), "Objective updated successfully");
+                            Utillity.message(getContext(), "Updated successfully");
                             skillsLayout.setVisibility(View.GONE);
                             getProfile();
                         } else {

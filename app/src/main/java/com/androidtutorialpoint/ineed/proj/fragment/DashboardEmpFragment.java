@@ -1,5 +1,6 @@
 package com.androidtutorialpoint.ineed.proj.fragment;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
+import com.androidtutorialpoint.ineed.proj.activities.LoginActivity;
 import com.androidtutorialpoint.ineed.proj.activities.ProfileViewed;
 import com.androidtutorialpoint.ineed.proj.activities.UpgradePlanActivity;
 import com.androidtutorialpoint.ineed.proj.models.EmployerProfileData;
@@ -335,14 +339,29 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
 
                             profileDetailMOdel = gson.fromJson(response.toString(), EmployerProfileData.class);
                             if (profileDetailMOdel.getProfile_detail() != null) {
-                                etName.setText(profileDetailMOdel.getProfile_detail().getUser_fname());
-                                etEmail.setText(profileDetailMOdel.getProfile_detail().getUser_email());
-                                etcontact.setText(profileDetailMOdel.getProfile_detail().getUser_phone());
-                                etcompany.setText(profileDetailMOdel.getProfile_detail().getUser_company());
-                                txtExpired.setText(profileDetailMOdel.getProfile_detail().getUser_package_expire_date());
-                                txtCredit.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_package_credit()));
-                                txtLeft.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_credit_use()));
-                                txt_proftitle.setText(profileDetailMOdel.getProfile_detail().getUser_fname());
+                               if (profileDetailMOdel.getProfile_detail().getUser_package_credit().equals("Expired")){
+                                    setupoverlay();
+                                } else {
+                                   etName.setText(profileDetailMOdel.getProfile_detail().getUser_fname());
+                                   etEmail.setText(profileDetailMOdel.getProfile_detail().getUser_email());
+                                   etcontact.setText(profileDetailMOdel.getProfile_detail().getUser_phone());
+                                   etcompany.setText(profileDetailMOdel.getProfile_detail().getUser_company());
+                                   txtExpired.setText(profileDetailMOdel.getProfile_detail().getUser_package_expire_date());
+                                   txtCredit.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_package_credit()));
+                                   txtLeft.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_credit_use()));
+                                   txt_proftitle.setText(profileDetailMOdel.getProfile_detail().getUser_fname());
+                                   if (profileDetailMOdel.getProfile_detail().getUser_image()!=null){
+                                       String url = ApiList.IMG_BASE+profileDetailMOdel.getProfile_detail().getUser_image();
+                                       GetImage task = new GetImage();
+                                       // Execute the task
+                                       task.execute(new String[] { url });
+                                   }
+                                    else {
+                                       Glide.with(getContext()).load(R.drawable.gfgf)
+                                               .apply(RequestOptions.circleCropTransform()).into(imgUser);
+                                   }
+
+                               }
                             }
                         } else {
                             Utillity.message(getContext(), "No data found");
@@ -354,6 +373,37 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
             }
         };
     }
+
+    private void setupoverlay() {
+        final Dialog dialog=new Dialog(getContext(),android.R.style.Theme_Translucent_NoTitleBar);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.error_overlay_popup);
+        final TextView txtlogout = dialog.findViewById(R.id.txtLogout);
+        final TextView txtMsg = dialog.findViewById(R.id.txt_msg);
+        txtMsg.setText("Your package expired please upgrade");
+        final Button upgrade=(Button)dialog.findViewById(R.id.overupgrade);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        upgrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                startActivity(new Intent(getActivity(), UpgradePlanActivity.class));
+            }
+        });
+        txtlogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(),LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                tinyDB.remove("login_data");
+                getActivity().finish();
+
+            }
+        });
+
+        dialog.show();
+    }
+
 
     private Response.ErrorListener error() {
         return new Response.ErrorListener() {
@@ -372,9 +422,37 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         params.put("user_image",img);
         params.put("user_id",userId);
         CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.EMP_PROFILE_PIC,params,
-                this.success(),this.error());
+                this.successIMg(),this.error());
         requestQueue.add(customRequest);
     }
+
+    private Response.Listener<JSONObject> successIMg() {
+        Utillity.showloadingpopup(getActivity());
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Utillity.hidepopup();
+                Log.d(TAG, "onResponse:data "+response.toString());
+                if (response!=null){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.toString());
+                        if (jsonObject.getString("status").equals("true")){
+                            Utillity.message(getContext(), "Updated successfully");
+                            getProfile();
+                        } else {
+                            Utillity.message(getContext(), "Connection error");
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        };
+    }
+
+
     public class GetImage extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected void onPreExecute() {

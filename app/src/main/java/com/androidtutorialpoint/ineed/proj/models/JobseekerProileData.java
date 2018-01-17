@@ -7,6 +7,14 @@ import java.util.List;
  */
 
 public class JobseekerProileData {
+
+    /**
+     * status : true
+     * user_list : {"user_id":"206","user_fname":"rakhi Singh","user_username":"pq","user_email":"a@g.in","user_phone":"1234956789","user_age":"23","user_country_id":"101","user_country_name":"India","user_workpermit":"no","user_permitcountry_id":null,"user_permitcountry":null,"user_nationality":"Indian","user_image":"download3.jpg","user_resume":"%5Cwritereaddata%5CfloatResumePhoto%5C3834_Mahender_Reddy_Resume.doc","user_payment_id":"8","user_package_price":"1223","user_package_credit":"0","user_package_startdate":"2018-01-17","user_package_expire_date":"2018-06-17","user_package_id":"pro","user_gender":"female","user_dob":"1995-01-12","profile_summary_id":"19","profile_summary_seekerid":"206","profile_summary_totalyear":"4.6","profile_summary_currentsalary":"345667778","profile_summary_companyname":"Ask Online","profile_summary_positions":"android developer","profile_summary_currentcountry_id":"13","profile_summary_currentcountry":"Australia","profile_summary_jobtype_id":"1","profile_summary_jobtype":"Full- Time","profile_summary_noticeperiod_id":"6","profile_summary_noticeperiod":"25 Days","profile_summary_resumeheadline":"This is my objective jolly highlighting hook for the first to know what you rightly there was no answer so that you can do that and it","profile_summary_skills":"android phone, have","profile_summary_exp":"1"}
+     * works_list : [{"jobseeker_workexp_id":"106","jobseeker_workexp_seekerid":"206","jobseeker_workexp_employertype":"","positions":"iOS","jobseeker_workexp_totalyear":"0.0","jobseeker_workexp_noticeperiod_id":"","jobseeker_workexp_noticeperiod":"","jobseeker_workexp_companyname":"ty","jobseeker_workexp_companyindus_id":"4","jobseeker_workexp_companyindus":"Courier/Transportation/Freight","jobseeker_workexp_dept_id":"3","jobseeker_workexp_dept":"Graphic / Web Developer"}]
+     * educations_list : [{"jobseeker_education_id":"55","jobseeker_education_seekerid":"206","jobseeker_education_seekertype":"2","jobseeker_education_course":"10","jobseeker_education_special":"test","jobseeker_education_institute":"rk","jobseeker_education_coursetype":"","jobseeker_education_year":"2010"},{"jobseeker_education_id":"54","jobseeker_education_seekerid":"206","jobseeker_education_seekertype":"2","jobseeker_education_course":"test","jobseeker_education_special":"Science","jobseeker_education_institute":"SK","jobseeker_education_coursetype":"","jobseeker_education_year":"2012"},{"jobseeker_education_id":"51","jobseeker_education_seekerid":"206","jobseeker_education_seekertype":"2","jobseeker_education_course":"B.tech","jobseeker_education_special":"IT","jobseeker_education_institute":"SUS Eng ","jobseeker_education_coursetype":"1","jobseeker_education_year":"2016"}]
+     */
+
     private boolean status;
     private UserListBean user_list;
     private List<WorksListBean> works_list;
@@ -47,41 +55,41 @@ public class JobseekerProileData {
     public static class UserListBean {
         /**
          * user_id : 206
-         * user_fname : Rakhi
+         * user_fname : rakhi Singh
          * user_username : pq
-         * user_email : p@g.in
-         * user_phone : 9958187463
+         * user_email : a@g.in
+         * user_phone : 1234956789
          * user_age : 23
          * user_country_id : 101
          * user_country_name : India
-         * user_workpermit : Yes
-         * user_permitcountry_id : 101
-         * user_permitcountry : India
-         * user_nationality : India
-         * user_image :
-         * user_resume :
+         * user_workpermit : no
+         * user_permitcountry_id : null
+         * user_permitcountry : null
+         * user_nationality : Indian
+         * user_image : download3.jpg
+         * user_resume : %5Cwritereaddata%5CfloatResumePhoto%5C3834_Mahender_Reddy_Resume.doc
          * user_payment_id : 8
-         * user_package_price : 100
+         * user_package_price : 1223
          * user_package_credit : 0
-         * user_package_startdate : 2017-12-26
-         * user_package_expire_date : 2018-01-26
-         * user_package_id : Basic
-         * user_gender : Female
+         * user_package_startdate : 2018-01-17
+         * user_package_expire_date : 2018-06-17
+         * user_package_id : pro
+         * user_gender : female
          * user_dob : 1995-01-12
          * profile_summary_id : 19
          * profile_summary_seekerid : 206
-         * profile_summary_totalyear : 1.6
-         * profile_summary_currentsalary : 7
+         * profile_summary_totalyear : 4.6
+         * profile_summary_currentsalary : 345667778
          * profile_summary_companyname : Ask Online
-         * profile_summary_positions : Android
-         * profile_summary_currentcountry_id : 101
-         * profile_summary_currentcountry : India
+         * profile_summary_positions : android developer
+         * profile_summary_currentcountry_id : 13
+         * profile_summary_currentcountry : Australia
          * profile_summary_jobtype_id : 1
          * profile_summary_jobtype : Full- Time
          * profile_summary_noticeperiod_id : 6
          * profile_summary_noticeperiod : 25 Days
-         * profile_summary_resumeheadline :
-         * profile_summary_skills : android
+         * profile_summary_resumeheadline : This is my objective jolly highlighting hook for the first to know what you rightly there was no answer so that you can do that and it
+         * profile_summary_skills : android phone, have
          * profile_summary_exp : 1
          */
 
@@ -94,8 +102,8 @@ public class JobseekerProileData {
         private String user_country_id;
         private String user_country_name;
         private String user_workpermit;
-        private String user_permitcountry_id;
-        private String user_permitcountry;
+        private Object user_permitcountry_id;
+        private Object user_permitcountry;
         private String user_nationality;
         private String user_image;
         private String user_resume;
@@ -195,19 +203,19 @@ public class JobseekerProileData {
             this.user_workpermit = user_workpermit;
         }
 
-        public String getUser_permitcountry_id() {
+        public Object getUser_permitcountry_id() {
             return user_permitcountry_id;
         }
 
-        public void setUser_permitcountry_id(String user_permitcountry_id) {
+        public void setUser_permitcountry_id(Object user_permitcountry_id) {
             this.user_permitcountry_id = user_permitcountry_id;
         }
 
-        public String getUser_permitcountry() {
+        public Object getUser_permitcountry() {
             return user_permitcountry;
         }
 
-        public void setUser_permitcountry(String user_permitcountry) {
+        public void setUser_permitcountry(Object user_permitcountry) {
             this.user_permitcountry = user_permitcountry;
         }
 
@@ -422,18 +430,18 @@ public class JobseekerProileData {
 
     public static class WorksListBean {
         /**
-         * jobseeker_workexp_id : 90
+         * jobseeker_workexp_id : 106
          * jobseeker_workexp_seekerid : 206
-         * jobseeker_workexp_employertype : p
-         * positions : Android
-         * jobseeker_workexp_totalyear : 1.4
+         * jobseeker_workexp_employertype :
+         * positions : iOS
+         * jobseeker_workexp_totalyear : 0.0
          * jobseeker_workexp_noticeperiod_id :
          * jobseeker_workexp_noticeperiod :
-         * jobseeker_workexp_companyname : ASK
-         * jobseeker_workexp_companyindus_id : 10
-         * jobseeker_workexp_companyindus : IT-Software/Software Services/Web Services
-         * jobseeker_workexp_dept_id : null
-         * jobseeker_workexp_dept : null
+         * jobseeker_workexp_companyname : ty
+         * jobseeker_workexp_companyindus_id : 4
+         * jobseeker_workexp_companyindus : Courier/Transportation/Freight
+         * jobseeker_workexp_dept_id : 3
+         * jobseeker_workexp_dept : Graphic / Web Developer
          */
 
         private String jobseeker_workexp_id;
@@ -529,7 +537,7 @@ public class JobseekerProileData {
             this.jobseeker_workexp_companyindus = jobseeker_workexp_companyindus;
         }
 
-        public Object getJobseeker_workexp_dept_id() {
+        public String getJobseeker_workexp_dept_id() {
             return jobseeker_workexp_dept_id;
         }
 
@@ -548,14 +556,14 @@ public class JobseekerProileData {
 
     public static class EducationsListBean {
         /**
-         * jobseeker_education_id : 51
+         * jobseeker_education_id : 55
          * jobseeker_education_seekerid : 206
          * jobseeker_education_seekertype : 2
-         * jobseeker_education_course : B.tech
-         * jobseeker_education_special : IT
-         * jobseeker_education_institute : SUS Eng
-         * jobseeker_education_coursetype : 1
-         * jobseeker_education_year : 2016
+         * jobseeker_education_course : 10
+         * jobseeker_education_special : test
+         * jobseeker_education_institute : rk
+         * jobseeker_education_coursetype :
+         * jobseeker_education_year : 2010
          */
 
         private String jobseeker_education_id;

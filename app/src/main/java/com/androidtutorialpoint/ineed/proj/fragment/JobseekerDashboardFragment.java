@@ -136,13 +136,13 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
                 if(status==true)
                 {
                     if (dashBoardModel.getJobseeker_dashboard().getUser_package_id().equals("Expired")){
+                        setupoverlay();
 
                     } else {
-//                        txtExpiry.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_expire_date());
-//                        txtPlan.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_id());
-//                        int id=dashBoardModel.getJobseeker_dashboard().getUser_viewed();
-//                        txtViewedProfile.setText(String.valueOf(id));
-                        setupoverlay();
+                        txtExpiry.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_expire_date());
+                        txtPlan.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_id());
+                        int id=dashBoardModel.getJobseeker_dashboard().getUser_viewed();
+                        txtViewedProfile.setText(String.valueOf(id));
                     }
 
                 }

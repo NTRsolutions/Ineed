@@ -5,8 +5,8 @@ package com.androidtutorialpoint.ineed.proj.webservices;
  * Contact Number : +91 9796173066
  */
 public interface ApiList {
-    String BASE_URL="http://www.ineed.biz/webservice/";
-    String IMG_BASE = "http://www.ineed.biz/upload/";
+    String BASE_URL="https://www.ineed.biz/webservice/";
+    String IMG_BASE = "https://www.ineed.biz/upload/";
     String ABOUT=BASE_URL+"about";
     String SIGNUP=BASE_URL+"signup";
     String FORGETPASSWORD=BASE_URL+"forgetpassword";
