@@ -97,9 +97,9 @@ public class CompleteSignup2JobFragment extends Fragment implements PackageAdapt
         final ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View view) {
-              /*  startActivity(new Intent(getActivity(),LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
-                tinyDB.remove("login_data");
-                getActivity().finish();*/
+                startActivity(new Intent(getActivity(),LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                sharpref.remove("login_data");
+                getActivity().finish();
             }
 
             @Override
