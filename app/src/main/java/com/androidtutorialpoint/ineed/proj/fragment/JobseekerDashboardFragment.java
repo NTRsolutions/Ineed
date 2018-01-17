@@ -12,9 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -26,6 +29,7 @@ import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.AboutActivity;
 import com.androidtutorialpoint.ineed.proj.activities.HomeActivity;
+import com.androidtutorialpoint.ineed.proj.activities.LoginActivity;
 import com.androidtutorialpoint.ineed.proj.activities.Splash2Activity;
 import com.androidtutorialpoint.ineed.proj.activities.UpgradePlanActivity;
 import com.androidtutorialpoint.ineed.proj.adapters.LanguageAdapter;
@@ -50,7 +54,6 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
     TinyDB tinyDB;
     Gson gson = new Gson();
     View view;
-    Dialog dialog;
     String userId;
     LoginData loginData = new LoginData();
 
@@ -90,7 +93,6 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
 
             case R.id.jobseekerdash_upgrade:
                 startActivity(new Intent(getActivity(), UpgradePlanActivity.class));
-
                 break;
         }
     }
@@ -134,19 +136,13 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
                 if(status==true)
                 {
                     if (dashBoardModel.getJobseeker_dashboard().getUser_package_id().equals("Expired")){
-                        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-                        LayoutInflater inflater=getActivity().getLayoutInflater();
-                        View view=inflater.inflate(R.layout.language_selector,null);
-                        builder.setView(view);
 
-                        builder.setCancelable(false);
-                        dialog=builder.create();
-                        dialog.show();
                     } else {
-                        txtExpiry.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_expire_date());
-                        txtPlan.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_id());
-                        int id=dashBoardModel.getJobseeker_dashboard().getUser_viewed();
-                        txtViewedProfile.setText(String.valueOf(id));
+//                        txtExpiry.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_expire_date());
+//                        txtPlan.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_id());
+//                        int id=dashBoardModel.getJobseeker_dashboard().getUser_viewed();
+//                        txtViewedProfile.setText(String.valueOf(id));
+                        setupoverlay();
                     }
 
                 }
@@ -171,4 +167,36 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
             }
         };
     }
+
+
+    private void setupoverlay() {
+        final Dialog dialog=new Dialog(getContext(),android.R.style.Theme_Translucent_NoTitleBar);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.error_overlay_popup);
+        final TextView txtlogout = dialog.findViewById(R.id.txtLogout);
+        final TextView txtMsg = dialog.findViewById(R.id.txt_msg);
+        txtMsg.setText("Your package expired please upgrade");
+        final Button upgrade=(Button)dialog.findViewById(R.id.overupgrade);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        upgrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                startActivity(new Intent(getActivity(), UpgradePlanActivity.class));
+            }
+        });
+        txtlogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(),LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                tinyDB.remove("login_data");
+                getActivity().finish();
+
+            }
+        });
+
+        dialog.show();
+    }
+
 }

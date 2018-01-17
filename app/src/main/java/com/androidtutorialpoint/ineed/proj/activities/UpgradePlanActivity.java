@@ -171,6 +171,7 @@ public class UpgradePlanActivity extends AppCompatActivity {
                         }
                         @Override
                         public void onFailure(Map<String, String> requestParamsMap, Map<String, String> fortResponseMap) {
+                            Log.d(TAG, "onFailure: "+fortResponseMap.toString());
                             Toast.makeText(getApplicationContext(), fortResponseMap.get("response_message"),
                                     Toast.LENGTH_SHORT).show();
                         }

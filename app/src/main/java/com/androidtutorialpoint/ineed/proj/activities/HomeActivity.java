@@ -126,12 +126,45 @@ public class HomeActivity extends AppCompatActivity
 //        setdefaultconatiner();
         if (loginData!=null){
             if (loginData.getUser_detail().getUser_payment_id().equals("7")){
-                Intent intent = new Intent(HomeActivity.this, DialogActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+//                Intent intent = new Intent(HomeActivity.this, DialogActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(intent);
+//
+                setupoverlay();
             }
         }
     }
+
+    private void setupoverlay() {
+        final Dialog dialog=new Dialog(HomeActivity.this,android.R.style.Theme_Translucent_NoTitleBar);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.error_overlay_popup);
+        final TextView txtlogout = dialog.findViewById(R.id.txtLogout);
+        final TextView txtMsg = dialog.findViewById(R.id.txt_msg);
+        txtMsg.setText("Your package expired please upgrade");
+        final Button upgrade=(Button)dialog.findViewById(R.id.overupgrade);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        upgrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                startActivity(new Intent(HomeActivity.this, UpgradePlanActivity.class));
+            }
+        });
+        txtlogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this,LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                tinyDB.remove("login_data");
+                finish();
+
+            }
+        });
+
+        dialog.show();
+    }
+
 
     @Override
     public void onBackPressed() {
