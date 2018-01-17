@@ -328,7 +328,133 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
 
 
     }
+    private void experfilter(String experi) {
+        String[] exp=experi.split("-");
+        String Efirst=exp[0];
+        String Esecong=exp[1];
+        Log.d("first",Efirst);
+        Log.d("last",Esecong);
+        Log.d("exp",experi);
+        int startExp= Integer.parseInt(Efirst);
+        int endExp= Integer.parseInt(Esecong);
+        if(value<=0) {
+            if (filtserch.size()>0 ) {
+                ArrayList<SearchModel.ProfileListBean> tab = new ArrayList<>();
 
+                for(int i=0;i<filtserch.size();i++)
+                {
+                    SearchModel.ProfileListBean sModel=filtserch.get(i);
+                    if(!experi.isEmpty())
+                    {
+                        String fi=sModel.getTotalExperienceyear();
+                        String se=sModel.getTotalExperiencemonths();
+
+                        if(fi==null) {
+                            fi = "0";
+                        }
+                        if(se==null) {
+                            se = "0";
+                        }
+                        String ex=fi+"."+se;
+                        float exps= Float.parseFloat(ex);
+                        if(exps>=startExp && exps<=endExp)
+                        {
+                            tab.add(sModel);
+                        }
+                    }
+                }
+                filtserch.clear();
+                filtserch.addAll(tab);
+            }
+            else
+            {
+                for(int i=0;i<searchlist.size();i++)
+                {
+                    SearchModel.ProfileListBean sModel=searchlist.get(i);
+                    if(!experi.isEmpty())
+                    {
+                        String fi=sModel.getTotalExperienceyear();
+                        String se=sModel.getTotalExperiencemonths();
+
+                        if(fi==null) {
+                            fi = "0";
+                        }
+                        if(se==null) {
+                            se = "0";
+                        }
+                        String ex=fi+"."+se;
+                        float exps= Float.parseFloat(ex);
+                        if(exps>=startExp && exps<=endExp)
+                        {
+                            filtserch.add(sModel);
+                        }
+                    }
+                }
+            }
+            if(filtserch.size()<=0)
+            {
+                value=1;
+            }
+        }
+        else
+        {
+            value=1;
+        }
+    }
+    private void ctcfilter(String ctc) {
+        //CTC Filter
+        /*String[] ctcs = ctc.split("-");
+        String Cfirst = ctcs[0];
+        String Csecong = ctcs[1];
+        Log.d("first", Cfirst);
+        Log.d("last", Csecong);
+        Log.d("ctc", ctc);
+        int startCtc = Integer.parseInt(Cfirst);
+        int endCtc = Integer.parseInt(Csecong);*/
+        if(value<=0) {
+            if (filtserch.size()>0 ){
+                ArrayList<SearchModel.ProfileListBean> tab = new ArrayList<>();
+                for (int i = 0; i < filtserch.size(); i++) {
+                    SearchModel.ProfileListBean sModel = filtserch.get(i);
+                    if (!ctc.isEmpty()) {
+                        String ex = sModel.getUser_ctc();
+                        if (ex == null) {
+                            ex = "0-0";
+                        }
+                        if (ctc.equalsIgnoreCase(ex)) {
+                            tab.add(sModel);
+                        }
+                    }
+                }
+                filtserch.clear();
+                filtserch.addAll(tab);
+            }
+            else {
+                for (int i = 0; i < searchlist.size(); i++) {
+                    SearchModel.ProfileListBean sModel = searchlist.get(i);
+                    if (!ctc.isEmpty()) {
+                        String ex = sModel.getUser_ctc();
+                        // int ctcss= Integer.parseInt(ex);
+                        //  if(ctcss>startCtc && ctcss<endCtc)
+                        if (ex == null) {
+                            ex = "0-0";
+                        }
+                        if (ctc.equalsIgnoreCase(ex)) {
+                            filtserch.add(sModel);
+                        }
+                    }
+                }
+            }
+            if(filtserch.size()<=0)
+            {
+                value=2;
+            }
+        }
+        else
+        {
+            value=2;
+        }
+    }
     private void genderfilter(String Gender) {
 
         Log.d("gender",Gender);
@@ -420,95 +546,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         }
     }
 
-    private void ctcfilter(String ctc) {
-        //CTC Filter
-        /*String[] ctcs = ctc.split("-");
-        String Cfirst = ctcs[0];
-        String Csecong = ctcs[1];
-        Log.d("first", Cfirst);
-        Log.d("last", Csecong);
-        Log.d("ctc", ctc);
-        int startCtc = Integer.parseInt(Cfirst);
-        int endCtc = Integer.parseInt(Csecong);*/
-        if(value<=0) {
-            if (filtserch.size()>0 ){
-                for (int i = 0; i < filtserch.size(); i++) {
-                    SearchModel.ProfileListBean sModel = searchlist.get(i);
-                    if (!ctc.isEmpty()) {
-                        String ex = sModel.getUser_ctc();
-                        // int ctcss= Integer.parseInt(ex);
-                        //  if(ctcss>startCtc && ctcss<endCtc)
-                        if (ex == null) {
-                            ex = "0-0";
-                        }
-                        if (ctc.equalsIgnoreCase(ex)) {
-                            filtserch.add(sModel);
-                        }
-                    }
-                }
-            } else {
-                for (int i = 0; i < searchlist.size(); i++) {
-                    SearchModel.ProfileListBean sModel = searchlist.get(i);
-                    if (!ctc.isEmpty()) {
-                        String ex = sModel.getUser_ctc();
-                        // int ctcss= Integer.parseInt(ex);
-                        //  if(ctcss>startCtc && ctcss<endCtc)
-                        if (ex == null) {
-                            ex = "0-0";
-                        }
-                        if (ctc.equalsIgnoreCase(ex)) {
-                            filtserch.add(sModel);
-                        }
-                    }
-                }
-            }
-            if(filtserch.size()<=0)
-            {
-                value=2;
-            }
-        }
-        else
-        {
-            value=2;
-        }
-    }
 
-    private void experfilter(String experi) {
-        String[] exp=experi.split("-");
-        String Efirst=exp[0];
-        String Esecong=exp[1];
-        Log.d("first",Efirst);
-        Log.d("last",Esecong);
-        Log.d("exp",experi);
-        int startExp= Integer.parseInt(Efirst);
-        int endExp= Integer.parseInt(Esecong);
-        for(int i=0;i<searchlist.size();i++)
-        {
-            SearchModel.ProfileListBean sModel=searchlist.get(i);
-            if(!experi.isEmpty())
-            {
-                String fi=sModel.getTotalExperienceyear();
-                String se=sModel.getTotalExperiencemonths();
 
-                if(fi==null) {
-                    fi = "0";
-                }
-                if(se==null) {
-                    se = "0";
-                }
-                String ex=fi+"."+se;
-                float exps= Float.parseFloat(ex);
-                if(exps>=startExp && exps<=endExp)
-                {
-                    filtserch.add(sModel);
-                }
-            }
-        }
-        if(filtserch.size()>=0)
-        {
-            value=1;
-        }
-    }
 
     private void setuptoolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
