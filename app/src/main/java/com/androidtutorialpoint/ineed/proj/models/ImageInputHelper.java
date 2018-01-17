@@ -6,9 +6,23 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
+
+import com.nbsp.materialfilepicker.ui.FilePickerActivity;
+
+import org.bouncycastle.util.encoders.Base64;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+
+import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 /**
  * Created by rakhi on 12/26/2017.
@@ -61,6 +75,8 @@ public class ImageInputHelper {
             imageActionListener.onImageCropped(tempUriFromCrop, tempFileFromCrop);
         }
     }
+
+
 
     /**
      * Starts an intent for selecting image from gallery. The result is returned to the

@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:text="Upload"
+            android:text="Update"
             android:id="@+id/txt_resume_upload"/>
 
 
