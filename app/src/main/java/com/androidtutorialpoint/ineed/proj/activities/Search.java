@@ -602,7 +602,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.SEARCH,params,this.sucess(),this.errorlistener());
             customRequest.setRetryPolicy(new DefaultRetryPolicy(30000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             requestQueue.add(customRequest);
-
         }
         else
         {
