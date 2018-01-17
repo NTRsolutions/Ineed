@@ -2,7 +2,6 @@ package com.androidtutorialpoint.ineed.proj.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,23 +11,20 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -40,6 +36,7 @@ import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.EducationAdd;
 import com.androidtutorialpoint.ineed.proj.activities.HomeActivity;
 import com.androidtutorialpoint.ineed.proj.activities.PersonalAdd;
+import com.androidtutorialpoint.ineed.proj.activities.UploadResumeActivity;
 import com.androidtutorialpoint.ineed.proj.activities.WorkExperience;
 import com.androidtutorialpoint.ineed.proj.models.ImageInputHelper;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
@@ -49,24 +46,21 @@ import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
 import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.common.api.Api;
 import com.google.gson.Gson;
-import com.helpshift.network.HttpEntity;
-import com.helpshift.network.HttpResponse;
 import com.mukesh.tinydb.TinyDB;
+import com.nbsp.materialfilepicker.MaterialFilePicker;
+import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
+import org.bouncycastle.util.encoders.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -74,9 +68,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
 
-import static android.app.Activity.RESULT_OK;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 /**
@@ -101,7 +97,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     TinyDB tinyDB;
     LinearLayout workLayout,workview, eduLayout, eduView, skillsLayout, noticeLayout, toLayout;
     TextView txtResumeView, txtResumeUpload, txtSkillsEditHeading, txtSaveObj, txtCancle, txt_personal, txtName, txtAge, txtDesignation, txtNationaliaty,
-            txtExp, txtCurrentLocation, txtSalary, txtMobile, txtEmail, txtSkills, txtWorkingexp,txtJobTitle, txtCompanyName, txtJobHeading, txtWorkingFrom, txtWrokingTo,
+            txtExp, txtCurrentLocation, txtSalary,txtWorkSalary, txtJobtype, txtMobile, txtEmail, txtWorkingexp,txtJobTitle, txtCompanyName, txtJobHeading, txtWorkingFrom, txtWrokingTo,
     txtNotice, txtIndustry, txtDepartment,txtSaveSkills, txtCancelSkill, txtTo,txtCoursetype, txtSpecilization, txtInstitute, txtYear, txtDepartMent,txt_addwk;
     EditText edtobjective, edtSkills;
 
@@ -120,7 +116,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Profile");
 
-        workLayout = (LinearLayout)view.findViewById(R.id.work_exp);
+        workLayout = view.findViewById(R.id.work_exp);
         skillsLayout = view.findViewById(R.id.ll_savecancelskills);
         workview = view.findViewById(R.id.layout_work_exp);
         eduLayout = view.findViewById(R.id.edu_exp);
@@ -129,10 +125,9 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         txtResumeUpload = view.findViewById(R.id.txt_resume_upload);
 
 //        find id
-        imgCamera = (ImageView) view.findViewById(R.id.edt_img_camera);
-        imgUser = (ImageView) view.findViewById(R.id.edt_img_profile);
+        imgCamera =  view.findViewById(R.id.edt_img_camera);
+        imgUser =  view.findViewById(R.id.edt_img_profile);
         imgedit=view.findViewById(R.id.edt_personal_img_edit);
-        imgedit.setOnClickListener(this);
         txtName = view.findViewById(R.id.jobseerker_profileName);
         txtAge = view.findViewById(R.id.jobseeker_profileAge);
         txtDesignation = view.findViewById(R.id.jobseeker_profileDesi);
@@ -143,22 +138,23 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         txtSalary = view.findViewById(R.id.jobseeker_profileSalary);
         txtMobile = view.findViewById(R.id.jobseerker_profileMobile);
         txtEmail = view.findViewById(R.id.jobseerker_profileEmail);
-        txtSkills = view.findViewById(R.id.txt_skills_value);
         edtobjective = view.findViewById(R.id.txt_objective);
         edtSkills = view.findViewById(R.id.txt_skills_value);
         txtCancle = view.findViewById(R.id.txt_cancel);
         txtSaveObj = view.findViewById(R.id.txt_save);
         txtaddeduc = view.findViewById(R.id.btnAddEducation);
-        txtaddeduc.setOnClickListener(this);
-        eduLayout = view.findViewById(R.id.layout_edu_exp);
         txtSkillsEditHeading = view.findViewById(R.id.txt_skills_heading);
         txtSaveSkills = view.findViewById(R.id.txt_saveskills);
         txtCancelSkill = view.findViewById(R.id.txt_cancelskills);
-
         ll_savecancel = (LinearLayout) view.findViewById(R.id.ll_savecancel);
         txt_personal = (TextView) view.findViewById(R.id.txt_objective_heading);
         txt_addwk=view.findViewById(R.id.btnAddwk);
+
+
+//        set onclick listener
+        txtaddeduc.setOnClickListener(this);
         txtSkillsEditHeading.setOnClickListener(this);
+        imgedit.setOnClickListener(this);
         txtSaveSkills.setOnClickListener(this);
         txtCancelSkill.setOnClickListener(this);
 
@@ -269,7 +265,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
                 }
             }
         };
@@ -282,6 +277,9 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         String loginPrefData = tinyDB.getString("login_data");
         loginData = gson.fromJson(loginPrefData, LoginData.class);
         userId = loginData.getUser_detail().getUser_id();
+//        set text
+        txtEmail.setText(loginData.getUser_detail().getUser_email());
+
         language = tinyDB.getString("language_id");
         Utillity.checkCameraPermission(getActivity());
         getProfile();
@@ -290,26 +288,18 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         imageInputHelper.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 0) {
-            if (resultCode == Activity.RESULT_OK) {
-                Uri selectedFileURI = data.getData();
-                File file = new File(selectedFileURI.getPath().toString());
-                String im = file.getPath();
-                Log.d("", "File : " + file.getName());
-                txtResumeView.setText(file.getPath());
-
-            }
-        }
     }
 
     @Override
     public void onImageSelectedFromGallery(Uri uri, File imageFile) {
         imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
     }
+
+
 
     @Override
     public void onImageTakenFromCamera(Uri uri, File imageFile) {
@@ -374,9 +364,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                     txtName.setText(jobseekerProileData.getUser_list().getUser_fname());
                                     name = jobseekerProileData.getUser_list().getUser_fname();
                                   }
-                                if (jsonObject.getString("user_email").length()>1&&jsonObject.getString("user_email").length()>1){
-                                    txtEmail.setText(jobseekerProileData.getUser_list().getUser_email());
-                                }
+
                                 if (jsonObject.getString("user_phone").length()>1&&jsonObject.getString("user_phone").length()>1){
                                     txtMobile.setText(jobseekerProileData.getUser_list().getUser_phone());
                                     mobile = jobseekerProileData.getUser_list().getUser_phone();
@@ -396,7 +384,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                     edtobjective.setText(jobseekerProileData.getUser_list().getProfile_summary_resumeheadline());
                                 }
                                 if (jsonObject.getString("profile_summary_skills").length()>1&&jsonObject.getString("profile_summary_skills").length()>1){
-                                    txtSkills.setText(jobseekerProileData.getUser_list().getProfile_summary_skills());
+                                    edtSkills.setText(jobseekerProileData.getUser_list().getProfile_summary_skills());
                                 }
                                 if (jsonObject.getString("profile_summary_currentsalary")!=null){
                                     Log.d(TAG, "onResponse: "+jobseekerProileData.getUser_list().getProfile_summary_currentsalary());
@@ -424,19 +412,14 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                     Glide.with(getContext()).load(R.drawable.gfgf)
                                             .apply(RequestOptions.circleCropTransform()).into(imgUser);
                                 }
-
                                 if (jsonObject.getString("user_resume")!=null){
-                                    String text = ApiList.IMG_BASE+jsonObject.getString("user_resume");
-                                    final File myFile = new File(text);
-                                    File file=myFile;
-                                    final Uri uri = Uri.fromFile(file);
+                                    final String text = ApiList.IMG_BASE+jsonObject.getString("user_resume");
                                     txtResumeView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
-                                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                                            intent.setDataAndType(uri, "application/msword");
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            getActivity().startActivity(intent);
+                                            Intent i = new Intent(Intent.ACTION_VIEW);
+                                            i.setData(Uri.parse(text));
+                                            startActivity(i);
                                         }
                                     });
                                 }
@@ -460,6 +443,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                         txtTo = workview.findViewById(R.id.txt_work_experienceTo);
                                         noticeLayout = workview.findViewById(R.id.notice_layout);
                                         toLayout = workview.findViewById(R.id.to_layout);
+                                        txtWorkSalary = workview.findViewById(R.id.txt_work_experienceSalary);
+                                        txtJobtype = workview.findViewById(R.id.txt_work_experienceJobType);
 
                                         Collections.sort(worksListBeans, new Comparator<JobseekerProileData.WorksListBean>() {
                                             @Override
@@ -484,6 +469,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                         txtJobTitle.setText(worksListBeans.get(i).getPositions());
                                         txtCompanyName.setText(worksListBeans.get(i).getJobseeker_workexp_companyname());
                                         txtDepartment.setText(worksListBeans.get(i).getJobseeker_workexp_dept());
+                                     //   txtWorkSalary.setText(worksListBeans.get(i).getJobseeker_workexp_companyindus());
+
                                         workLayout.addView(workview);
 
                                         int count = workLayout.getChildCount();
@@ -510,11 +497,10 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                                     intent.putExtra("type", txtJobHeading.getText());
                                                     intent.putExtra("exp", txtExp.getText().toString());
                                                     intent.putExtra("indu", txtIndustry.getText().toString());
-                                                    intent.putExtra("deprt", txtDepartment.getText().toString());
+                                                    intent.putExtra("depart", txtDepartment.getText().toString());
                                                     intent.putExtra("title", txtJobTitle.getText().toString());
-
+                                                    intent.putExtra("notice", txtNotice.getText().toString());
                                                     intent.putExtra("id", worksListBeans.get(finalK).getJobseeker_workexp_id());
-                                                    Utillity.message(getActivity(), worksListBeans.get(finalK).getJobseeker_workexp_id());
                                                     startActivity(intent);
                                                 }
                                             });
@@ -576,16 +562,11 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                                         intent.putExtra("year", txtYear.getText().toString());
                                                         intent.putExtra("eduId", educationsListBeans.get(finalK).getJobseeker_education_id());
                                                         startActivity(intent);
-
                                                     }
                                                 });
                                             }
-
-
                                         }
-
                                     }
-
                                 } else {
                                     eduLayout.setVisibility(View.GONE);
                                 }
@@ -641,7 +622,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                 skillsLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.txt_resume_upload:
-                showFileChooser();
+                startActivity(new Intent(getActivity(), UploadResumeActivity.class));
                 break;
             case R.id.txt_saveskills:
                 skills = edtSkills.getText().toString();
@@ -661,22 +642,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         }
     }
 
-    private static final int FILE_SELECT_CODE = 0;
-
-    private void showFileChooser() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("application/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        try {
-            startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"),
-                    0);
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(getActivity(), "Please install a File Manager.",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
     public void updateSkill(){
         HashMap<String,String> params=new HashMap<>();
         params.put("skills",skills);
@@ -685,7 +650,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                 this.successSkills(),this.error());
         requestQueue.add(customRequest);
     }
-
 
     private Response.Listener<JSONObject> successSkills() {
         Utillity.showloadingpopup(getActivity());
@@ -714,43 +678,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             }
         };
     }
-
-
-    public void upResume(String img){
-        HashMap<String,String> params=new HashMap<>();
-        params.put("user_file",img);
-        params.put("user_id",userId);
-        CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_UPLOAD_RESUME,params,
-                this.successResume(),this.error());
-        requestQueue.add(customRequest);
-    }
-
-
-    private Response.Listener<JSONObject> successResume() {
-        Utillity.showloadingpopup(getActivity());
-        return new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Utillity.hidepopup();
-                Log.d(TAG, "onResponse:data "+response.toString());
-                if (response!=null){
-                    try {
-                        JSONObject jsonObject = new JSONObject(response.toString());
-                        if (jsonObject.getString("status").equals("true")){
-                            Log.d(TAG, "onResponse: "+response);
-                        } else {
-                            Utillity.message(getContext(), "Connection error");
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        };
-    }
-
 
     public void uploading(String img){
         HashMap<String,String> params=new HashMap<>();

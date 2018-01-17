@@ -49,13 +49,16 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
     LinearLayout bottom_toolbar, noticeLayout, toLayout;
     TextView txt_save,txt_cancel, txtFrom, txtTo;
     EditText edtJobtitle, edtCompanyName;
-    String jobtitle="", noticeid = " ", indu ,indId =" ",id, companyName, workingfrom=" ", deptid=" ",workingTo=" ", userid,name, desi,
-            empType="";
-    Spinner  spinner_exp, spinner_notice, spinner_department;
-    ArrayList<String> noticeName, noticeId, expName, expIdList, departmenyName, deptIdList;
+    String jobtitle="", noticeid = " ", indu ,noticePeriod=" ", departType="",indId =" ",id, companyName, workingfrom=" ", deptid=" ",workingTo=" ", userid,name, desi,
+            empType="", salaryId="", jobtypeid="", jobTypename=" ", salaryName=" ";
+    Spinner spinner_indus, spinner_notice, spinner_department, spinner_jobtype, spinner_salary;
+    ArrayList<String> noticeName, noticeId, industryName, industryId, departmenyName, deptIdList,
+            salaryList, salaryListid, jobtypeList, jobTypeIdList;
     List<AdminList.NoticeperiodsBean> noticeperiodsBeans = new ArrayList<>();
     List<AdminList.DepartmentsBean> departmentsBeans = new ArrayList<>();
     List<AdminList.IndustriesBean> industries = new ArrayList<>();
+    List<AdminList.CtcsBean> ctcsBeans = new ArrayList<>();
+    List<AdminList.JobtypesBean> jobtypesBeans = new ArrayList<>();
     LoginData loginData;
     Gson gson = new Gson();
     TinyDB tinyDB;
@@ -75,10 +78,12 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
 
 
 //        find id
+        spinner_jobtype = findViewById(R.id.work_experience_spi_jobtype);
+        spinner_salary = findViewById(R.id.work_experience_spi_salary);
         edtJobtitle = findViewById(R.id.edt_work_experienceJobtitle);
         edtCompanyName = findViewById(R.id.workexp_txt_CompanyName);
         spinner_department = findViewById(R.id.work_experience_spi_Department);
-        spinner_exp = findViewById(R.id.work_experience_spin_Industry);
+        spinner_indus = findViewById(R.id.work_experience_spin_Industry);
         spinner_notice = findViewById(R.id.work_experience_spin_Notice);
         txtFrom = findViewById(R.id.txt_work_experienceWorkFrom);
         txtTo = findViewById(R.id.txt_work_experienceWorkTo);
@@ -86,13 +91,6 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         previousRadio = findViewById(R.id.work_exp_radio_pre);
         noticeLayout = findViewById(R.id.addexp_notice_layout);
         toLayout = findViewById(R.id.addexp_to_layout);
-        /* intent.putExtra("jobtitle", txtJobTitle.getText().toString());
-                                                    intent.putExtra("compName", txtCompanyName.getText().toString());
-                                                    intent.putExtra("type", txtJobHeading.getText());
-                                                    intent.putExtra("exp", txtExp.getText().toString());
-                                                    intent.putExtra("indu", txtIndustry.getText().toString());
-                                                    intent.putExtra("deprt", txtDepartment.getText().toString());
-                                                   */
 
         if (getIntent().hasExtra("type")){
             empType = getIntent().getStringExtra("type");
@@ -123,6 +121,13 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
 
         if (getIntent().hasExtra("indu")){
             indu = getIntent().getStringExtra("indu");
+        }
+
+        if (getIntent().hasExtra("depart")){
+            departType = getIntent().getStringExtra("depart");
+        }
+        if (getIntent().hasExtra("notice")){
+            noticePeriod = getIntent().getStringExtra("notice");
         }
 
         getAdminList();
@@ -178,9 +183,18 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
                 if (response!=null){
                     Log.d("TAG", "onResponse: datasuccesss"+response.toString());
                     adminList = gson.fromJson(response.toString(), AdminList.class);
+                    departmenyName = new ArrayList<>();
+                    deptIdList = new ArrayList<>();
+                    ctcsBeans = new ArrayList<>();
+                    jobtypesBeans = new ArrayList<>();
+                    jobTypeIdList = new ArrayList<>();
+                    jobtypeList = new ArrayList<>();
+                    salaryList = new ArrayList<>();
+                    salaryListid = new ArrayList<>();
+
                     try {
                         if (response.getString("status").equals("true")){
-                            //                            for age
+//                            for notice
                             noticeperiodsBeans = adminList.getNoticeperiods();
                             noticeName =new ArrayList<>();
                             noticeId =new ArrayList<>();
@@ -195,11 +209,31 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
                             notice();
 
 
-//                            for department
 
                             departmentsBeans = adminList.getDepartments();
-                            departmenyName = new ArrayList<>();
-                            deptIdList = new ArrayList<>();
+//                            for jobtype
+                            jobtypesBeans = adminList.getJobtypes();
+                            for(int i = 0; i< jobtypesBeans.size(); i++)
+                            {
+                                String CName= jobtypesBeans.get(i).getJobtype_name();
+                                String CId= jobtypesBeans.get(i).getJobtype_id();
+                                jobTypeIdList.add(CId);
+                                jobtypeList.add(CName);
+                            }
+                            jobTypeSpinner();
+
+//                            for ctc
+                            ctcsBeans = adminList.getCtcs();
+                            for(int i = 0; i< ctcsBeans.size(); i++)
+                            {
+                                String CName= ctcsBeans.get(i).getCtc_name();
+                                String CId= ctcsBeans.get(i).getCtc_id();
+                                salaryListid.add(CId);
+                                salaryList.add(CName);
+                            }
+                            salarySpinner();
+
+//                            for department
                             for(int i = 0; i< departmentsBeans.size(); i++)
                             {
                                 String CName= departmentsBeans.get(i).getDepartment_name();
@@ -211,16 +245,16 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
 //                            for industry
 
                             industries = adminList.getIndustries();
-                            expName = new ArrayList<>();
-                            expIdList = new ArrayList<>();
+                            industryName = new ArrayList<>();
+                            industryId = new ArrayList<>();
                             for(int i = 0; i< industries.size(); i++)
                             {
                                 String CName= industries.get(i).getIndustry_name();
                                 String CId= industries.get(i).getIndustry_id();
-                                expName.add(CName);
-                                expIdList.add(CId);
+                                industryName.add(CName);
+                                industryId.add(CId);
                             }
-                            expSpinner();
+                            induSpinner();
 
                         } else {
                             Utillity.message(WorkExperience.this, "Connection error");
@@ -455,6 +489,11 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row,noticeName);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
         spinner_notice.setAdapter(arrayAdapter);
+        if (noticePeriod != null) {
+            int spinnerPosition = arrayAdapter.getPosition(noticePeriod);
+            spinner_notice.setSelection(spinnerPosition);
+        }
+
         spinner_notice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -469,15 +508,20 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    private void expSpinner() {
-        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row,expName);
+    private void induSpinner() {
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row, industryName);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
-        spinner_exp.setAdapter(arrayAdapter);
-//        spinner_exp.setSelection(indu);
-        spinner_exp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner_indus.setAdapter(arrayAdapter);
+        if (indu != null) {
+            int spinnerPosition = arrayAdapter.getPosition(indu);
+            spinner_indus.setSelection(spinnerPosition);
+        }
+
+//        spinner_indus.setSelection(indu);
+        spinner_indus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                indId = expIdList.get(position);
+                indId = industryId.get(position);
             }
 
             @Override
@@ -487,10 +531,63 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         });
     }
 
+    private void salarySpinner() {
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row, salaryList);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
+        spinner_salary.setAdapter(arrayAdapter);
+//        if (departType != null) {
+//            int spinnerPosition = arrayAdapter.getPosition(departType);
+//            spinner_department.setSelection(spinnerPosition);
+//        }
+
+        spinner_salary.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                salaryId = salaryListid.get(position);
+                Utillity.message(getApplicationContext(), salaryId);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+
+    private void jobTypeSpinner() {
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row, jobtypeList);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
+        spinner_jobtype.setAdapter(arrayAdapter);
+//        if (departType != null) {
+//            int spinnerPosition = arrayAdapter.getPosition(departType);
+//            spinner_department.setSelection(spinnerPosition);
+//        }
+
+        spinner_jobtype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                jobtypeid = jobTypeIdList.get(position);
+                Utillity.message(getApplicationContext(), jobtypeid);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+
     private void deptSpinner() {
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row, departmenyName);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
         spinner_department.setAdapter(arrayAdapter);
+        if (departType != null) {
+            int spinnerPosition = arrayAdapter.getPosition(departType);
+            spinner_department.setSelection(spinnerPosition);
+        }
+
         spinner_department.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
