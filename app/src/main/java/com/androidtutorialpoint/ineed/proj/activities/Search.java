@@ -480,7 +480,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                     SearchModel.ProfileListBean sModel = searchlist.get(i);
                     if (!Gender.isEmpty()) {
                         String gen = sModel.getUser_gender();
-                        if (gen.equalsIgnoreCase(Gender)) {
+                        if (gen.equalsIgnoreCase(Gender))
+                        {
                             if (!filtserch.contains(sModel.getUser_id())) {
                                 filtserch.add(sModel);
                             }
@@ -545,9 +546,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             value=3;
         }
     }
-
-
-
 
     private void setuptoolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
