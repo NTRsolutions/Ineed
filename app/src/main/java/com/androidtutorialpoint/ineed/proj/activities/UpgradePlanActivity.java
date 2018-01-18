@@ -78,7 +78,6 @@ public class UpgradePlanActivity extends AppCompatActivity {
         userId = loginData.getUser_detail().getUser_id();
         language=tinyDB.getString("language_id");
 
-
         if(loginData.getUser_detail().getUser_type().equals("2"))     // Checking is it Jobseeker
         {
             JobPlanFragment istFragment=new JobPlanFragment();

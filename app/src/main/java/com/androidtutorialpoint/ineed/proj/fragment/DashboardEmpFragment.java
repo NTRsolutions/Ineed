@@ -82,7 +82,7 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         tinyDB = new TinyDB(getContext());
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
 
-//             find id
+//             find jobseekerid
         txtCredit = view.findViewById(R.id.credit_point);
         txtUpgrade = view.findViewById(R.id.txtUpgradePlan);
         txtCancle = view.findViewById(R.id.txt_cancel);

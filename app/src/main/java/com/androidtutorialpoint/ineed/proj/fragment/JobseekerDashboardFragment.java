@@ -68,7 +68,7 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
         loginData= gson.fromJson(data, LoginData.class);
         userId = loginData.getUser_detail().getUser_id();
 
-//        find id
+//        find jobseekerid
         txtMyProfile = (TextView) view.findViewById(R.id.jobseekerdash_txtMyProfile);
         txtExpiry = (TextView) view.findViewById(R.id.jobseekerdash_expiryDate);
         txtViewedProfile = (TextView) view.findViewById(R.id.jobseekerdash_viewNo);

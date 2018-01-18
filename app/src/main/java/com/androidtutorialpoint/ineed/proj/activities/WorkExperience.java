@@ -49,7 +49,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
     LinearLayout bottom_toolbar, noticeLayout, toLayout;
     TextView txt_save,txt_cancel, txtFrom, txtTo;
     EditText edtJobtitle, edtCompanyName;
-    String jobtitle="", noticeid = " ", indu ,noticePeriod=" ", departType="",indId =" ",id, companyName, workingfrom=" ", deptid=" ",workingTo=" ", userid,name, desi,
+    String jobtitle="", noticeid = " ", indu ,noticePeriod=" ",salaryedit = " ",jobtypeedit= " ", departType="",indId =" ",id, companyName, workingfrom=" ", deptid=" ",workingTo=" ", userid,name, desi,
             empType="", salaryId="", jobtypeid="", jobTypename=" ", salaryName=" ";
     Spinner spinner_indus, spinner_notice, spinner_department, spinner_jobtype, spinner_salary;
     ArrayList<String> noticeName, noticeId, industryName, industryId, departmenyName, deptIdList,
@@ -75,9 +75,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         loginData = gson.fromJson(loginPrefData, LoginData.class);
         userid = loginData.getUser_detail().getUser_id();
 
-
-
-//        find id
+//        find jobseekerid
         spinner_jobtype = findViewById(R.id.work_experience_spi_jobtype);
         spinner_salary = findViewById(R.id.work_experience_spi_salary);
         edtJobtitle = findViewById(R.id.edt_work_experienceJobtitle);
@@ -108,8 +106,8 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             }
         }
 
-        if (getIntent().hasExtra("id")){
-            id = getIntent().getStringExtra("id");
+        if (getIntent().hasExtra("jobseekerid")){
+            id = getIntent().getStringExtra("jobseekerid");
         }
         if (getIntent().hasExtra("title")){
             edtJobtitle.setText(getIntent().getStringExtra("title"));
@@ -128,6 +126,16 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         }
         if (getIntent().hasExtra("notice")){
             noticePeriod = getIntent().getStringExtra("notice");
+        }
+
+        /*   intent.putExtra("salary", (String) worksListBeans.get(finalK).getJobseeker_workexp_annualsalary());
+                                                    intent.putExtra("jobtype", (S*/
+
+        if (getIntent().hasExtra("salary")){
+            salaryedit = getIntent().getStringExtra("salary");
+        }
+        if (getIntent().hasExtra("jobtype")){
+            jobtypeedit = getIntent().getStringExtra("jobtype");
         }
 
         getAdminList();
@@ -207,8 +215,6 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
                                 noticeId.add(CId);
                             }
                             notice();
-
-
 
                             departmentsBeans = adminList.getDepartments();
 //                            for jobtype
@@ -415,6 +421,8 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             params.put("notice",noticeid);
             params.put("department",deptid);
             params.put("jobseeker_workexp_id", id);
+            params.put("jobtype", jobtypeid);
+            params.put("salary", salaryId);
 
             CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_WORK,
                     params, this.success(), this.errorListener());
@@ -444,6 +452,8 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             params.put("industry", indId);
             params.put("notice",noticeid);
             params.put("department",deptid);
+            params.put("jobtype", jobtypeid);
+            params.put("salary", salaryId);
 
             CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_WORK,
                     params, this.success(), this.errorListener());
@@ -539,10 +549,10 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row, salaryList);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
         spinner_salary.setAdapter(arrayAdapter);
-//        if (departType != null) {
-//            int spinnerPosition = arrayAdapter.getPosition(departType);
-//            spinner_department.setSelection(spinnerPosition);
-//        }
+        if (salaryedit != null) {
+            int spinnerPosition = arrayAdapter.getPosition(salaryedit);
+            spinner_salary.setSelection(spinnerPosition);
+        }
 
         spinner_salary.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -563,10 +573,10 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row, jobtypeList);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
         spinner_jobtype.setAdapter(arrayAdapter);
-//        if (departType != null) {
-//            int spinnerPosition = arrayAdapter.getPosition(departType);
-//            spinner_department.setSelection(spinnerPosition);
-//        }
+        if (jobtypeedit != null) {
+            int spinnerPosition = arrayAdapter.getPosition(jobtypeedit);
+            spinner_jobtype.setSelection(spinnerPosition);
+        }
 
         spinner_jobtype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

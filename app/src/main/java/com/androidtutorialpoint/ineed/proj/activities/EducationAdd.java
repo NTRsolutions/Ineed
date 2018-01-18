@@ -53,7 +53,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         loginData = gson.fromJson(loginPrefData, LoginData.class);
         userid = loginData.getUser_detail().getUser_id();
 
-//        find id
+//        find jobseekerid
         edtCourseTitle = findViewById(R.id.txt_edu_course_title);
         edtInsti = findViewById(R.id.txt_institute);
         edtSpeci = findViewById(R.id.txt_Specialization);

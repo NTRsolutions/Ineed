@@ -809,8 +809,6 @@
                         android:padding="5dp"
                         android:id="@+id/txt_resume_heading"
                         android:textColor="@color/textColor"
-                        android:drawableRight="@drawable/ic_pencil_edit_button"
-                        android:drawableEnd="@drawable/ic_pencil_edit_button"
                         android:textSize="@dimen/small_size"
                         android:textStyle="bold"/>
                     <include layout="@layout/resume_view"/>

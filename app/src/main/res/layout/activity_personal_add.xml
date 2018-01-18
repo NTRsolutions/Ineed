@@ -156,14 +156,17 @@
                     android:text="@string/experience"/>
 
 
-                <EditText
-                    android:layout_weight="1"
+                <Spinner
                     android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:hint="@string/experience"
-                    android:id="@+id/spinner_exp"/>
+                    android:layout_weight="1"
+                    android:id="@+id/edit_personal_year"/>
+                <Spinner
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:id="@+id/edit_personal_month"/>
+
 
             </LinearLayout>
             <LinearLayout
@@ -233,14 +236,11 @@
                     android:text="@string/salary"/>
 
 
-                <EditText
+                <Spinner
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:id="@+id/spinner_salary"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:hint="@string/salary"/>
+                    android:id="@+id/spinner_salary" />
 
             </LinearLayout>
             <LinearLayout

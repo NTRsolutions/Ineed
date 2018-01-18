@@ -43,7 +43,7 @@ public class ContactUsActivity extends AppCompatActivity {
         tinyDB = new TinyDB(getApplicationContext());
         language = tinyDB.getString("language_id");
 
-//        find id
+//        find jobseekerid
         edtFName = (EditText) findViewById(R.id.contact_etFName);
         edtLName = (EditText) findViewById(R.id.contact_etLName);
         edtEmail = (EditText) findViewById(R.id.contact_etEmail);

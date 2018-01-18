@@ -91,7 +91,7 @@ public class Signup3frag extends Fragment {
         int j=noAccount.indexOf("IN");
 
         txtlogin= (TextView)view.findViewById(R.id.txt_sign_Login3);
-//        radioButton = (RadioGroup) view.findViewById(R.id.radiogroup);
+//        radioButton = (RadioGroup) view.findViewById(R.jobseekerid.radiogroup);
         txtlogin.setMovementMethod(LinkMovementMethod.getInstance());
         txtlogin.setText(noAccount, TextView.BufferType.SPANNABLE);
         Spannable spannable= (Spannable) txtlogin.getText();

@@ -67,7 +67,7 @@ public class UploadResumeActivity extends AppCompatActivity {
         loginData= gson.fromJson(data, LoginData.class);
         user_id = loginData.getUser_detail().getUser_type();
 
-//        find id
+//        find jobseekerid
         frameLayout = findViewById(R.id.frame_upload);
         btnUpload = findViewById(R.id.upload);
 

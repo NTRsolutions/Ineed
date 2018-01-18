@@ -127,11 +127,11 @@ public class SinupIstFragment extends Fragment {
             public void onClick(View view) {
               /*  if (selection.equals("2")){
                     Signup2JobFragment istFragment=new Signup2JobFragment();
-                    getFragmentManager().beginTransaction().replace(R.id.flContent,istFragment)
+                    getFragmentManager().beginTransaction().replace(R.jobseekerid.flContent,istFragment)
                             .addToBackStack("signupstep2").commit();
                 } else {
                     Signup2EmpFragment istFragment=new Signup2EmpFragment();
-                    getFragmentManager().beginTransaction().replace(R.id.flContent,istFragment)
+                    getFragmentManager().beginTransaction().replace(R.jobseekerid.flContent,istFragment)
                             .addToBackStack("signupstep2").commit();
                 }*/
 

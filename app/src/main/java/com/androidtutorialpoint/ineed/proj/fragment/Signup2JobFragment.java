@@ -25,8 +25,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
+import com.androidtutorialpoint.ineed.proj.Utils.AppGlobal;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.LoginActivity;
+import com.androidtutorialpoint.ineed.proj.activities.UpgradePlanActivity;
 import com.androidtutorialpoint.ineed.proj.adapters.PackageAdapter;
 import com.androidtutorialpoint.ineed.proj.models.JobSeekerPackage;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
@@ -35,6 +37,7 @@ import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -57,9 +60,10 @@ import static com.androidtutorialpoint.ineed.proj.activities.SignUpActivity.sele
 public class Signup2JobFragment extends Fragment implements PackageAdapter.Clicklistner{
     View view;
     TextView txtlogin;
+//    AppGlobal appGlobal;
     Button bt_next;
     TinyDB sharpref;
-    String language, usertype;
+    String language, usertype, transaction_id = "free", userId;
     RequestQueue requestQueue;
     Gson gson = new Gson();
     List<JobSeekerPackage.ResponseBean.JobsekerDataBean> jobSeekerPackage;
@@ -190,11 +194,63 @@ public class Signup2JobFragment extends Fragment implements PackageAdapter.Click
         Bundle args = new Bundle();
         price = jobSeekerPackage.get(post).getJobseekars_package_prize();
         packageId = jobSeekerPackage.get(post).getJobseekars_package_id();
+        if (Integer.parseInt(UpgradePlanActivity.price)>0){
+            args.putString("price", jobSeekerPackage.get(post).getJobseekars_package_prize());
+            thirFragment.setArguments(args);
+            getActivity(). getSupportFragmentManager().beginTransaction().replace(R.id.flContent,thirFragment)
+                    .addToBackStack(null).commit();
+        } else {
 
-        args.putString("price", jobSeekerPackage.get(post).getJobseekars_package_prize());
-        thirFragment.setArguments(args);
-        getActivity(). getSupportFragmentManager().beginTransaction().replace(R.id.flContent,thirFragment)
-                .addToBackStack(null).commit();
+        }
+    }
 
+
+
+    public void upgradePackage(View view) {
+        if (transaction_id == null) {
+            Utillity.message(getActivity(), "Please make payment");
+        } else {
+            if (!transaction_id.isEmpty()) {
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put("user_type", usertype);
+                params.put("language", language);
+                params.put("transaction_id", transaction_id);
+                params.put("package_id", packageId);
+                params.put("user_id", userId);
+                CustomRequest customRequest = new CustomRequest(com.android.volley.Request.Method.POST, ApiList.MAKE_PAYMENT, params,
+                        this.successSign(), this.error());
+                requestQueue.add(customRequest);
+            } else {
+                Utillity.message(getActivity(), "Please make payment before signup ");
+            }
+        }
+    }
+
+    private com.android.volley.Response.Listener<JSONObject> successSign()
+    {
+        Utillity.showloadingpopup(getActivity());
+        return new com.android.volley.Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Utillity.hidepopup();
+                if (response!=null){
+                    try {
+                        if (response.getString("status").equals("true")){
+                            Utillity.message(getActivity(), "Process completed");
+                            sharpref.remove("login_data");
+//                            appGlobal.setLoginData(response.toString());
+
+                            getActivity().finish();
+                        }
+                        else {
+                            Utillity.message(getActivity(),"Something went wrong");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
     }
 }

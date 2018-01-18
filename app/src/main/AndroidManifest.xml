@@ -26,7 +26,8 @@
         </activity>
         <activity
             android:name=".proj.activities.LoginActivity"
-            android:theme="@style/AppTheme.Blue.NoActionBar" />
+            android:theme="@style/AppTheme.Blue.NoActionBar"
+            android:noHistory="true"/>
         <activity
             android:name=".proj.activities.ChangePasswordActivity"
             android:theme="@style/Theme.Design.NoActionBar" />

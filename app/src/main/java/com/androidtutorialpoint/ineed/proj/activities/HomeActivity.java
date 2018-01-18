@@ -1,19 +1,11 @@
 package com.androidtutorialpoint.ineed.proj.activities;
 
+import android.app.Activity;
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -28,15 +20,11 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidtutorialpoint.ineed.R;
-import com.androidtutorialpoint.ineed.proj.fragment.ChangePasswordFragment;
 import com.androidtutorialpoint.ineed.proj.fragment.DashboardEmpFragment;
 import com.androidtutorialpoint.ineed.proj.fragment.DashboardJobseeker;
-import com.androidtutorialpoint.ineed.proj.fragment.GalFragment;
 import com.androidtutorialpoint.ineed.proj.fragment.JobseekerDashboardFragment;
 import com.androidtutorialpoint.ineed.proj.fragment.UpdateProfileFragment;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
@@ -70,11 +58,14 @@ public class HomeActivity extends AppCompatActivity
         methodManager.hideSoftInputFromWindow(HomeActivity.this.getWindow().getDecorView().getWindowToken(),0);
 
         setdefaultconatiner();
-//        find id
+//        find jobseekerid
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         frameLayout= (FrameLayout) findViewById(R.id.frame_cont);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        if (jobseekerid!=null){
+//            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//        }
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         {
@@ -88,6 +79,24 @@ public class HomeActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        if (loginData!=null){
+            if (loginData.getUser_detail().getUser_payment_id().equals("7")){
+//                Intent intent = new Intent(HomeActivity.this, DialogActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(intent);
+
+                setupoverlay();
+            }
+        }
+//        if (getIntent().hasExtra("jobseekerid")){
+//            jobseekerid = getIntent().getStringExtra("jobseekerid");
+//
+//            DashboardJobseeker dashboardJobseeker = new DashboardJobseeker();
+////            Bundle args = new Bundle();
+////            args.putString("jobseekerid", String.valueOf(jobseekerid));
+////            dashboardJobseeker.setArguments(args);
+//            getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, dashboardJobseeker).commit();
+//        }
 
     }
 
@@ -124,15 +133,7 @@ public class HomeActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 //        setdefaultconatiner();
-        if (loginData!=null){
-            if (loginData.getUser_detail().getUser_payment_id().equals("7")){
-//                Intent intent = new Intent(HomeActivity.this, DialogActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
-//
-                setupoverlay();
-            }
-        }
+
     }
 
     private void setupoverlay() {
@@ -155,10 +156,10 @@ public class HomeActivity extends AppCompatActivity
         txtlogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(HomeActivity.this,LoginActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
+                startActivity(new Intent(HomeActivity.this,LoginActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK));
                 tinyDB.remove("login_data");
                 finish();
-
             }
         });
 
@@ -169,33 +170,50 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if(getSupportFragmentManager().getBackStackEntryCount()>0)
-        {
-            getSupportFragmentManager().popBackStack();
-        }
-        else {
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else if(getSupportFragmentManager().getBackStackEntryCount()>0)
+//        {
+//            getSupportFragmentManager().popBackStack();
+//        }
+//        else {
+//
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setTitle("Exit");
+//            builder.setMessage("Do you want to Exit?");
+//            builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    finish();
+//                }
+//            });
+//            builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.dismiss();
+//                }
+//            });
+//            builder.create();
+//            builder.show();
+            super.onBackPressed();
+//        }
+    }
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Exit");
-            builder.setMessage("Do you want to Exit?");
-            builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 1:
+                if (resultCode == Activity.RESULT_OK) {
+                    // TODO Extract the data returned from the child Activity.
+                    String returnValue = data.getStringExtra("jobseekerid");
+                    DashboardJobseeker dashboardJobseeker = new DashboardJobseeker();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, dashboardJobseeker).addToBackStack(null).commit();
                 }
-            });
-            builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            builder.create();
-            builder.show();
-            //super.onBackPressed();
+
+                break;
         }
+
     }
 
     @Override
@@ -232,7 +250,7 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_changepass) {
             startActivity(new Intent(HomeActivity.this, ChangePasswordActivity.class));
 //            ChangePasswordFragment passwordFragment=new ChangePasswordFragment();
-//            getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,passwordFragment).addToBackStack(null).commit();
+//            getSupportFragmentManager().beginTransaction().replace(R.jobseekerid.subview_container,passwordFragment).addToBackStack(null).commit();
         } else if (id == R.id.nav_updateprofile) {
             UpdateProfileFragment passwordFragment=new UpdateProfileFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,passwordFragment).addToBackStack(null).commit();
@@ -245,10 +263,11 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_search) {
             Intent it=new Intent(HomeActivity.this,Search.class);
             it.putExtra("Login","search");
-            startActivity(it);
+            startActivityForResult(it,1);
         } else if (id == R.id.nav_logout) {
             tinyDB.remove("login_data");
             startActivity(new Intent(HomeActivity.this,LoginActivity.class));
+            Search.jobseekerid = null;
             finish();
         } else if (id == R.id.nav_help){
             startActivity(new Intent(HomeActivity.this,HelpActivity.class));

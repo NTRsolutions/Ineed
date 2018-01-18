@@ -8,10 +8,11 @@ import java.util.List;
 
 public class JobseekerProileData {
 
+
     /**
      * status : true
-     * user_list : {"user_id":"206","user_fname":"rakhi Singh","user_username":"pq","user_email":"a@g.in","user_phone":"1234956789","user_age":"23","user_country_id":"101","user_country_name":"India","user_workpermit":"no","user_permitcountry_id":null,"user_permitcountry":null,"user_nationality":"Indian","user_image":"download3.jpg","user_resume":"%5Cwritereaddata%5CfloatResumePhoto%5C3834_Mahender_Reddy_Resume.doc","user_payment_id":"8","user_package_price":"1223","user_package_credit":"0","user_package_startdate":"2018-01-17","user_package_expire_date":"2018-06-17","user_package_id":"pro","user_gender":"female","user_dob":"1995-01-12","profile_summary_id":"19","profile_summary_seekerid":"206","profile_summary_totalyear":"4.6","profile_summary_currentsalary":"345667778","profile_summary_companyname":"Ask Online","profile_summary_positions":"android developer","profile_summary_currentcountry_id":"13","profile_summary_currentcountry":"Australia","profile_summary_jobtype_id":"1","profile_summary_jobtype":"Full- Time","profile_summary_noticeperiod_id":"6","profile_summary_noticeperiod":"25 Days","profile_summary_resumeheadline":"This is my objective jolly highlighting hook for the first to know what you rightly there was no answer so that you can do that and it","profile_summary_skills":"android phone, have","profile_summary_exp":"1"}
-     * works_list : [{"jobseeker_workexp_id":"106","jobseeker_workexp_seekerid":"206","jobseeker_workexp_employertype":"","positions":"iOS","jobseeker_workexp_totalyear":"0.0","jobseeker_workexp_noticeperiod_id":"","jobseeker_workexp_noticeperiod":"","jobseeker_workexp_companyname":"ty","jobseeker_workexp_companyindus_id":"4","jobseeker_workexp_companyindus":"Courier/Transportation/Freight","jobseeker_workexp_dept_id":"3","jobseeker_workexp_dept":"Graphic / Web Developer"}]
+     * user_list : {"user_id":"206","user_fname":"sonu","user_username":"pq","user_email":"sonu@gmail.com","user_phone":"6564332","user_age":"26","user_country_id":"101","user_country_name":"India","user_workpermit":"Yes","user_permitcountry_id":"5","user_permitcountry":"Andorra","user_nationality":"indian","user_image":"student.JPG","user_resume":"%5Cwritereaddata%5CfloatResumePhoto%5C3834_Mahender_Reddy_Resume.doc","user_payment_id":"8","user_package_price":"1223","user_package_credit":"0","user_package_startdate":"2018-01-17","user_package_expire_date":"2018-06-17","user_package_id":"pro","user_gender":"male","user_dob":"1995-01-12","profile_summary_id":"19","profile_summary_seekerid":"206","profile_summary_totalexpyear":"1","profile_summary_totalexpmonths":"5","profile_summary_currentsalary_id":"5","profile_summary_currentsalary":"150001-200000","profile_summary_companyname":"Ask Online","profile_summary_positions":"html","profile_summary_currentcountry_id":"6","profile_summary_currentcountry":"Angola","profile_summary_jobtype_id":"1","profile_summary_jobtype":"Full- Time","profile_summary_noticeperiod_id":"6","profile_summary_noticeperiod":"25 Days","profile_summary_resumeheadline":"This is my objective jolly highlighting hook for the first to know what you rightly there was no answer so that you can do that and it","profile_summary_skills":"android phone, have","profile_summary_exp":"1"}
+     * works_list : [{"jobseeker_workexp_id":"112","jobseeker_workexp_seekerid":"206","jobseeker_workexp_employertype":"p","positions":"android","jobseeker_workexp_totalyear":"0.6","jobseeker_workexp_noticeperiod_id":"","jobseeker_workexp_noticeperiod":"","jobseeker_workexp_companyname":"test","jobseeker_workexp_companyindus_id":"3","jobseeker_workexp_companyindus":"Chemicals/PetroChemical/Plastic/Rubber","jobseeker_workexp_dept_id":"2","jobseeker_workexp_dept":"Tech Support Engg","jobseeker_workexp_jobtype_id":"2","jobseeker_workexp_jobtype":"Part -Time","jobseeker_workexp_annualsalary_id":"11","jobseeker_workexp_annualsalary":"700001-1000000"},{"jobseeker_workexp_id":"110","jobseeker_workexp_seekerid":"206","jobseeker_workexp_employertype":"c","positions":"software","jobseeker_workexp_totalyear":"0.2","jobseeker_workexp_noticeperiod_id":"6","jobseeker_workexp_noticeperiod":"25 Days","jobseeker_workexp_companyname":"test","jobseeker_workexp_companyindus_id":"13","jobseeker_workexp_companyindus":"Real Estate/Property","jobseeker_workexp_dept_id":"5","jobseeker_workexp_dept":"Web Developer","jobseeker_workexp_jobtype_id":"3","jobseeker_workexp_jobtype":"Contract","jobseeker_workexp_annualsalary_id":"8","jobseeker_workexp_annualsalary":"300001-400000"}]
      * educations_list : [{"jobseeker_education_id":"55","jobseeker_education_seekerid":"206","jobseeker_education_seekertype":"2","jobseeker_education_course":"10","jobseeker_education_special":"test","jobseeker_education_institute":"rk","jobseeker_education_coursetype":"","jobseeker_education_year":"2010"},{"jobseeker_education_id":"54","jobseeker_education_seekerid":"206","jobseeker_education_seekertype":"2","jobseeker_education_course":"test","jobseeker_education_special":"Science","jobseeker_education_institute":"SK","jobseeker_education_coursetype":"","jobseeker_education_year":"2012"},{"jobseeker_education_id":"51","jobseeker_education_seekerid":"206","jobseeker_education_seekertype":"2","jobseeker_education_course":"B.tech","jobseeker_education_special":"IT","jobseeker_education_institute":"SUS Eng ","jobseeker_education_coursetype":"1","jobseeker_education_year":"2016"}]
      */
 
@@ -55,18 +56,18 @@ public class JobseekerProileData {
     public static class UserListBean {
         /**
          * user_id : 206
-         * user_fname : rakhi Singh
+         * user_fname : sonu
          * user_username : pq
-         * user_email : a@g.in
-         * user_phone : 1234956789
-         * user_age : 23
+         * user_email : sonu@gmail.com
+         * user_phone : 6564332
+         * user_age : 26
          * user_country_id : 101
          * user_country_name : India
-         * user_workpermit : no
-         * user_permitcountry_id : null
-         * user_permitcountry : null
-         * user_nationality : Indian
-         * user_image : download3.jpg
+         * user_workpermit : Yes
+         * user_permitcountry_id : 5
+         * user_permitcountry : Andorra
+         * user_nationality : indian
+         * user_image : student.JPG
          * user_resume : %5Cwritereaddata%5CfloatResumePhoto%5C3834_Mahender_Reddy_Resume.doc
          * user_payment_id : 8
          * user_package_price : 1223
@@ -74,16 +75,18 @@ public class JobseekerProileData {
          * user_package_startdate : 2018-01-17
          * user_package_expire_date : 2018-06-17
          * user_package_id : pro
-         * user_gender : female
+         * user_gender : male
          * user_dob : 1995-01-12
          * profile_summary_id : 19
          * profile_summary_seekerid : 206
-         * profile_summary_totalyear : 4.6
-         * profile_summary_currentsalary : 345667778
+         * profile_summary_totalexpyear : 1
+         * profile_summary_totalexpmonths : 5
+         * profile_summary_currentsalary_id : 5
+         * profile_summary_currentsalary : 150001-200000
          * profile_summary_companyname : Ask Online
-         * profile_summary_positions : android developer
-         * profile_summary_currentcountry_id : 13
-         * profile_summary_currentcountry : Australia
+         * profile_summary_positions : html
+         * profile_summary_currentcountry_id : 6
+         * profile_summary_currentcountry : Angola
          * profile_summary_jobtype_id : 1
          * profile_summary_jobtype : Full- Time
          * profile_summary_noticeperiod_id : 6
@@ -102,8 +105,8 @@ public class JobseekerProileData {
         private String user_country_id;
         private String user_country_name;
         private String user_workpermit;
-        private Object user_permitcountry_id;
-        private Object user_permitcountry;
+        private String user_permitcountry_id;
+        private String user_permitcountry;
         private String user_nationality;
         private String user_image;
         private String user_resume;
@@ -117,7 +120,9 @@ public class JobseekerProileData {
         private String user_dob;
         private String profile_summary_id;
         private String profile_summary_seekerid;
-        private String profile_summary_totalyear;
+        private String profile_summary_totalexpyear;
+        private String profile_summary_totalexpmonths;
+        private String profile_summary_currentsalary_id;
         private String profile_summary_currentsalary;
         private String profile_summary_companyname;
         private String profile_summary_positions;
@@ -203,19 +208,19 @@ public class JobseekerProileData {
             this.user_workpermit = user_workpermit;
         }
 
-        public Object getUser_permitcountry_id() {
+        public String getUser_permitcountry_id() {
             return user_permitcountry_id;
         }
 
-        public void setUser_permitcountry_id(Object user_permitcountry_id) {
+        public void setUser_permitcountry_id(String user_permitcountry_id) {
             this.user_permitcountry_id = user_permitcountry_id;
         }
 
-        public Object getUser_permitcountry() {
+        public String getUser_permitcountry() {
             return user_permitcountry;
         }
 
-        public void setUser_permitcountry(Object user_permitcountry) {
+        public void setUser_permitcountry(String user_permitcountry) {
             this.user_permitcountry = user_permitcountry;
         }
 
@@ -323,12 +328,28 @@ public class JobseekerProileData {
             this.profile_summary_seekerid = profile_summary_seekerid;
         }
 
-        public String getProfile_summary_totalyear() {
-            return profile_summary_totalyear;
+        public String getProfile_summary_totalexpyear() {
+            return profile_summary_totalexpyear;
         }
 
-        public void setProfile_summary_totalyear(String profile_summary_totalyear) {
-            this.profile_summary_totalyear = profile_summary_totalyear;
+        public void setProfile_summary_totalexpyear(String profile_summary_totalexpyear) {
+            this.profile_summary_totalexpyear = profile_summary_totalexpyear;
+        }
+
+        public String getProfile_summary_totalexpmonths() {
+            return profile_summary_totalexpmonths;
+        }
+
+        public void setProfile_summary_totalexpmonths(String profile_summary_totalexpmonths) {
+            this.profile_summary_totalexpmonths = profile_summary_totalexpmonths;
+        }
+
+        public String getProfile_summary_currentsalary_id() {
+            return profile_summary_currentsalary_id;
+        }
+
+        public void setProfile_summary_currentsalary_id(String profile_summary_currentsalary_id) {
+            this.profile_summary_currentsalary_id = profile_summary_currentsalary_id;
         }
 
         public String getProfile_summary_currentsalary() {
@@ -430,18 +451,22 @@ public class JobseekerProileData {
 
     public static class WorksListBean {
         /**
-         * jobseeker_workexp_id : 106
+         * jobseeker_workexp_id : 112
          * jobseeker_workexp_seekerid : 206
-         * jobseeker_workexp_employertype :
-         * positions : iOS
-         * jobseeker_workexp_totalyear : 0.0
+         * jobseeker_workexp_employertype : p
+         * positions : android
+         * jobseeker_workexp_totalyear : 0.6
          * jobseeker_workexp_noticeperiod_id :
          * jobseeker_workexp_noticeperiod :
-         * jobseeker_workexp_companyname : ty
-         * jobseeker_workexp_companyindus_id : 4
-         * jobseeker_workexp_companyindus : Courier/Transportation/Freight
-         * jobseeker_workexp_dept_id : 3
-         * jobseeker_workexp_dept : Graphic / Web Developer
+         * jobseeker_workexp_companyname : test
+         * jobseeker_workexp_companyindus_id : 3
+         * jobseeker_workexp_companyindus : Chemicals/PetroChemical/Plastic/Rubber
+         * jobseeker_workexp_dept_id : 2
+         * jobseeker_workexp_dept : Tech Support Engg
+         * jobseeker_workexp_jobtype_id : 2
+         * jobseeker_workexp_jobtype : Part -Time
+         * jobseeker_workexp_annualsalary_id : 11
+         * jobseeker_workexp_annualsalary : 700001-1000000
          */
 
         private String jobseeker_workexp_id;
@@ -456,6 +481,10 @@ public class JobseekerProileData {
         private String jobseeker_workexp_companyindus;
         private String jobseeker_workexp_dept_id;
         private String jobseeker_workexp_dept;
+        private String jobseeker_workexp_jobtype_id;
+        private String jobseeker_workexp_jobtype;
+        private String jobseeker_workexp_annualsalary_id;
+        private String jobseeker_workexp_annualsalary;
 
         public String getJobseeker_workexp_id() {
             return jobseeker_workexp_id;
@@ -551,6 +580,38 @@ public class JobseekerProileData {
 
         public void setJobseeker_workexp_dept(String jobseeker_workexp_dept) {
             this.jobseeker_workexp_dept = jobseeker_workexp_dept;
+        }
+
+        public String getJobseeker_workexp_jobtype_id() {
+            return jobseeker_workexp_jobtype_id;
+        }
+
+        public void setJobseeker_workexp_jobtype_id(String jobseeker_workexp_jobtype_id) {
+            this.jobseeker_workexp_jobtype_id = jobseeker_workexp_jobtype_id;
+        }
+
+        public String getJobseeker_workexp_jobtype() {
+            return jobseeker_workexp_jobtype;
+        }
+
+        public void setJobseeker_workexp_jobtype(String jobseeker_workexp_jobtype) {
+            this.jobseeker_workexp_jobtype = jobseeker_workexp_jobtype;
+        }
+
+        public String getJobseeker_workexp_annualsalary_id() {
+            return jobseeker_workexp_annualsalary_id;
+        }
+
+        public void setJobseeker_workexp_annualsalary_id(String jobseeker_workexp_annualsalary_id) {
+            this.jobseeker_workexp_annualsalary_id = jobseeker_workexp_annualsalary_id;
+        }
+
+        public String getJobseeker_workexp_annualsalary() {
+            return jobseeker_workexp_annualsalary;
+        }
+
+        public void setJobseeker_workexp_annualsalary(String jobseeker_workexp_annualsalary) {
+            this.jobseeker_workexp_annualsalary = jobseeker_workexp_annualsalary;
         }
     }
 

@@ -28,6 +28,7 @@ import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class JobPlanFragment extends Fragment implements PackageAdapter.Clicklis
         user_type = loginData.getUser_detail().getUser_type();
         userId= loginData.getUser_detail().getUser_id();
 
-//        find id
+//        find jobseekerid
         recyclerView = view.findViewById(R.id.job_plan_recycler);
 
 
@@ -133,8 +134,17 @@ public class JobPlanFragment extends Fragment implements PackageAdapter.Clicklis
         price = jobSeekerPackage.get(post).getJobseekars_package_prize();
         package_id = jobSeekerPackage.get(post).getJobseekars_package_id();
         args.putString("price", jobSeekerPackage.get(post).getJobseekars_package_prize());
-        thirFragment.setArguments(args);
-        getActivity(). getSupportFragmentManager().beginTransaction().replace(R.id.upgrade_frame,thirFragment)
-                .addToBackStack(null).commit();
+        if (Integer.parseInt(price)>0){
+            thirFragment.setArguments(args);
+            getActivity(). getSupportFragmentManager().beginTransaction().replace(R.id.upgrade_frame,thirFragment)
+                    .addToBackStack(null).commit();
+        } else {
+
+        }
+
     }
+
+
+
+
 }

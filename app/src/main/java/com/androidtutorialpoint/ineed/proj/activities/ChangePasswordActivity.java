@@ -60,7 +60,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         loginData = gson.fromJson(data, LoginData.class);
         userid = loginData.getUser_detail().getUser_id();
 
-//        find id
+//        find jobseekerid
         edtConfrim = (EditText) findViewById(R.id.change_pass_edtNewConfirm);
         edtCurrent = (EditText) findViewById(R.id.change_pass_edtCurrent);
         edtNew = (EditText) findViewById(R.id.change_pass_edtNew);

@@ -1,5 +1,6 @@
 package com.androidtutorialpoint.ineed.proj.activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
@@ -34,6 +35,7 @@ import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.adapters.SearchAdapter;
+import com.androidtutorialpoint.ineed.proj.fragment.DashboardJobseeker;
 import com.androidtutorialpoint.ineed.proj.models.CountryList;
 import com.androidtutorialpoint.ineed.proj.models.SearchModel;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
@@ -74,7 +76,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         txt_filter=findViewById(R.id.txt_filter);
         txt_filter.setOnClickListener(this);
         et_search.setOnEditorActionListener(this);
-        // linearLayout= (LinearLayout) findViewById(R.id.ll_linear);
+        // linearLayout= (LinearLayout) findViewById(R.jobseekerid.ll_linear);
         select_country=findViewById(R.id.sp_selectCountry);
         // linearLayout.setOnClickListener(this);
         Intent it=getIntent();
@@ -646,6 +648,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             }
         };
     }
+    public static String jobseekerid;
 
     @Override
     public void itemclick(View v, int position) {
@@ -654,8 +657,13 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         }
         else
         {
-            int idd = Integer.parseInt(searchlist.get(position).getUser_id());
-            Utillity.message(getApplication(), "" + idd);
+            jobseekerid = searchlist.get(position).getUser_id();
+            Intent resultIntent = new Intent();
+// TODO Add extras or a data URI to this intent as appropriate.
+            resultIntent.putExtra("jobseekerid", jobseekerid);
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+
         }
     }
 }

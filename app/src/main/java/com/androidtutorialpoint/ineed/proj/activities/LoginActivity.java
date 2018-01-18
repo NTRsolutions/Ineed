@@ -57,12 +57,12 @@ public class LoginActivity extends AppCompatActivity {
         loginData = new LoginData();
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
 
-//        find id
+//        find jobseekerid
         txt_forget= (TextView) findViewById(R.id.txt_forgetpass);
         txtSignUp= (TextView) findViewById(R.id.txt_sign_up);
         et_email= (TextInputEditText) findViewById(R.id.tiet_email);
         et_password=(TextInputEditText) findViewById(R.id.tiet_password);
-        //   txt_login= (TextView) findViewById(R.id.login);
+        //   txt_login= (TextView) findViewById(R.jobseekerid.login);
         txt_skip= (TextView) findViewById(R.id.txt_skp);
 
 //        set click listener

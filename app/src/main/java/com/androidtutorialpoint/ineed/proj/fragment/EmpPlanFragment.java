@@ -64,7 +64,7 @@ public class EmpPlanFragment extends Fragment implements EmpPackageAdapter.Click
         userId= loginData.getUser_detail().getUser_id();
 
 
-//        find id
+//        find jobseekerid
         recyclerView = view.findViewById(R.id.plan_fragment);
 
         packageAdapter = new EmpPackageAdapter(getContext(), jobSeekerPackage);
