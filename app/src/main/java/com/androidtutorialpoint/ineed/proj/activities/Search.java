@@ -548,9 +548,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         }
     }
 
-
-
-
     private void setuptoolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
         TextView textView= (TextView)toolbar.findViewById(R.id.toolbar_txt);

@@ -60,7 +60,7 @@ import static com.androidtutorialpoint.ineed.proj.activities.SignUpActivity.sele
 public class Signup2JobFragment extends Fragment implements PackageAdapter.Clicklistner{
     View view;
     TextView txtlogin;
-//    AppGlobal appGlobal;
+    AppGlobal appGlobal = AppGlobal.getInstancess();
     Button bt_next;
     TinyDB sharpref;
     String language, usertype, transaction_id = "free", userId;
@@ -81,6 +81,7 @@ public class Signup2JobFragment extends Fragment implements PackageAdapter.Click
 //        initialize
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
         jobSeekerPackage = new ArrayList<>();
+        appGlobal.context=getActivity();
         sharpref=new TinyDB(getContext());
         language=sharpref.getString("language_id");
         bt_next.setOnClickListener(new View.OnClickListener() {
@@ -200,13 +201,13 @@ public class Signup2JobFragment extends Fragment implements PackageAdapter.Click
             getActivity(). getSupportFragmentManager().beginTransaction().replace(R.id.flContent,thirFragment)
                     .addToBackStack(null).commit();
         } else {
-
+            upgradePackage();
         }
     }
 
 
 
-    public void upgradePackage(View view) {
+    public void upgradePackage() {
         if (transaction_id == null) {
             Utillity.message(getActivity(), "Please make payment");
         } else {
@@ -239,7 +240,7 @@ public class Signup2JobFragment extends Fragment implements PackageAdapter.Click
                         if (response.getString("status").equals("true")){
                             Utillity.message(getActivity(), "Process completed");
                             sharpref.remove("login_data");
-//                            appGlobal.setLoginData(response.toString());
+                            appGlobal.setLoginData(response.toString());
 
                             getActivity().finish();
                         }
