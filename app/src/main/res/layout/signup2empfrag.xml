@@ -40,14 +40,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:gravity="right"/>
-            <TextView
-                android:id="@+id/txt_sign_Login"
-                android:layout_marginTop="10dp"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:gravity="center_horizontal"/>
 
 
         </LinearLayout>

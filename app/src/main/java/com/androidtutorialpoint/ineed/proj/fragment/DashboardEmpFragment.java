@@ -353,8 +353,11 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                                    if (profileDetailMOdel.getProfile_detail().getUser_image()!=null){
                                        String url = ApiList.IMG_BASE+profileDetailMOdel.getProfile_detail().getUser_image();
                                        GetImage task = new GetImage();
+                                       if (url!=null&&url.length()>0){
+                                           task.execute(new String[] { url });
+                                       }
                                        // Execute the task
-                                       task.execute(new String[] { url });
+
                                    }
                                     else {
                                        Glide.with(getContext()).load(R.drawable.gfgf)
@@ -488,10 +491,13 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
             bmOptions.inSampleSize = 1;
 
             try {
-                stream = getHttpConnection(url);
-                bitmap = BitmapFactory.
-                        decodeStream(stream, null, bmOptions);
-                stream.close();
+                if (stream!=null){
+                    stream = getHttpConnection(url);
+                    bitmap = BitmapFactory.
+                            decodeStream(stream, null, bmOptions);
+                    stream.close();
+                }
+
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

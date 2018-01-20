@@ -156,6 +156,28 @@
     </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+
 </LinearLayout>
-<include layout="@layout/bottom_toolbar"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:padding="8dp"
+            android:drawableRight="@drawable/ic_delete"
+            android:textSize="@dimen/extra_small_size"
+            android:id="@+id/txtedu_remove"
+            android:textColor="@color/redStrong"
+            android:textStyle="bold"/>
+        <include layout="@layout/bottom_toolbar"></include>
+    </LinearLayout>
+
+
     </RelativeLayout>

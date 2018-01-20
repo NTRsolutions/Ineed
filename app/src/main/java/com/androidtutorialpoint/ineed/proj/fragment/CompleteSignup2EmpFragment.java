@@ -26,9 +26,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
+import com.androidtutorialpoint.ineed.proj.Utils.AppGlobal;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.DialogActivity;
 import com.androidtutorialpoint.ineed.proj.activities.LoginActivity;
+import com.androidtutorialpoint.ineed.proj.activities.UpgradePlanActivity;
 import com.androidtutorialpoint.ineed.proj.adapters.EmpPackageAdapter;
 import com.androidtutorialpoint.ineed.proj.models.EmpPackage;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
@@ -37,6 +39,7 @@ import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -56,11 +59,12 @@ public class CompleteSignup2EmpFragment extends Fragment implements EmpPackageAd
     View view;
     RequestQueue requestQueue;
     Gson gson = new Gson();
+    AppGlobal appGlobal = AppGlobal.getInstancess();
     List<EmpPackage.ResponseBean.EmployerDataBean> jobSeekerPackage;
     RecyclerView recyclerView;
     EmpPackageAdapter packageAdapter;
     TinyDB sharpref;
-    String language;
+    String language,transaction_id, userId;
     TextView txtlogin;
     Button bt_next;
 
@@ -74,7 +78,7 @@ public class CompleteSignup2EmpFragment extends Fragment implements EmpPackageAd
         jobSeekerPackage = new ArrayList<>();
         sharpref=new TinyDB(getContext());
         language=sharpref.getString("language_id");
-
+        appGlobal.context = getContext();
         bt_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,9 +190,58 @@ public class CompleteSignup2EmpFragment extends Fragment implements EmpPackageAd
         Bundle args = new Bundle();
         price = jobSeekerPackage.get(post).getEmployers_package_prize();
         package_id = jobSeekerPackage.get(post).getEmployers_package_id();
-        args.putString("price", jobSeekerPackage.get(post).getEmployers_package_prize());
-        thirFragment.setArguments(args);
-        getActivity(). getSupportFragmentManager().beginTransaction().replace(R.id.dialog_fragment,thirFragment)
-                .addToBackStack(null).commit();
+        if (Integer.parseInt(DialogActivity.price) > 0) {
+            thirFragment.setArguments(args);
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.dialog_fragment, thirFragment)
+                    .addToBackStack(null).commit();
+        } else {
+            transaction_id = "free";
+            upgradePackage();
+        }
     }
+
+    public void upgradePackage() {
+        if (transaction_id == null) {
+            Utillity.message(getContext(), "Please make payment");
+        } else {
+            if (!transaction_id.isEmpty()) {
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put("user_type", user_type);
+                params.put("language", language);
+                params.put("transaction_id", transaction_id);
+                params.put("package_id", DialogActivity.package_id);
+                params.put("user_id", userId);
+                CustomRequest customRequest = new CustomRequest(com.android.volley.Request.Method.POST, ApiList.MAKE_PAYMENT, params,
+                        this.successPlan(), this.error());
+                requestQueue.add(customRequest);
+            } else {
+                Utillity.message(getContext(), "Please make payment before signup ");
+            }
+        }
+    }
+
+    private com.android.volley.Response.Listener<JSONObject> successPlan() {
+        Utillity.showloadingpopup(getActivity());
+        return new com.android.volley.Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Utillity.hidepopup();
+                if (response != null) {
+                    try {
+                        if (response.getString("status").equals("true")) {
+                            Utillity.message(getActivity(), "Process completed");
+                            appGlobal.setLoginData(response.toString());
+                            getActivity().finish();
+                        } else {
+                            Utillity.message(getActivity(), "Something went wrong");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+    }
+
 }

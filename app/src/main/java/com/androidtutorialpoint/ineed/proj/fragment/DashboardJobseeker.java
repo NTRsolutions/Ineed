@@ -32,6 +32,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
+import com.androidtutorialpoint.ineed.proj.Utils.AppGlobal;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.EducationAdd;
 import com.androidtutorialpoint.ineed.proj.activities.HomeActivity;
@@ -88,6 +89,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     LinearLayout ll_savecancel;
     ImageView imgUser, imgCamera,imgedit;
     Gson gson;
+
     LoginData loginData;
     String img,language, userId, obj, skills, name=" ", age = " ", desig = " ", nationality = " ",
             exp = " ", loc = " ", salary = " ", mobile =  " ", workpermit = " ", permitCountry = " ";

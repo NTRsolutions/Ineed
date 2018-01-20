@@ -47,7 +47,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
     ActionBar actionBar;
     RadioButton currentRadio, previousRadio;
     LinearLayout bottom_toolbar, noticeLayout, toLayout;
-    TextView txt_save,txt_cancel, txtFrom, txtTo;
+    TextView txt_save,txt_cancel, txtFrom, txtTo, txtDelete;
     EditText edtJobtitle, edtCompanyName;
     String jobtitle="", noticeid = " ", indu ,noticePeriod=" ",salaryedit = " ",jobtypeedit= " ", departType="",indId =" ",id, companyName, workingfrom=" ", deptid=" ",workingTo=" ", userid,name, desi,
             empType="", salaryId="", jobtypeid="", jobTypename=" ", salaryName=" ";
@@ -89,6 +89,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         previousRadio = findViewById(R.id.work_exp_radio_pre);
         noticeLayout = findViewById(R.id.addexp_notice_layout);
         toLayout = findViewById(R.id.addexp_to_layout);
+        txtDelete = findViewById(R.id.txtwork_exp_remove);
 
         if (getIntent().hasExtra("type")){
             empType = getIntent().getStringExtra("type");
@@ -137,6 +138,8 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         if (getIntent().hasExtra("jobtype")){
             jobtypeedit = getIntent().getStringExtra("jobtype");
         }
+
+        txtDelete.setOnClickListener(this);
 
         getAdminList();
 //        set onclick listener
@@ -199,7 +202,6 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
                     jobtypeList = new ArrayList<>();
                     salaryList = new ArrayList<>();
                     salaryListid = new ArrayList<>();
-
                     try {
                         if (response.getString("status").equals("true")){
 //                            for notice
@@ -339,7 +341,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         }
     }
     private void setupbottomtoolbar() {
-        bottom_toolbar=findViewById(R.id.bottom_toolbar);
+        bottom_toolbar=findViewById(R.id.bottom_view);
         txt_save=bottom_toolbar.findViewById(R.id.txt_save);
         txt_cancel=bottom_toolbar.findViewById(R.id.txt_cancel);
         txt_save.setOnClickListener(this);
@@ -386,6 +388,11 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.txt_cancel:
                 finish();
+                break;
+            case R.id.txtwork_exp_remove:
+                if (id!=null){
+                    deletExp();
+                }
                 break;
             case R.id.work_exp_radio_current:
                 currentRadio.setChecked(true);
@@ -499,6 +506,27 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         };
     }
 
+
+    private Response.Listener<JSONObject> deletsuccess() {
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (response!=null){
+                    try {
+                        if (response.getString("status").equals("true")){
+                            Utillity.message(WorkExperience.this, "Experience deleted");
+                            finish();
+                        } else {
+                            Utillity.message(WorkExperience.this, "Connection error");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+    }
+
     private void notice() {
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row,noticeName);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
@@ -520,6 +548,18 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
 
             }
         });
+    }
+
+    public void deletExp(){
+        Utillity.showloadingpopup(WorkExperience.this);
+        RequestQueue queue = VolleySingelton.getsInstance().getmRequestQueue();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("user_id",userid);
+        params.put("jobseeker_workexp_id",id);
+
+        CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_WORK_EXP_DELETE,
+                params, this.deletsuccess(), this.errorListener());
+        queue.add(customRequest);
     }
 
     private void induSpinner() {

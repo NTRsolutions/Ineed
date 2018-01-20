@@ -210,8 +210,6 @@ public class LoginActivity extends AppCompatActivity {
 //                        }
                         startActivity(new Intent(LoginActivity.this,HomeActivity.class));
                         finish();
-
-
                     } else {
                         Utillity.message(getApplicationContext(), loginData.getMsg());
                     }

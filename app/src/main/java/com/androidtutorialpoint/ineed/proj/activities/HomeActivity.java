@@ -81,11 +81,11 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         if (loginData!=null){
             if (loginData.getUser_detail().getUser_payment_id().equals("7")){
-//                Intent intent = new Intent(HomeActivity.this, DialogActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
+                Intent intent = new Intent(HomeActivity.this, DialogActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
 
-                setupoverlay();
+//                setupoverlay();
             }
         }
 //        if (getIntent().hasExtra("jobseekerid")){
@@ -165,7 +165,6 @@ public class HomeActivity extends AppCompatActivity
 
         dialog.show();
     }
-
 
     @Override
     public void onBackPressed() {

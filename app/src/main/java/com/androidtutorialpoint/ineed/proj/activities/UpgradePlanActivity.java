@@ -268,7 +268,7 @@ public class UpgradePlanActivity extends AppCompatActivity {
         requestOperation("PURCHASE" ,sdk_token) ;
     }
 
-    public void upgradePackage(View view) {
+    public void upgradePackage(View view ) {
         if (transaction_id == null) {
             Utillity.message(getApplicationContext(), "Please make payment");
         } else {

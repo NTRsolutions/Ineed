@@ -28,9 +28,11 @@ import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.AppGlobal;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.LoginActivity;
+import com.androidtutorialpoint.ineed.proj.activities.SignUpActivity;
 import com.androidtutorialpoint.ineed.proj.activities.UpgradePlanActivity;
 import com.androidtutorialpoint.ineed.proj.adapters.PackageAdapter;
 import com.androidtutorialpoint.ineed.proj.models.JobSeekerPackage;
+import com.androidtutorialpoint.ineed.proj.models.LoginData;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
 import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
 import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
@@ -63,7 +65,8 @@ public class Signup2JobFragment extends Fragment implements PackageAdapter.Click
     AppGlobal appGlobal = AppGlobal.getInstancess();
     Button bt_next;
     TinyDB sharpref;
-    String language, usertype, transaction_id = "free", userId;
+    LoginData loginData = new LoginData();
+    String language, usertype, transaction_id, userId;
     RequestQueue requestQueue;
     Gson gson = new Gson();
     List<JobSeekerPackage.ResponseBean.JobsekerDataBean> jobSeekerPackage;
@@ -83,6 +86,8 @@ public class Signup2JobFragment extends Fragment implements PackageAdapter.Click
         jobSeekerPackage = new ArrayList<>();
         appGlobal.context=getActivity();
         sharpref=new TinyDB(getContext());
+
+        userId = SignUpActivity.userid;
         language=sharpref.getString("language_id");
         bt_next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,12 +200,13 @@ public class Signup2JobFragment extends Fragment implements PackageAdapter.Click
         Bundle args = new Bundle();
         price = jobSeekerPackage.get(post).getJobseekars_package_prize();
         packageId = jobSeekerPackage.get(post).getJobseekars_package_id();
-        if (Integer.parseInt(UpgradePlanActivity.price)>0){
+        if (Integer.parseInt(price)>0){
             args.putString("price", jobSeekerPackage.get(post).getJobseekars_package_prize());
             thirFragment.setArguments(args);
             getActivity(). getSupportFragmentManager().beginTransaction().replace(R.id.flContent,thirFragment)
                     .addToBackStack(null).commit();
         } else {
+            transaction_id = "free";
             upgradePackage();
         }
     }
@@ -239,10 +245,8 @@ public class Signup2JobFragment extends Fragment implements PackageAdapter.Click
                     try {
                         if (response.getString("status").equals("true")){
                             Utillity.message(getActivity(), "Process completed");
-                            sharpref.remove("login_data");
                             appGlobal.setLoginData(response.toString());
-
-                            getActivity().finish();
+                            startActivity(new Intent(getActivity(), LoginActivity.class));
                         }
                         else {
                             Utillity.message(getActivity(),"Something went wrong");
