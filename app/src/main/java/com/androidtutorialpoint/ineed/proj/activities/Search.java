@@ -94,6 +94,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             RequestQueue requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
             CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.COUNTRY,params,this.sucesslistener(),this.errorlistener());
             customRequest.setRetryPolicy(new DefaultRetryPolicy(30000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
             requestQueue.add(customRequest);
         }
         else
@@ -179,7 +180,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             @Override
             public void onErrorResponse(VolleyError error) {
                 Utillity.hidepopup();
-                Utillity.message(getApplicationContext(),""+error);
+                Utillity.message(getApplicationContext(),"Error in Network");
                 Log.d("Error Respons",""+error);
             }
         };
@@ -325,7 +326,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             }*/
             }
         }
-
 
     }
     private void experfilter(String experi) {

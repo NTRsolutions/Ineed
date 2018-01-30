@@ -99,7 +99,6 @@ public class HelpDetailActivity extends AppCompatActivity {
                         JSONObject object=response.getJSONObject("response");
                         JSONArray jsonArray=object.getJSONArray("help_data");
                         helpTitles = new ArrayList<>();
-
                         for(int i=0;i<jsonArray.length();i++)
                         {
                             JSONObject jsonObject=jsonArray.getJSONObject(i);
