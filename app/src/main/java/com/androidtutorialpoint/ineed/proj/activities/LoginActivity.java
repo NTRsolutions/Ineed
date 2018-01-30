@@ -89,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this,ResetPasswordsActivity.class));
             }
         });
+
         if(language!=null && !language.isEmpty())
         {
             if (language.equals("en"))
@@ -103,7 +104,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
-                        finish();
                     }
 
                     @Override
@@ -127,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View widget) {
                         startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
-                        finish();
                     }
 
                     @Override
@@ -138,9 +137,9 @@ public class LoginActivity extends AppCompatActivity {
                 };
                 spannable.setSpan(clickableSpan,i,j+2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-
         }
     }
+
 
     public void loginclick(View v)
     {
@@ -180,15 +179,8 @@ public class LoginActivity extends AppCompatActivity {
         {
             Utillity.message(this,getResources().getString(R.string.fieldsmeand));
         }
-
-
     }
 
-    @Override
-    public void onBackPressed() {
-
-        finish();
-    }
 
     private Response.Listener<JSONObject> success()
     {   Utillity.showloadingpopup(this);
@@ -202,12 +194,6 @@ public class LoginActivity extends AppCompatActivity {
                     if (loginData.isStatus()== true){
                         appGlobal.setLoginData(response.toString());
                         Utillity.message(getApplicationContext(), loginData.getMsg());
-//                        if (loginData.getUser_detail().getUser_payment_id().equals("7")){
-//                            startActivity(new Intent(LoginActivity.this,DialogActivity.class));
-//
-//                        } else {
-//                            startActivity(new Intent(LoginActivity.this,HomeActivity.class));
-//                        }
                         startActivity(new Intent(LoginActivity.this,HomeActivity.class));
                         finish();
                     } else {
@@ -230,4 +216,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
     }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Utillity.hideSoftKeyboard(LoginActivity.this);
+    }
+
 }

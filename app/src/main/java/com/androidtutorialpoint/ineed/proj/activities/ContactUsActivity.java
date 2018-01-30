@@ -132,7 +132,8 @@ public class ContactUsActivity extends AppCompatActivity {
                 }
                 catch (Exception e)
                 {
-                    Utillity.message(getApplicationContext(),""+e);
+                    Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
+
                 }
 
                 Log.d("Response",""+response);
@@ -146,13 +147,12 @@ public class ContactUsActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Utillity.hidepopup();
-                Utillity.message(getApplicationContext(),""+error);
+                Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
+
                 Log.d("Error Respons",""+error);
             }
         };
     }
-
-
 
     private void setuptoolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
@@ -174,6 +174,7 @@ public class ContactUsActivity extends AppCompatActivity {
         {
             case android.R.id.home:
                 onBackPressed();
+                Utillity.hideSoftKeyboard(ContactUsActivity.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -159,13 +159,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
         };
     }
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
-        toolbar.setTitle("Change Password");
-
     }
 
     @Override
@@ -174,6 +170,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         {
             case android.R.id.home:
                 onBackPressed();
+                Utillity.hideSoftKeyboard(ChangePasswordActivity.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

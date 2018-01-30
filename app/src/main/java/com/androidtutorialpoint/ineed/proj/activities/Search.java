@@ -143,7 +143,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                         handlespinner();
                     }
                 } catch (Exception e) {
-                    Utillity.message(getApplicationContext(),""+e);
+                    Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
+
                 }
 
 
@@ -181,7 +182,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             @Override
             public void onErrorResponse(VolleyError error) {
                 Utillity.hidepopup();
-                Utillity.message(getApplicationContext(),""+error);
+                Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
+
                 Log.d("Error Respons",""+error);
             }
         };
@@ -567,7 +569,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         switch (item.getItemId())
         {
             case android.R.id.home:
-                onBackPressed();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -579,10 +581,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if(v.getId()==R.id.et_search)
         {
-            InputMethodManager inputMethodManager= (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromInputMethod(getCurrentFocus().getWindowToken(),0);
+            Utillity.hideSoftKeyboard(Search.this);
             search();
-
         }
         return false;
     }
@@ -657,7 +657,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         {
             jobseekerid = searchlist.get(position).getUser_id();
             Intent resultIntent = new Intent();
-// TODO Add extras or a data URI to this intent as appropriate.
             resultIntent.putExtra("jobseekerid", jobseekerid);
             setResult(Activity.RESULT_OK, resultIntent);
             finish();

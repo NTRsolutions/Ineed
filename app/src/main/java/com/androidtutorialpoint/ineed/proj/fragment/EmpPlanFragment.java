@@ -107,6 +107,7 @@ public class EmpPlanFragment extends Fragment implements EmpPackageAdapter.Click
             public void onResponse(JSONObject response) {
                 Utillity.hidepopup();
                 if (response!=null){
+                    Log.d(TAG, "onResponse: "+response.toString());
                     EmpPackage jobSeekerPackage1 = gson.fromJson(response.toString(), EmpPackage.class);
                     jobSeekerPackage.addAll(jobSeekerPackage1.getResponse().getEmployer_data());
                     packageAdapter.notifyDataSetChanged();

@@ -1,15 +1,20 @@
 package com.androidtutorialpoint.ineed.proj.fragment;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -41,34 +47,42 @@ import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.mukesh.permissions.AppPermissions;
 import com.mukesh.tinydb.TinyDB;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
+import static android.app.Activity.RESULT_OK;
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 
 public class DashboardEmpFragment extends Fragment implements ImageInputHelper.ImageActionListener{
+
+    private static final int CAMERA_REQUEST_CODE = 1;
+    private static final int GALLERY_REQUEST_CODE = 2;
     EditText etEmail,etName,etcontact,etcompany;
     TextView txt_proftitle,txt_personal,txtSave,txtCancle, txtProfileView, txtPackage, txtExpired, txtCredit,
             txtUpgrade, txtLeft;
     LinearLayout ll_savecancel;
-    private ImageInputHelper imageInputHelper;
+    private AppPermissions mRuntimePermission;
     ImageView imgUser, imgCamera;
     String img,language, userId, name, company, email, phone;
     TinyDB tinyDB;
     LoginData loginData;
     EmployerProfileData profileDetailMOdel = new EmployerProfileData();
-
+    private ImageInputHelper imageInputHelper;
     RequestQueue requestQueue;
 
     @Override
@@ -76,13 +90,16 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_dashboard_emp, container, false);
-        imageInputHelper = new ImageInputHelper(this);
-        imageInputHelper.setImageActionListener(this);
         loginData = new LoginData();
         tinyDB = new TinyDB(getContext());
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
+        mRuntimePermission = new AppPermissions(getActivity());
+        String loginPrefData = tinyDB.getString("login_data");
+        loginData = gson.fromJson(loginPrefData, LoginData.class);
+        userId = loginData.getUser_detail().getUser_id();
+        language = tinyDB.getString("language_id");
 
-//             find jobseekerid
+//             find empid
         txtCredit = view.findViewById(R.id.credit_point);
         txtUpgrade = view.findViewById(R.id.txtUpgradePlan);
         txtCancle = view.findViewById(R.id.txt_cancel);
@@ -100,7 +117,8 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         txt_proftitle = (TextView) view.findViewById(R.id.etProfile_name);
         imgUser = (ImageView) view.findViewById(R.id.emp_img_profilew) ;
         imgCamera = (ImageView) view.findViewById(R.id.emp_img_camera);
-
+        imageInputHelper = new ImageInputHelper(this);
+        imageInputHelper.setImageActionListener(this);
         txtProfileView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +129,6 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         imgCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -137,7 +154,6 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 builder.show();
             }
         });
-
         etcontact.setEnabled(false);
         etEmail.setEnabled(false);
         etcompany.setEnabled(false);
@@ -180,10 +196,10 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         txtSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = etEmail.getText().toString();
-                name = etName.getText().toString();
-                phone = etcontact.getText().toString();
-                company = etcompany.getText().toString();
+                email = etEmail.getText().toString().trim();
+                name = etName.getText().toString().trim();
+                phone = etcontact.getText().toString().trim();
+                company = etcompany.getText().toString().trim();
                 if (Utillity.CheckEmail(email)){
                     if (Utillity.CheckPhone(phone)){
                         if (!company.isEmpty()){
@@ -203,6 +219,8 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 }
             }
         });
+
+
         return view;
     }
 
@@ -232,55 +250,44 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 etcompany.setEnabled(true);
                 etName.setEnabled(true);
                 ll_savecancel.setVisibility(View.VISIBLE);
-
             }
         }
     }
 
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         imageInputHelper.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onImageSelectedFromGallery(Uri uri, File imageFile) {
-        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
 
     }
 
     @Override
-    public void onImageTakenFromCamera(Uri uri, File imageFile) {
-        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
-
-    }
-
-    @Override
-    public void onImageCropped(Uri uri, File imageFile) {
-        try {
-            // getting bitmap from uri
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-
-            // showing bitmap in image view
-            Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(imgUser);
-            img = Utillity.BitMapToString(bitmap);
-            uploading(img);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case CAMERA_REQUEST_CODE:
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(getActivity(), "Camera Permissions not granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Camera Permissions granted", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case GALLERY_REQUEST_CODE:
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(getActivity(), "Gallery Permissions not granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Gallery Permissions granted", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
+
 
     Gson gson = new Gson();
     @Override
     public void onResume() {
         super.onResume();
-        String loginPrefData = tinyDB.getString("login_data");
-        loginData = gson.fromJson(loginPrefData, LoginData.class);
-        userId = loginData.getUser_detail().getUser_id();
-        language = tinyDB.getString("language_id");
-
         getProfile();
     }
 
@@ -325,7 +332,6 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         };
     }
 
-
     private Response.Listener<JSONObject> success() {
         Utillity.showloadingpopup(getActivity());
         return new Response.Listener<JSONObject>() {
@@ -350,20 +356,17 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                                    txtCredit.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_package_credit()));
                                    txtLeft.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_credit_use()));
                                    txt_proftitle.setText(profileDetailMOdel.getProfile_detail().getUser_fname());
-                                   if (profileDetailMOdel.getProfile_detail().getUser_image()!=null){
+                                   if (profileDetailMOdel.getProfile_detail().getUser_image()!=null && profileDetailMOdel.getProfile_detail().getUser_image().length()>0){
                                        String url = ApiList.IMG_BASE+profileDetailMOdel.getProfile_detail().getUser_image();
                                        GetImage task = new GetImage();
                                        if (url!=null&&url.length()>0){
                                            task.execute(new String[] { url });
                                        }
-                                       // Execute the task
-
                                    }
                                     else {
                                        Glide.with(getContext()).load(R.drawable.gfgf)
                                                .apply(RequestOptions.circleCropTransform()).into(imgUser);
                                    }
-
                                }
                             }
                         } else {
@@ -443,7 +446,7 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                             Utillity.message(getContext(), "Updated successfully");
                             getProfile();
                         } else {
-                            Utillity.message(getContext(), "Connection error");
+                            Utillity.message(getContext(), getResources().getString(R.string.internetConnection));
                         }
 
                     } catch (JSONException e) {
@@ -454,6 +457,36 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
             }
         };
     }
+
+    @Override
+    public void onImageSelectedFromGallery(Uri uri, File imageFile) {
+        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
+    }
+
+    @Override
+    public void onImageTakenFromCamera(Uri uri, File imageFile) {
+        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
+
+    }
+
+    @Override
+    public void onImageCropped(Uri uri, File imageFile) {
+        try {
+            // getting bitmap from uri
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+
+            // showing bitmap in image view
+//            imgUser.setImageBitmap(bitmap);
+            Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(imgUser);
+
+            img = Utillity.BitMapToString(bitmap);
+            uploading(img);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     public class GetImage extends AsyncTask<String, Void, Bitmap> {
@@ -491,13 +524,10 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
             bmOptions.inSampleSize = 1;
 
             try {
-                if (stream!=null){
-                    stream = getHttpConnection(url);
-                    bitmap = BitmapFactory.
-                            decodeStream(stream, null, bmOptions);
-                    stream.close();
-                }
-
+                stream = getHttpConnection(url);
+                bitmap = BitmapFactory.
+                        decodeStream(stream, null, bmOptions);
+                stream.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -525,6 +555,4 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
             return stream;
         }
     }
-
-
 }

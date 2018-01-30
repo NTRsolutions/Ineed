@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.androidtutorialpoint.ineed">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
     <application
         android:name=".proj.MyApplication"
         android:allowBackup="true"
@@ -26,8 +28,7 @@
         </activity>
         <activity
             android:name=".proj.activities.LoginActivity"
-            android:theme="@style/AppTheme.Blue.NoActionBar"
-            android:noHistory="true"/>
+            android:theme="@style/AppTheme.Blue.NoActionBar" />
         <activity
             android:name=".proj.activities.ChangePasswordActivity"
             android:theme="@style/Theme.Design.NoActionBar" />
@@ -40,7 +41,8 @@
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".proj.activities.Search" />
         <activity android:name=".proj.activities.ResetPasswordsActivity" />
-        <activity android:name=".proj.activities.ContactUsActivity" />
+        <activity android:name=".proj.activities.ContactUsActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".proj.activities.Splash2Activity" />
         <activity android:name=".proj.activities.DashboardActivity" />
         <activity
@@ -76,7 +78,17 @@
         <activity
             android:name=".proj.activities.PersonalAdd"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".proj.activities.UploadResumeActivity"></activity>
+        <activity android:name=".proj.activities.UploadResumeActivity"/>
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.androidtutorialpoint.ineed.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"
+                tools:replace="android:resource"/>
+        </provider>
     </application>
 
 </manifest>

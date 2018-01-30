@@ -203,13 +203,14 @@ public class HomeActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case 1:
-                if (resultCode == Activity.RESULT_OK) {
-                    // TODO Extract the data returned from the child Activity.
-                    String returnValue = data.getStringExtra("jobseekerid");
-                    DashboardJobseeker dashboardJobseeker = new DashboardJobseeker();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, dashboardJobseeker).addToBackStack(null).commit();
+                if (data!=null){
+                    if (resultCode == Activity.RESULT_OK) {
+                        // TODO Extract the data returned from the child Activity.
+                        String returnValue = data.getStringExtra("jobseekerid");
+                        DashboardJobseeker dashboardJobseeker = new DashboardJobseeker();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, dashboardJobseeker).addToBackStack(null).commit();
+                    }
                 }
-
                 break;
         }
 

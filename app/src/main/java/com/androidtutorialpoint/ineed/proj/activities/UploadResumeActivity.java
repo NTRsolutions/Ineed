@@ -1,7 +1,12 @@
 package com.androidtutorialpoint.ineed.proj.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +18,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,6 +31,7 @@ import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
 import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
 import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.google.gson.Gson;
+import com.mukesh.permissions.AppPermissions;
 import com.mukesh.tinydb.TinyDB;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
@@ -44,6 +51,8 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 
+import static com.androidtutorialpoint.ineed.proj.models.ImageInputHelper.REQUEST_PICTURE_FROM_CAMERA;
+import static com.androidtutorialpoint.ineed.proj.models.ImageInputHelper.REQUEST_PICTURE_FROM_GALLERY;
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 public class UploadResumeActivity extends AppCompatActivity {
@@ -54,7 +63,8 @@ public class UploadResumeActivity extends AppCompatActivity {
     LoginData loginData = new LoginData();
     RequestQueue requestQueue;
     ActionBar actionBar;
-    String user_id;
+    String user_id,extension;
+    private AppPermissions mRuntimePermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +75,8 @@ public class UploadResumeActivity extends AppCompatActivity {
         tinyDB = new TinyDB(getApplicationContext());
         String data = tinyDB.getString("login_data");
         loginData= gson.fromJson(data, LoginData.class);
-        user_id = loginData.getUser_detail().getUser_type();
-
+        user_id = loginData.getUser_detail().getUser_id();
+        mRuntimePermission = new AppPermissions(UploadResumeActivity.this);
 //        find jobseekerid
         frameLayout = findViewById(R.id.frame_upload);
         btnUpload = findViewById(R.id.upload);
@@ -76,7 +86,11 @@ public class UploadResumeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                select file
-                showFileChooser();
+                if (mRuntimePermission.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    showFileChooser();
+                } else {
+                    mRuntimePermission.requestPermission(Manifest.permission.CAMERA, REQUEST_PICTURE_FROM_CAMERA);
+                }
             }
         });
 
@@ -89,6 +103,20 @@ public class UploadResumeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 0:
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Gallery Permissions granted", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
 
     private void setuptoolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
@@ -131,10 +159,12 @@ public class UploadResumeActivity extends AppCompatActivity {
             String a;
             if (resultCode == Activity.RESULT_OK) {
                 File file = new File(data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH));
+
                 try {
                     a = encodeFileToBase64Binary(file);
 //                    update resume
                     upResume(a);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -147,8 +177,10 @@ public class UploadResumeActivity extends AppCompatActivity {
     public void upResume(String file){
         Utillity.checkCameraPermission(UploadResumeActivity.this);
         HashMap<String,String> params=new HashMap<>();
+
         params.put("user_file",file);
         params.put("user_id",user_id);
+        params.put("ext",extension);
         CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_UPLOAD_RESUME,params,
                 this.successResume(),this.error());
         requestQueue.add(customRequest);
@@ -166,8 +198,10 @@ public class UploadResumeActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(response.toString());
                         if (jsonObject.getString("status").equals("true")){
                             Log.d(TAG, "onResponse: "+response);
+                            Utillity.message(UploadResumeActivity.this, "Resume uploaded");
+                            finish();
                         } else {
-                            Utillity.message(UploadResumeActivity.this, "Connection error");
+                            Utillity.message(UploadResumeActivity.this, "No file selected");
                         }
 
                     } catch (JSONException e) {
@@ -191,23 +225,30 @@ public class UploadResumeActivity extends AppCompatActivity {
     }
 
     private void showFileChooser() {
-        new MaterialFilePicker().withActivity(this)
-                .withRequestCode(0)
-                .start();
+
+        if (mRuntimePermission.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+            new MaterialFilePicker().withActivity(this)
+                    .withRequestCode(0)
+                    .start();
+        } else {
+            mRuntimePermission.requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 0);
+        }
     }
 
     private String encodeFileToBase64Binary(File fileName)
             throws IOException {
         byte[] bytes = loadFile(fileName);
         byte[] encoded = Base64.encode(bytes);
+        extension = fileName.getAbsolutePath().substring(fileName.getAbsolutePath().lastIndexOf("."));
         String encodedString = new String(encoded);
-
+            Log.d(TAG, "upResume: "+extension.replace(".",""));
         return encodedString;
     }
     private byte[] loadFile(File file) throws IOException {
 
         InputStream is = new FileInputStream(file);
-        int maxBufferSize = 4* 1024;
+        int maxBufferSize = 1 * 1024 * 1024;
         long length = file.length();
         byte[] bytes = new byte[0];
 

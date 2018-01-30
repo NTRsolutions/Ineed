@@ -92,17 +92,24 @@ public class ProfileViewed extends AppCompatActivity implements ProfileViewdAdap
                 Utillity.hidepopup();
                 Log.d(TAG, "onResponse:data "+response.toString());
                 if (response!=null){
-                    ViewedProflie profileListBeans = new ViewedProflie();
-                    profileListBeans = gson.fromJson(response.toString(), ViewedProflie.class);
-                    profileListBean = profileListBeans.getProfile_list();
+                    try {
+                        if (response.getString("status").equals("false")){
+                            Utillity.message(getApplicationContext(), "no data found");
+                        }else {
+                            ViewedProflie profileListBeans = new ViewedProflie();
+                            profileListBeans = gson.fromJson(response.toString(), ViewedProflie.class);
+                            profileListBean.addAll(profileListBeans.getProfile_list());
 
-                    profileViewdAdapter = new ProfileViewdAdapter(getApplicationContext(), profileListBean);
+                            profileViewdAdapter = new ProfileViewdAdapter(getApplicationContext(), profileListBean);
 //        set recyclerview
-                    RecyclerView.LayoutManager mlayoutManager=new LinearLayoutManager(getApplicationContext());
-                    recyclerView.setLayoutManager(mlayoutManager);
-                    recyclerView.setAdapter(profileViewdAdapter);
-                    profileViewdAdapter.notifyDataSetChanged();
-
+                            RecyclerView.LayoutManager mlayoutManager=new LinearLayoutManager(getApplicationContext());
+                            recyclerView.setLayoutManager(mlayoutManager);
+                            recyclerView.setAdapter(profileViewdAdapter);
+                            profileViewdAdapter.notifyDataSetChanged();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };

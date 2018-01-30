@@ -164,6 +164,12 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             }
         });
 
+
+        if (id==null){
+           txtDelete.setVisibility(View.GONE);
+        } else {
+           txtDelete.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getAdminList() {
@@ -352,7 +358,9 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         switch (item.getItemId())
         {
             case android.R.id.home:
+                Utillity.hideSoftKeyboard(WorkExperience.this);
                 onBackPressed();
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -365,8 +373,9 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         {
             case R.id.txt_save:
 
-                companyName = edtCompanyName.getText().toString();
-                jobtitle = edtJobtitle.getText().toString();
+                companyName = edtCompanyName.getText().toString().trim();
+                jobtitle = edtJobtitle.getText().toString().trim();
+                Utillity.hideSoftKeyboard(WorkExperience.this);
                 if (!companyName.isEmpty()){
                     if (!jobtitle.isEmpty()){
                         if (empType.length()>0){

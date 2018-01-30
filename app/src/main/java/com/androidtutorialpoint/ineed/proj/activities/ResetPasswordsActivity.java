@@ -47,6 +47,7 @@ public class ResetPasswordsActivity extends AppCompatActivity implements View.On
         setuptoolbar();
 
     }
+
     private void setuptoolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
         TextView textView= (TextView)toolbar.findViewById(R.id.toolbar_txt);
@@ -62,17 +63,16 @@ public class ResetPasswordsActivity extends AppCompatActivity implements View.On
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())
         {
             case android.R.id.home:
                 onBackPressed();
+                Utillity.hideSoftKeyboard(ResetPasswordsActivity.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     @Override

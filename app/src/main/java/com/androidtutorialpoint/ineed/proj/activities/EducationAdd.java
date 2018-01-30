@@ -35,7 +35,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
     LinearLayout bottom_toolbar;
     TextView txt_save,txt_cancel, txtremoveedu;
     EditText edtCourseTitle, edtSpeci, edtyear, edtInsti;
-    String courseTitle="", speci="", year=" ", insti= " ", userid, eduId=" ";
+    String courseTitle="", speci="", year=" ", insti= " ", userid, eduId="";
     TinyDB tinyDB;
     LoginData loginData = new LoginData();
     Gson gson = new Gson();
@@ -79,14 +79,17 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
             eduId = getIntent().getStringExtra("eduId");
         }
 
-        edtyear.setText(year);
-        edtSpeci.setText(speci);
-        edtInsti.setText(insti);
-        edtCourseTitle.setText(courseTitle);
+        edtyear.setText(year.trim());
+        edtSpeci.setText(speci.trim());
+        edtInsti.setText(insti.trim());
+        edtCourseTitle.setText(courseTitle.trim());
 
         txt_cancel.setOnClickListener(this);
         txt_save.setOnClickListener(this);
 
+        if (eduId.length()>0){
+            txtremoveedu.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -116,6 +119,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId())
         {
             case android.R.id.home:
+                Utillity.hideSoftKeyboard(EducationAdd.this);
                 onBackPressed();
                 return true;
             default:
@@ -128,10 +132,10 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         switch (v.getId())
         {
             case R.id.txt_save:
-                year = edtyear.getText().toString();
-                courseTitle = edtCourseTitle.getText().toString();
-                insti = edtInsti.getText().toString();
-                speci = edtSpeci.getText().toString();
+                year = edtyear.getText().toString().trim();
+                courseTitle = edtCourseTitle.getText().toString().trim();
+                insti = edtInsti.getText().toString().trim();
+                speci = edtSpeci.getText().toString().trim();
 
                 if (!year.isEmpty()){
                     if (!courseTitle.isEmpty()){
@@ -160,8 +164,10 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.txtedu_remove:
-                if (eduId!=null){
+                if (eduId!=null && eduId.length()>0){
                     deletEdu();
+                } else {
+                    txtremoveedu.setVisibility(View.GONE);
                 }
                 break;
         }
@@ -201,7 +207,8 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
             params.put("specilization", speci);
             params.put("institute", insti);
             params.put("year", year);
-            CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_EDU, params, this.success(), this.errorListener());
+            CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_EDU, params,
+                    this.success(), this.errorListener());
             queue.add(customRequest);
 
         } else {
@@ -264,6 +271,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
                     try {
                         if (response.getString("status").equals("true")){
                             Utillity.message(getApplicationContext(), "Education added successfully");
+                            Utillity.hideSoftKeyboard(EducationAdd.this);
                             finish();
                         } else {
                             Utillity.message(getApplicationContext(), "Education not added");

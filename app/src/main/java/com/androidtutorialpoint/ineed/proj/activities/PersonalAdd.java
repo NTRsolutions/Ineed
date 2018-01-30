@@ -1,5 +1,7 @@
 package com.androidtutorialpoint.ineed.proj.activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -43,8 +45,8 @@ import java.util.List;
 public class PersonalAdd extends AppCompatActivity implements View.OnClickListener {
     ActionBar actionBar;
     Toolbar toolbar;
-    String CountryId, userEmail,exp="", locid,salary,age, expYear, expMonth, gender, userid, workPermit,nationalityId,
-            name, desi, no, salaryId,permitCountry,permitCountryId=" ";
+    String CountryId, userEmail,exp="", locid,salary,age, expYear, gender, userid, workPermit,nationalityId,
+            name, desi, no, salaryId,permitCountry,permitCountryId="", workpermitcount="", expMonth;
     LinearLayout bottom_toolbar;
     TextView txt_save,txt_cancel;
     EditText edtName, edtDesig,  edtNo, edtAge, edtNationality;
@@ -93,8 +95,18 @@ public class PersonalAdd extends AppCompatActivity implements View.OnClickListen
         salary  = getIntent().getStringExtra("salary");
         no = getIntent().getStringExtra("mobile");
         nationalityId = getIntent().getStringExtra("nat");
-        workPermit = getIntent().getStringExtra("workpermit");
-        permitCountry = getIntent().getStringExtra("permitCountry");
+        if (getIntent().hasExtra("workpermit")){
+            workPermit = getIntent().getStringExtra("workpermit");
+        }
+        if (getIntent().hasExtra("permitCountry")){
+            permitCountry = getIntent().getStringExtra("permitCountry");
+        }
+        if (getIntent().hasExtra("expYear")){
+            expYear = getIntent().getStringExtra("expYear");
+        }
+        if (getIntent().hasExtra("expMonth")){
+            expMonth = getIntent().getStringExtra("expMonth");
+        }
 
 //        find jobseekerid
         select_location = findViewById(R.id.spinner_location);
@@ -114,19 +126,20 @@ public class PersonalAdd extends AppCompatActivity implements View.OnClickListen
         edtAge = findViewById(R.id.edt_age);
 
 //        set value
-//        edtSalary.setText(salary);
+
         edtNationality.setText(nationalityId);
         edtName.setText(name);
         edtNo.setText(no);
-
-
         edtAge.setText(age);
         edtDesig.setText(desi);
+        gender = "male";
         if (workPermit.equals("yes")){
+            workPermit = "yes";
             workPermitYes.setChecked(true);
             workPermitNo.setChecked(false);
             spinner_workPermit.setVisibility(View.VISIBLE);
         } else {
+            workPermit = "no";
             workPermitNo.setChecked(true);
             workPermitYes.setChecked(false);
             spinner_workPermit.setVisibility(View.GONE);
@@ -136,8 +149,7 @@ public class PersonalAdd extends AppCompatActivity implements View.OnClickListen
         workPermitYes.setOnClickListener(this);
         maleRadioButton.setOnClickListener(this);
         femaleRadioButton.setOnClickListener(this);
-        gender = "male";
-        workPermit = "no";
+
         getcountrylist();
         expmonthSpinner();
         expyearSpinner();
@@ -172,12 +184,12 @@ public class PersonalAdd extends AppCompatActivity implements View.OnClickListen
         {
             case android.R.id.home:
                 onBackPressed();
+                Utillity.hideSoftKeyboard(PersonalAdd.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     private void getAdminList() {
         if(Utillity.isNetworkConnected(PersonalAdd.this)) {
@@ -351,10 +363,10 @@ public class PersonalAdd extends AppCompatActivity implements View.OnClickListen
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row, salaryList);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
         spinner_salary.setAdapter(arrayAdapter);
-//        if (salaryedit != null) {
-//            int spinnerPosition = arrayAdapter.getPosition(salaryedit);
-//            spinner_salary.setSelection(spinnerPosition);
-//        }
+        if (salary != null) {
+            int spinnerPosition = arrayAdapter.getPosition(salary);
+            spinner_salary.setSelection(spinnerPosition);
+        }
 
         spinner_salary.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -479,10 +491,10 @@ public class PersonalAdd extends AppCompatActivity implements View.OnClickListen
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row,expyearList);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
         spinner_expYear.setAdapter(arrayAdapter);
-//        if (permitCountry != null) {
-//            int spinnerPosition = arrayAdapter.getPosition(permitCountry);
-//            spinner_workPermit.setSelection(spinnerPosition);
-//        }
+        if (expYear != null) {
+            int spinnerPosition = arrayAdapter.getPosition(expYear);
+            spinner_expYear.setSelection(spinnerPosition);
+        }
         spinner_expYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -500,10 +512,10 @@ public class PersonalAdd extends AppCompatActivity implements View.OnClickListen
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row,expMonthList);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
         spinner_expMonth.setAdapter(arrayAdapter);
-//        if (permitCountry != null) {
-//            int spinnerPosition = arrayAdapter.getPosition(permitCountry);
-//            spinner_workPermit.setSelection(spinnerPosition);
-//        }
+        if (expMonth != null) {
+            int spinnerPosition = arrayAdapter.getPosition(expMonth);
+            spinner_expMonth.setSelection(spinnerPosition);
+        }
         spinner_expMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

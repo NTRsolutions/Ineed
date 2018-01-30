@@ -144,6 +144,7 @@ public class UpgradePlanActivity extends AppCompatActivity {
         requestMap.put("command",command);
         requestMap.put("merchant_reference",MERCHANT_REFERENCE);
         requestMap.put("amount",AMOUNT);
+
         requestMap.put("currency",CURRENCY);
         requestMap.put("language",LANGUAGE);
         requestMap.put("customer_email",CUSTOMER_EMAIL);

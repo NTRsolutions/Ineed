@@ -152,7 +152,6 @@ public class HelpActivity extends AppCompatActivity implements HelpAdapter.Click
             Intent intent=new Intent(HelpActivity.this,HelpDetailActivity.class);
             intent.putExtra("idd",""+id);
             startActivity(intent);
-            Utillity.message(getApplication(),""+id);
           //  startActivity(new Intent(HelpActivity.this,HelpDetailActivity.class));
     }
 }

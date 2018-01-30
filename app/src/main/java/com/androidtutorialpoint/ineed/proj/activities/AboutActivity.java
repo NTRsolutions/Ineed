@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,16 +33,18 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 public class AboutActivity extends AppCompatActivity {
-ActionBar actionBar;
-TextView text_about;
-TinyDB tinyDB;
-String language;
+    ActionBar actionBar;
+    TextView text_about;
+    TinyDB tinyDB;
+    String language;
+    WebView view;
+    String text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        text_about= (TextView) findViewById(R.id.about_text);
+        view=  findViewById(R.id.about_text);
         tinyDB = new TinyDB(getApplicationContext());
         language = tinyDB.getString("language_id");
         setuptoolbar();
@@ -118,19 +121,21 @@ String language;
                     if(status=true)
                     {
                         String detailtext=aboutUsModel.getResponse().getAbout_list().getCms_language_content();
-                        text_about.setText(detailtext);
+                        text = "<html><body><p align=\"justify\">";
+                        text+= detailtext;
+                        text+= "</p></body></html>";
+                        view.loadData(text, "text/html", "utf-8");
                        // Utillity.message(getApplicationContext(),""+detailtext);
 
                     }
                     else
                     {
-                        Utillity.message(getApplicationContext(),"Error");
-
+                        Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
                     }
                 }
                 catch (Exception e)
                 {
-                    Utillity.message(getApplicationContext(),""+e);
+                    Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
                 }
 
                 Log.d("Response",""+response);
@@ -143,7 +148,7 @@ String language;
             @Override
             public void onErrorResponse(VolleyError error) {
                 Utillity.hidepopup();
-                Utillity.message(getApplicationContext(),""+error);
+                Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
                 Log.d("Error Respons",""+error);
             }
         };
