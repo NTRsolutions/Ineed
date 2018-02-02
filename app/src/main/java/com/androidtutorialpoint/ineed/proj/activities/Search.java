@@ -67,6 +67,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     Button txt_filter;
     ArrayList<SearchModel.ProfileListBean> filtserch = new ArrayList<>();
     int value=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +88,9 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         recsearch.setLayoutManager(layoutManager);
         recsearch.setAdapter(searchAdapte);
         searchAdapte.setclick(this);
+
+        search();
+
     }
 
     private void getcountrylist() {
@@ -112,6 +116,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         super.onResume();
         setuptoolbar();
     }
+
     private Response.Listener<JSONObject> sucesslistener()
     {
         return new Response.Listener<JSONObject>() {
@@ -204,9 +209,11 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             job.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent it=new Intent(Search.this,DashboardActivity.class);
-                    it.putExtra("Login","search");
-                    startActivity(it);
+                    getViewed(jobseekerid);
+//                    Intent resultIntent = new Intent();
+//                    resultIntent.putExtra("jobseekerid", jobseekerid);
+//                    setResult(Activity.RESULT_OK, resultIntent);
+//                    finish();
                     dialog.dismiss();
                 }
             });
@@ -499,10 +506,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             value=4;
         }
     }
-
-
-    private void agefiter(String Age)
-    {
+    private void agefiter(String Age) {
           /*AGE Filter*/
         String[] sp = Age.split("-");
         String first = sp[0];
@@ -587,6 +591,20 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         return false;
     }
 
+    public void getViewed(String jobseekerid) {
+        if (Utillity.isNetworkConnected(this)) {
+            Utillity.showloadingpopup(Search.this);
+            HashMap<String, String> params = new HashMap<>();
+            params.put("employer_id", HomeActivity.userid);
+            params.put("user_id", jobseekerid);
+            RequestQueue requestQueue = VolleySingelton.getsInstance().getmRequestQueue();
+            CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.EMP_JOBSEEKER_VIEWED,
+                    params, this.viewedsucess(), this.errorlistener());
+            customRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            requestQueue.add(customRequest);
+        }
+    }
+
     private void search() {
         if(Utillity.isNetworkConnected(this)) {
             if(searchlist!=null)
@@ -611,8 +629,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             snackbar.show();
         }
     }
-    private Response.Listener<JSONObject> sucess()
-    {
+    private Response.Listener<JSONObject> sucess() {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -646,6 +663,18 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             }
         };
     }
+
+    private Response.Listener<JSONObject> viewedsucess() {
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("TAG", "onResponse: "+response.toString());
+                Utillity.hidepopup();
+                Gson gson=new Gson();
+
+            }
+        };
+    }
     public static String jobseekerid;
 
     @Override
@@ -655,12 +684,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         }
         else
         {
+            setupoverlay();
             jobseekerid = searchlist.get(position).getUser_id();
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("jobseekerid", jobseekerid);
-            setResult(Activity.RESULT_OK, resultIntent);
-            finish();
-
         }
     }
 }

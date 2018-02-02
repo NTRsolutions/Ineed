@@ -130,13 +130,13 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         }
 
         /*   intent.putExtra("salary", (String) worksListBeans.get(finalK).getJobseeker_workexp_annualsalary());
-                                                    intent.putExtra("jobtype", (S*/
+                                                    intent.putExtra("jobtypeid", (S*/
 
         if (getIntent().hasExtra("salary")){
             salaryedit = getIntent().getStringExtra("salary");
         }
-        if (getIntent().hasExtra("jobtype")){
-            jobtypeedit = getIntent().getStringExtra("jobtype");
+        if (getIntent().hasExtra("jobtypeid")){
+            jobtypeedit = getIntent().getStringExtra("jobtypeid");
         }
 
         txtDelete.setOnClickListener(this);
@@ -225,7 +225,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
                             notice();
 
                             departmentsBeans = adminList.getDepartments();
-//                            for jobtype
+//                            for jobtypeid
                             jobtypesBeans = adminList.getJobtypes();
                             for(int i = 0; i< jobtypesBeans.size(); i++)
                             {
@@ -437,7 +437,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             params.put("notice",noticeid);
             params.put("department",deptid);
             params.put("jobseeker_workexp_id", id);
-            params.put("jobtype", jobtypeid);
+            params.put("jobtypeid", jobtypeid);
             params.put("salary", salaryId);
 
             CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_WORK,
@@ -468,7 +468,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             params.put("industry", indId);
             params.put("notice",noticeid);
             params.put("department",deptid);
-            params.put("jobtype", jobtypeid);
+            params.put("jobtypeid", jobtypeid);
             params.put("salary", salaryId);
 
             CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_WORK,

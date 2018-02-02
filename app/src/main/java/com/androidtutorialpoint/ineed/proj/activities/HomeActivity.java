@@ -4,7 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +26,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.fragment.DashboardEmpFragment;
@@ -41,6 +47,7 @@ public class HomeActivity extends AppCompatActivity
     LoginData  loginData = new LoginData();
     Gson gson = new Gson();
     TinyDB tinyDB;
+    public static String userid;
 
 
     @Override
@@ -80,6 +87,7 @@ public class HomeActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
         if (loginData!=null){
+            userid=loginData.getUser_detail().getUser_id();
             if (loginData.getUser_detail().getUser_payment_id().equals("7")){
                 Intent intent = new Intent(HomeActivity.this, DialogActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -208,12 +216,12 @@ public class HomeActivity extends AppCompatActivity
                         // TODO Extract the data returned from the child Activity.
                         String returnValue = data.getStringExtra("jobseekerid");
                         DashboardJobseeker dashboardJobseeker = new DashboardJobseeker();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.subview_container, dashboardJobseeker).addToBackStack(null).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.subview_container,
+                                dashboardJobseeker).addToBackStack(null).commit();
                     }
                 }
                 break;
         }
-
     }
 
     @Override

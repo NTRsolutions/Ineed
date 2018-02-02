@@ -1,5 +1,6 @@
 package com.androidtutorialpoint.ineed.proj.fragment;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -11,18 +12,19 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,26 +46,29 @@ import com.androidtutorialpoint.ineed.proj.activities.WorkExperience;
 import com.androidtutorialpoint.ineed.proj.models.ImageInputHelper;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
 import com.androidtutorialpoint.ineed.proj.models.JobseekerProileData;
+import com.androidtutorialpoint.ineed.proj.models.Skills;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
 import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
 import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.mukesh.permissions.AppPermissions;
 import com.mukesh.tinydb.TinyDB;
-import com.nbsp.materialfilepicker.MaterialFilePicker;
-import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
-import org.bouncycastle.util.encoders.Base64;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -74,14 +79,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-
 import static com.androidtutorialpoint.ineed.proj.activities.Search.jobseekerid;
-import static com.androidtutorialpoint.ineed.proj.models.ImageInputHelper.REQUEST_PICTURE_FROM_CAMERA;
-import static com.androidtutorialpoint.ineed.proj.models.ImageInputHelper.REQUEST_PICTURE_FROM_GALLERY;
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 /**
@@ -89,14 +87,17 @@ import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
  * Contact Number : +91 9796173066
  */
 public class DashboardJobseeker extends Fragment implements ImageInputHelper.ImageActionListener, View.OnClickListener {
-
+    private final int  REQUEST_CAMERA=0, SELECT_FILE = 1;
+    private String userChoosenTask;
+    boolean result;
+    AppPermissions appPermissions;
     TextView txtaddeduc;
     LinearLayout ll_savecancel;
     ImageView imgUser, imgCamera,imgedit;
     Gson gson;
     LoginData loginData;
-    String img,language, userId, obj, skills, name="", age = "", desig = "", nationality =  "",
-            exp ="", loc = "", salary = "",permitCountry = "", expMonth, expYear="",mobile ="", workpermit="",workpermitid;
+    String img,language, userId, obj, skills, name="", dob = "", desig = "", nationality =  "",
+            exp ="", loc = "", salary = "",permitCountry = "",jobtype="", jobtypeid ="",currentComp="",gender="", expMonth="", expYear="",mobile ="", workpermit="",workpermitid;
     RequestQueue requestQueue;
     private ImageInputHelper imageInputHelper;
     JobseekerProileData jobseekerProileData;
@@ -105,10 +106,12 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     View view;
     TinyDB tinyDB;
     LinearLayout workLayout,workview, eduLayout, eduView, skillsLayout, noticeLayout, toLayout;
-    TextView txtResumeView, txtResumeUpload, txtSkillsEditHeading, txtSaveObj, txtCancle, txt_personal, txtName, txtAge, txtDesignation, txtNationaliaty,
+    TextView txtResumeView, txtResumeUpload, txtSkillsEditHeading, txtSaveObj, txtCancle, txt_personal, txtName, txtDob, txtDesignation, txtNationaliaty,
             txtExp, txtCurrentLocation, txtSalary,txtWorkSalary, txtJobtype, txtMobile, txtEmail, txtWorkingexp,txtJobTitle, txtCompanyName, txtJobHeading, txtWorkingFrom, txtWrokingTo,
     txtNotice, txtIndustry, txtDepartment,txtSaveSkills, txtCancelSkill, txtTo,txtCoursetype, txtSpecilization, txtInstitute, txtYear, txtDepartMent,txt_addwk;
     EditText edtobjective, edtSkills;
+    private static final int ALL_REQUEST_CODE = 3;
+    ArrayList<Skills>skillsList = new ArrayList<>();
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -124,7 +127,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         imageInputHelper.setImageActionListener(this);
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Profile");
-
+        appPermissions = new AppPermissions(getActivity());
         workLayout = view.findViewById(R.id.work_exp);
         skillsLayout = view.findViewById(R.id.ll_savecancelskills);
         workview = view.findViewById(R.id.layout_work_exp);
@@ -133,12 +136,26 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         txtResumeView = view.findViewById(R.id.txt_resume_view);
         txtResumeUpload = view.findViewById(R.id.txt_resume_upload);
 
+        for (int i=0;i<=5;i++){
+            skillsList.add(new Skills("HTML","2"));
+        }
+        Log.d(TAG, "onCreateView: "+skillsList.size());
+
+        String jsonStudents = gson.toJson(skillsList);
+        System.out.println("jsonStudents = " + jsonStudents);
+
+        // Converts JSON string into a collection of Student object.
+        Type type = new TypeToken<List<Skills>>() {}.getType();
+        List<Skills> studentList = gson.fromJson(jsonStudents, type);
+
+
+//        Log.d(TAG, "onCreateView: "+jsonArray);
 //        find id
         imgCamera =  view.findViewById(R.id.edt_img_camera);
         imgUser =  view.findViewById(R.id.edt_img_profile);
         imgedit=view.findViewById(R.id.edt_personal_img_edit);
         txtName = view.findViewById(R.id.jobseerker_profileName);
-        txtAge = view.findViewById(R.id.jobseeker_profileAge);
+        txtDob = view.findViewById(R.id.jobseeker_profileAge);
         txtDesignation = view.findViewById(R.id.jobseeker_profileDesi);
         txtNationaliaty = view.findViewById(R.id.jobseeker_profileNationality);
 //        txtWorkPermit = view.findViewById(R.id.jobseerker_profileName);
@@ -159,13 +176,17 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         txt_personal = (TextView) view.findViewById(R.id.txt_objective_heading);
         txt_addwk=view.findViewById(R.id.btnAddwk);
 
-
 //        set onclick listener
         txtaddeduc.setOnClickListener(this);
         txtSkillsEditHeading.setOnClickListener(this);
         imgedit.setOnClickListener(this);
         txtSaveSkills.setOnClickListener(this);
         txtCancelSkill.setOnClickListener(this);
+        if (appPermissions.hasPermission(ALL_PERMISSIONS)){
+            result = true;
+        } else {
+            appPermissions.requestPermission(getActivity(), ALL_PERMISSIONS, ALL_REQUEST_CODE);
+        }
 
         txt_addwk.setOnClickListener(this);
         txt_personal.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +207,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             ByteArrayInputStream bis = new ByteArrayInputStream(imageInByte);
             img = Utillity.BitMapToString(bitmap);
         }
-
 
         txtResumeUpload.setOnClickListener(this);
         txtCancle.setOnClickListener(new View.OnClickListener() {
@@ -214,57 +234,17 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         imgCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Add Photo!");
-                builder.setItems(options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int item) {
-                        if (options[item].equals("Take Photo"))
-                        {
-                            imageInputHelper.takePhotoWithCamera();
-
-                        }
-                        else if (options[item].equals("Choose from Gallery"))
-                        {
-                            imageInputHelper.selectImageFromGallery();
-
-                        }
-                        else if (options[item].equals("Cancel")) {
-                            dialog.dismiss();
-                        }
-                    }
-                });
-                builder.show();
+                selectImage();
             }
         });
         return view;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                                     @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
+    private static final String[] ALL_PERMISSIONS = {
 
-            case REQUEST_PICTURE_FROM_CAMERA:
-                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(getActivity(), "Camera Permissions not granted", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Camera Permissions granted", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case REQUEST_PICTURE_FROM_GALLERY:
-                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(getActivity(), "SMS Permissions not granted", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "SMS Permissions granted", Toast.LENGTH_SHORT).show();
-                }
-                break;
+            Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE,
+    };
 
-        }
-    }
     public void updateObj(){
         HashMap<String,String> params=new HashMap<>();
         params.put("objective",obj);
@@ -330,12 +310,115 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        imageInputHelper.onActivityResult(requestCode, resultCode, data);
+    private void selectImage() {
+        final CharSequence[] items = { "Take Photo", "Choose from Library",
+                "Cancel" };
 
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (items[item].equals("Take Photo")) {
+                    userChoosenTask ="Take Photo";
+                    if (appPermissions.hasPermission( Manifest.permission.CAMERA)){
+                        result = true;
+                        cameraIntent();
+                    } else {
+                        appPermissions.requestPermission(getActivity(),  Manifest.permission.CAMERA, REQUEST_CAMERA);
+                    }
+                } else if (items[item].equals("Choose from Library")) {
+                    userChoosenTask ="Choose from Library";
+                    if (appPermissions.hasPermission( Manifest.permission.READ_EXTERNAL_STORAGE)){
+                        result = true;
+                        galleryIntent();
+                        Toast.makeText(getContext(), "All granted gal"+result, Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        appPermissions.requestPermission(getActivity(),  Manifest.permission.READ_EXTERNAL_STORAGE, SELECT_FILE);
+
+                    }
+
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
     }
+
+    private void galleryIntent()
+    {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
+    }
+
+    private void cameraIntent()
+    {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent,REQUEST_CAMERA);
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        imgUser.setImageBitmap(thumbnail);
+        Glide.with(this).load(thumbnail).apply(RequestOptions.circleCropTransform()).into(imgUser);
+
+        img = Utillity.BitMapToString(thumbnail);
+        uploading(img);
+    }
+
+    @SuppressWarnings("deprecation")
+    private void onSelectFromGalleryResult(Intent data) {
+
+        Bitmap bm=null;
+        if (data != null) {
+            try {
+                bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+                Glide.with(this).load(bm).apply(RequestOptions.circleCropTransform()).into(imgUser);
+
+                img = Utillity.BitMapToString(bm);
+                uploading(img);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        }
+    }
+
 
     @Override
     public void onImageSelectedFromGallery(Uri uri, File imageFile) {
@@ -356,10 +439,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
 
             // showing bitmap in image view
 //            imgUser.setImageBitmap(bitmap);
-            Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(imgUser);
 
-            img = Utillity.BitMapToString(bitmap);
-            uploading(img);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -391,6 +471,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
 
         Utillity.showloadingpopup(getActivity());
         return new Response.Listener<JSONObject>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(JSONObject response) {
                 Utillity.hidepopup();
@@ -404,14 +485,14 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                 txtName.setText(jobseekerProileData.getUser_list().getUser_fname());
                                 name = jobseekerProileData.getUser_list().getUser_fname();
                             }
-
                             if (jsonObject.getString("user_phone").length()>1&&jsonObject.getString("user_phone").length()>1){
                                 txtMobile.setText(jobseekerProileData.getUser_list().getUser_phone());
                                 mobile = jobseekerProileData.getUser_list().getUser_phone();
                             }
-                            if (jsonObject.getString("user_age").length()>1&&jsonObject.getString("user_age").length()>1){
-                                txtAge.setText(" "+jobseekerProileData.getUser_list().getUser_age()+" year");
-                                age = jobseekerProileData.getUser_list().getUser_age();
+                            if (jsonObject.getString("user_dob").length()>1&&jsonObject.getString("user_dob").length()>1){
+                                dob = jobseekerProileData.getUser_list().getUser_dob();
+                                gender =  jobseekerProileData.getUser_list().getUser_gender();
+                                txtDob.setText(dob+ ",  "+gender);
                             }
                             if (!jsonObject.getString("user_nationality").equals("0") &&jsonObject.getString("user_nationality").length()>1){
                                 nationality  = jobseekerProileData.getUser_list().getUser_nationality();
@@ -441,8 +522,14 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                 salary = jobseekerProileData.getUser_list().getProfile_summary_currentsalary();
                             }
                             if (jsonObject.getString("profile_summary_positions").length()>1&&jsonObject.getString("profile_summary_positions").length()>1){
-                                txtDesignation.setText(jobseekerProileData.getUser_list().getProfile_summary_positions());
+
                                 desig = jobseekerProileData.getUser_list().getProfile_summary_positions();
+                                jobtype = jobseekerProileData.getUser_list().getProfile_summary_jobtype();
+                                jobtypeid = jobseekerProileData.getUser_list().getProfile_summary_jobtype_id();
+                                currentComp =  jobseekerProileData.getUser_list().getProfile_summary_companyname();
+                                txtDesignation.setText(desig.toUpperCase()+ " | "+ currentComp
+                                +" | " + jobtype);
+
                             }
 //                                if (jsonObject.getString("profile_summary_totalyear").length()>1&&jsonObject.getString("profile_summary_totalyear").length()>1){
 //                                    txtExp.setText(jobseekerProileData.getUser_list().getProfile_summary_totalyear()+" year");
@@ -452,7 +539,8 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                 if (jobseekerProileData.getUser_list().getProfile_summary_totalexpmonths()!=null){
                                     expYear = jobseekerProileData.getUser_list().getProfile_summary_totalexpyear();
                                     expMonth  = jobseekerProileData.getUser_list().getProfile_summary_totalexpmonths();
-                                    txtExp.setText(jobseekerProileData.getUser_list().getProfile_summary_totalexpyear() + "." + jobseekerProileData.getUser_list().getProfile_summary_totalexpmonths() +" year");
+                                    txtExp.setText(jobseekerProileData.getUser_list().getProfile_summary_totalexpyear()
+                                            + "." + jobseekerProileData.getUser_list().getProfile_summary_totalexpmonths() +" year");
                                 }
                             }
 
@@ -575,9 +663,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                                 intent.putExtra("notice", txtNotice.getText().toString());
                                                 intent.putExtra("jobseekerid", worksListBeans.get(finalK).getJobseeker_workexp_id());
                                                 intent.putExtra("salary", (String) worksListBeans.get(finalK).getJobseeker_workexp_annualsalary());
-                                                intent.putExtra("jobtype", (String) worksListBeans.get(finalK).getJobseeker_workexp_jobtype());
-
-
+                                                intent.putExtra("jobtypeid", (String) worksListBeans.get(finalK).getJobseeker_workexp_jobtype());
                                                 startActivity(intent);
                                             }
                                         });
@@ -591,7 +677,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                             educationsListBeans.addAll(jobseekerProileData.getEducations_list());
                             if (educationsListBeans!=null){
                                 Log.d(TAG, "onResponse: "+educationsListBeans.size());
-                                eduLayout.setVisibility(View.VISIBLE);
+                                 eduLayout.setVisibility(View.VISIBLE);
 
                                 Collections.sort(educationsListBeans, new Comparator<JobseekerProileData.EducationsListBean>() {
                                     @Override
@@ -662,6 +748,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             }
         };
     }
+
     private Response.ErrorListener error() {
         return new Response.ErrorListener() {
             @Override
@@ -686,7 +773,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
             case R.id.edt_personal_img_edit:
                 Intent intent = new Intent(getActivity(), PersonalAdd.class);
                 intent.putExtra("name", name);
-                intent.putExtra("age", age);
+                intent.putExtra("dob", dob);
                 intent.putExtra("desi", desig);
                 intent.putExtra("exp", exp);
                 intent.putExtra("loc", loc);
@@ -697,6 +784,11 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                 intent.putExtra("permitCountry", permitCountry);
                 intent.putExtra("expYear", expYear);
                 intent.putExtra("expMonth", expMonth);
+                intent.putExtra("jobTypeid", jobtypeid);
+                intent.putExtra("jobType", jobtype);
+                intent.putExtra("gender", gender);
+                intent.putExtra("dob",dob);
+                intent.putExtra("currentComp",currentComp);
                 startActivity(intent);
 
                 break;

@@ -1,6 +1,7 @@
 package com.androidtutorialpoint.ineed.proj.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -53,8 +54,10 @@ import com.mukesh.tinydb.TinyDB;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -68,22 +71,26 @@ import static android.app.Activity.RESULT_OK;
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 
-public class DashboardEmpFragment extends Fragment implements ImageInputHelper.ImageActionListener{
-
-    private static final int CAMERA_REQUEST_CODE = 1;
-    private static final int GALLERY_REQUEST_CODE = 2;
+public class DashboardEmpFragment extends Fragment {
+    private final int  REQUEST_CAMERA=0, SELECT_FILE = 1;
+    private String userChoosenTask;
+    boolean result;
+    AppPermissions appPermissions;
     EditText etEmail,etName,etcontact,etcompany;
     TextView txt_proftitle,txt_personal,txtSave,txtCancle, txtProfileView, txtPackage, txtExpired, txtCredit,
             txtUpgrade, txtLeft;
     LinearLayout ll_savecancel;
-    private AppPermissions mRuntimePermission;
     ImageView imgUser, imgCamera;
     String img,language, userId, name, company, email, phone;
     TinyDB tinyDB;
     LoginData loginData;
     EmployerProfileData profileDetailMOdel = new EmployerProfileData();
-    private ImageInputHelper imageInputHelper;
     RequestQueue requestQueue;
+    private static final int ALL_REQUEST_CODE = 3;
+    private static final String[] ALL_PERMISSIONS = {
+
+            Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE,
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,9 +98,9 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_dashboard_emp, container, false);
         loginData = new LoginData();
+        appPermissions = new AppPermissions(getActivity());
         tinyDB = new TinyDB(getContext());
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
-        mRuntimePermission = new AppPermissions(getActivity());
         String loginPrefData = tinyDB.getString("login_data");
         loginData = gson.fromJson(loginPrefData, LoginData.class);
         userId = loginData.getUser_detail().getUser_id();
@@ -117,41 +124,23 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         txt_proftitle = (TextView) view.findViewById(R.id.etProfile_name);
         imgUser = (ImageView) view.findViewById(R.id.emp_img_profilew) ;
         imgCamera = (ImageView) view.findViewById(R.id.emp_img_camera);
-        imageInputHelper = new ImageInputHelper(this);
-        imageInputHelper.setImageActionListener(this);
+
         txtProfileView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), ProfileViewed.class));
             }
         });
+        if (appPermissions.hasPermission(ALL_PERMISSIONS)){
+            result = true;
+        } else {
+            appPermissions.requestPermission(getActivity(), ALL_PERMISSIONS, ALL_REQUEST_CODE);
+        }
 
         imgCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Add Photo!");
-                builder.setItems(options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int item) {
-                        if (options[item].equals("Take Photo"))
-                        {
-                            imageInputHelper.takePhotoWithCamera();
-
-                        }
-                        else if (options[item].equals("Choose from Gallery"))
-                        {
-                            imageInputHelper.selectImageFromGallery();
-
-                        }
-                        else if (options[item].equals("Cancel")) {
-                            dialog.dismiss();
-                        }
-                    }
-                });
-                builder.show();
+               selectImage();
             }
         });
         etcontact.setEnabled(false);
@@ -255,33 +244,115 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        imageInputHelper.onActivityResult(requestCode, resultCode, data);
+    private void selectImage() {
+        final CharSequence[] items = { "Take Photo", "Choose from Library",
+                "Cancel" };
 
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (items[item].equals("Take Photo")) {
+                    userChoosenTask ="Take Photo";
+                    if (appPermissions.hasPermission( Manifest.permission.CAMERA)){
+                        result = true;
+                        cameraIntent();
+                    } else {
+                        appPermissions.requestPermission(getActivity(),  Manifest.permission.CAMERA, REQUEST_CAMERA);
+                    }
+                } else if (items[item].equals("Choose from Library")) {
+                    userChoosenTask ="Choose from Library";
+                    if (appPermissions.hasPermission( Manifest.permission.READ_EXTERNAL_STORAGE)){
+                        result = true;
+                        galleryIntent();
+                        Toast.makeText(getContext(), "All granted gal"+result, Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        appPermissions.requestPermission(getActivity(),  Manifest.permission.READ_EXTERNAL_STORAGE, SELECT_FILE);
+
+                    }
+
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case CAMERA_REQUEST_CODE:
-                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(getActivity(), "Camera Permissions not granted", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Camera Permissions granted", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case GALLERY_REQUEST_CODE:
-                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(getActivity(), "Gallery Permissions not granted", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Gallery Permissions granted", Toast.LENGTH_SHORT).show();
-                }
-                break;
+    private void galleryIntent()
+    {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
+    }
+
+    private void cameraIntent()
+    {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent,REQUEST_CAMERA);
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        imgUser.setImageBitmap(thumbnail);
+        Glide.with(this).load(thumbnail).apply(RequestOptions.circleCropTransform()).into(imgUser);
+
+        img = Utillity.BitMapToString(thumbnail);
+        uploading(img);
+    }
+
+    @SuppressWarnings("deprecation")
+    private void onSelectFromGalleryResult(Intent data) {
+
+        Bitmap bm=null;
+        if (data != null) {
+            try {
+                bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+                Glide.with(this).load(bm).apply(RequestOptions.circleCropTransform()).into(imgUser);
+
+                img = Utillity.BitMapToString(bm);
+                uploading(img);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        }
+    }
+
 
 
     Gson gson = new Gson();
@@ -354,6 +425,7 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                                    etcompany.setText(profileDetailMOdel.getProfile_detail().getUser_company());
                                    txtExpired.setText(profileDetailMOdel.getProfile_detail().getUser_package_expire_date());
                                    txtCredit.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_package_credit()));
+                                   txtPackage.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_package_id()));
                                    txtLeft.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_credit_use()));
                                    txt_proftitle.setText(profileDetailMOdel.getProfile_detail().getUser_fname());
                                    if (profileDetailMOdel.getProfile_detail().getUser_image()!=null && profileDetailMOdel.getProfile_detail().getUser_image().length()>0){
@@ -457,37 +529,6 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
             }
         };
     }
-
-    @Override
-    public void onImageSelectedFromGallery(Uri uri, File imageFile) {
-        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
-    }
-
-    @Override
-    public void onImageTakenFromCamera(Uri uri, File imageFile) {
-        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
-
-    }
-
-    @Override
-    public void onImageCropped(Uri uri, File imageFile) {
-        try {
-            // getting bitmap from uri
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-
-            // showing bitmap in image view
-//            imgUser.setImageBitmap(bitmap);
-            Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(imgUser);
-
-            img = Utillity.BitMapToString(bitmap);
-            uploading(img);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 
     public class GetImage extends AsyncTask<String, Void, Bitmap> {
         @Override
