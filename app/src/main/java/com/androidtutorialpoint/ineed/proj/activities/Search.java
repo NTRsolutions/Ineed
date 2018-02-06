@@ -72,6 +72,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        Utillity.hideSoftKeyboard(this);
         recsearch=findViewById(R.id.search_recy);
         et_search=findViewById(R.id.et_search);
         txt_filter=findViewById(R.id.txt_filter);
