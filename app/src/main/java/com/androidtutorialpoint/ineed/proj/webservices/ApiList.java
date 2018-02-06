@@ -26,8 +26,8 @@ public interface ApiList {
     String EMPLOYER_PROFILE  =BASE_URL+"employer_profile";
     String EMPLOYER_PROFILE_EDIT = BASE_URL+"employer_edit_profile";
     String JOBSEEKER_OBJECTIVE = BASE_URL+"jobseeker_edit_objective";
-    String JOBSEEKER_PROFILE_PIC = BASE_URL+"employer_image";
-    String EMP_PROFILE_PIC = BASE_URL+"jobseeker_image";
+    String JOBSEEKER_PROFILE_PIC = BASE_URL+"jobseeker_image";
+    String EMP_PROFILE_PIC = BASE_URL+"employer_image";
     String JOBSEEKER_SKILLS = BASE_URL+"jobseekers_skills";
     String JOBSEEKER_PERSONAL_EDIT= BASE_URL+"jobseeker_edit_personal";
     String JOBSEEKER_ADD_EDU = BASE_URL+"jobseeker_add_education";

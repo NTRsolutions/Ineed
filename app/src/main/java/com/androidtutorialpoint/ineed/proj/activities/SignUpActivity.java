@@ -227,6 +227,7 @@ ActionBar actionBar;
                             Toast.makeText(getApplicationContext(), fortResponseMap.get("response_message"),
                                     Toast.LENGTH_SHORT).show();
                             transaction_id = fortResponseMap.get("fort_id");
+                            signUp(transaction_id);
                         }
                         @Override
                         public void onFailure(Map<String, String> requestParamsMap, Map<String, String> fortResponseMap) {
@@ -325,9 +326,8 @@ ActionBar actionBar;
     }
 
 
-    public void signUp(View view){
+    public void signUp(String transaction_id){
         if (transaction_id==null){
-            Utillity.message(getApplicationContext(), "Please make payment before signup ");
         } else {
             if (!transaction_id.isEmpty()) {
 

@@ -165,6 +165,7 @@ public class DialogActivity extends AppCompatActivity {
                             Log.d(TAG, "onSuccess: "+fortResponseMap.get("response_message"));
                             transaction_id = fortResponseMap.get("fort_id");
                             Utillity.message(getApplicationContext(), "Payment successful ");
+                            signUp(transaction_id);
                         }
                         @Override
                         public void onFailure(Map<String, String> requestParamsMap, Map<String, String> fortResponseMap) {
@@ -267,9 +268,8 @@ public class DialogActivity extends AppCompatActivity {
 
 
 
-    public void signUp(View view){
+    public void signUp(String transaction_id){
         if (transaction_id==null){
-            Utillity.message(getApplicationContext(), "Please make payment before signup ");
 
         }else {
             if (!transaction_id.isEmpty()){
@@ -284,7 +284,7 @@ public class DialogActivity extends AppCompatActivity {
                         this.success(),this.error());
                 requestQueue.add(customRequest);
             } else {
-                Utillity.message(getApplicationContext(), "Please make payment before signup ");
+//                Utillity.message(getApplicationContext(), "Please make payment before signup ");
             }
         }
     }

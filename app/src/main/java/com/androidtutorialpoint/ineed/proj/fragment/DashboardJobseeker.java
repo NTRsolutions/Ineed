@@ -38,6 +38,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
+import com.androidtutorialpoint.ineed.proj.activities.AddSkillsActivity;
 import com.androidtutorialpoint.ineed.proj.activities.EducationAdd;
 import com.androidtutorialpoint.ineed.proj.activities.HomeActivity;
 import com.androidtutorialpoint.ineed.proj.activities.PersonalAdd;
@@ -295,7 +296,7 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
         } else {
             imgCamera.setVisibility(View.GONE);
             imgedit.setVisibility(View.GONE);
-            txtSkillsEditHeading.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            txtSkillsEditHeading.setVisibility(View.GONE);
             txt_personal.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             txt_addwk.setVisibility(View.GONE);
             txtaddeduc.setVisibility(View.GONE);
@@ -414,9 +415,9 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
             else if (requestCode == REQUEST_CAMERA)
                 onCaptureImageResult(data);
         }
+
+
     }
-
-
 
     public void getProfile(String userId){
             educationsListBeans = new ArrayList<>();
@@ -439,7 +440,7 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
             }
         }
 
-    private Response.Listener<JSONObject> success() {
+    private Response.Listener<JSONObject>   success() {
 
         Utillity.showloadingpopup(getActivity());
         return new Response.Listener<JSONObject>() {
@@ -550,7 +551,7 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                             worksListBeans.addAll(jobseekerProileData.getWorks_list());
 
                             if (worksListBeans != null && worksListBeans.size()>0) {
-                                workLayout.setVisibility(View.VISIBLE);
+
                                 for (int i = 0; i <worksListBeans.size(); i++) {
                                     workview = (LinearLayout) View.inflate(getContext(), R.layout.work_experience_view, null);
                                     txtJobHeading = workview.findViewById(R.id.txt_work_experience_heading);
@@ -767,8 +768,9 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
 
                 break;
             case R.id.txt_skills_heading:
-                edtSkills.setEnabled(true);
-                skillsLayout.setVisibility(View.VISIBLE);
+//                edtSkills.setEnabled(true);
+//                skillsLayout.setVisibility(View.VISIBLE);
+                startActivity(new Intent(getActivity(), AddSkillsActivity.class));
                 break;
             case R.id.txt_resume_upload:
                 startActivity(new Intent(getActivity(), UploadResumeActivity.class));

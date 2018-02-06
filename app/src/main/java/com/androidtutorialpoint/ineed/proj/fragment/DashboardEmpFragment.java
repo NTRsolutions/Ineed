@@ -351,9 +351,8 @@ public class DashboardEmpFragment extends Fragment {
             else if (requestCode == REQUEST_CAMERA)
                 onCaptureImageResult(data);
         }
+
     }
-
-
 
     Gson gson = new Gson();
     @Override

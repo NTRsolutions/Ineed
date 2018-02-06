@@ -46,6 +46,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom|right"
                             android:padding="5dp"
+                            android:visibility="gone"
                             android:src="@drawable/ic_photo_camera" />
 
                     </FrameLayout>
@@ -81,7 +82,7 @@
                         android:textSize="10sp"
                         android:id="@+id/jobseeker_profileAge"
                         android:textColor="@color/white"
-                       />
+                        />
 
                 </LinearLayout>
                 <TextView
@@ -94,7 +95,7 @@
                     android:id="@+id/jobseeker_profileDesi"
                     android:textStyle="bold"
                     android:textColor="@color/white"
-                   />
+                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -610,10 +611,6 @@
 
 
             </android.support.v7.widget.CardView>
-
-
-
-
 
         </LinearLayout>
 

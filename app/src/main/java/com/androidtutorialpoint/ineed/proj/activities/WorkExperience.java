@@ -353,6 +353,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         txt_save.setOnClickListener(this);
         txt_cancel.setOnClickListener(this);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId())

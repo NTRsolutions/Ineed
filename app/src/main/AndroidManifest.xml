@@ -8,7 +8,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
+
     <application
         android:name=".proj.MyApplication"
         android:allowBackup="true"
@@ -41,7 +43,8 @@
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".proj.activities.Search" android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".proj.activities.ResetPasswordsActivity" />
-        <activity android:name=".proj.activities.ContactUsActivity"
+        <activity
+            android:name=".proj.activities.ContactUsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".proj.activities.Splash2Activity" />
         <activity android:name=".proj.activities.DashboardActivity" />
@@ -78,7 +81,8 @@
         <activity
             android:name=".proj.activities.PersonalAdd"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".proj.activities.UploadResumeActivity"/>
+        <activity android:name=".proj.activities.UploadResumeActivity" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.androidtutorialpoint.ineed.android.fileprovider"
@@ -87,8 +91,11 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"
-                tools:replace="android:resource"/>
+                tools:replace="android:resource" />
         </provider>
+
+        <activity android:name=".proj.activities.AddSkillsActivity" />
+        <activity android:name=".proj.activities.JobseekerDetailActivity"></activity>
     </application>
 
 </manifest>
