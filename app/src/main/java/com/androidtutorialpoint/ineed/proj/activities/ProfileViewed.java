@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
+import static com.androidtutorialpoint.ineed.proj.activities.Search.jobseekerid;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -153,9 +153,10 @@ public class ProfileViewed extends AppCompatActivity implements ProfileViewdAdap
         }
 
     }
-
+    public static String jobseekerid;
     @Override
     public void itemclick(View v, int post) {
+        jobseekerid = profileListBean.get(post).getJobseeker_id();
 
     }
 }

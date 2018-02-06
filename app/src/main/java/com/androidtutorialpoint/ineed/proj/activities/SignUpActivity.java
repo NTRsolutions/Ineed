@@ -80,7 +80,7 @@ ActionBar actionBar;
         image3= (ImageView) findViewById(R.id.image3);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         SelectScreen();
-        setupoverlay();
+   //     setupoverlay();
      //   setuptoolbar();
     }
 

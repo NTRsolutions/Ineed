@@ -1,5 +1,6 @@
 package com.androidtutorialpoint.ineed.proj.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
@@ -13,9 +14,12 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import static com.androidtutorialpoint.ineed.proj.activities.SignUpActivity.selection;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -103,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                 final ClickableSpan clickableSpan=new ClickableSpan() {
                     @Override
                     public void onClick(View view) {
-                        startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
+                        setupoverlay();
                     }
 
                     @Override
@@ -224,4 +228,32 @@ public class LoginActivity extends AppCompatActivity {
         Utillity.hideSoftKeyboard(LoginActivity.this);
     }
 
+    private void setupoverlay() {
+        final Dialog dialog=new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.overlay_popup);
+        RelativeLayout relativeLayout=(RelativeLayout)dialog.findViewById(R.id.rela_backgrnd);
+        TextView textView=(TextView)dialog.findViewById(R.id.txt_msg);
+        final Button job=(Button)dialog.findViewById(R.id.overjob);
+        Button emp=(Button)dialog.findViewById(R.id.overemp);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        job.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                selection="2";  /*It's for Jobseeker*/
+                startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
+            }
+        });
+        emp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                selection="1";  /*It's for Employer*/
+                startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
+            }
+        });
+        dialog.show();
+    }
 }

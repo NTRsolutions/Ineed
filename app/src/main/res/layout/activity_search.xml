@@ -48,7 +48,9 @@
         android:layout_marginLeft="5dp"
         android:inputType="text"
         android:imeOptions="actionSearch"
-        android:hint="Enter Keyword technology"/>
+        android:hint="Enter Keyword technology">
+
+    </EditText>
 </LinearLayout>
 
     <LinearLayout

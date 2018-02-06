@@ -72,7 +72,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        Utillity.hideSoftKeyboard(this);
         recsearch=findViewById(R.id.search_recy);
         et_search=findViewById(R.id.et_search);
         txt_filter=findViewById(R.id.txt_filter);
@@ -114,7 +113,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     protected void onResume() {
         super.onResume();
         setuptoolbar();
-
     }
 
     private Response.Listener<JSONObject> sucesslistener()
@@ -145,15 +143,11 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                             Cname.add(CName);
                             Cid.add(CId);
                         }
-
                         handlespinner();
                     }
                 } catch (Exception e) {
                     Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
-
                 }
-
-
             }
         };
     }
@@ -167,7 +161,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position>0) {
                     CountryId = Cid.get(position);
-                    Utillity.message(getApplicationContext(), CountryId);
+                 //   Utillity.message(getApplicationContext(), CountryId);
                 }
                 else
                 {
@@ -196,7 +190,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         };
     }
 
-    private void setupoverlay() {
+    private void
+    setupoverlay() {
         final Dialog dialog=new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.search_overlay_popup);
@@ -212,10 +207,10 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                 @Override
                 public void onClick(View view) {
                     getViewed(jobseekerid);
-//                    Intent resultIntent = new Intent();
-//                    resultIntent.putExtra("jobseekerid", jobseekerid);
-//                    setResult(Activity.RESULT_OK, resultIntent);
-//                    finish();
+                   Intent resultIntent = new Intent();
+                   resultIntent.putExtra("jobseekerid", jobseekerid);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                   finish();
                     dialog.dismiss();
                 }
             });
