@@ -88,9 +88,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         recsearch.setLayoutManager(layoutManager);
         recsearch.setAdapter(searchAdapte);
         searchAdapte.setclick(this);
-
         search();
-
     }
 
     private void getcountrylist() {
@@ -115,6 +113,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     protected void onResume() {
         super.onResume();
         setuptoolbar();
+
     }
 
     private Response.Listener<JSONObject> sucesslistener()
@@ -145,6 +144,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                             Cname.add(CName);
                             Cid.add(CId);
                         }
+
                         handlespinner();
                     }
                 } catch (Exception e) {
@@ -176,6 +176,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                CountryId="";
 
             }
         });
@@ -613,6 +614,10 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             String searchval=et_search.getText().toString();
             Utillity.showloadingpopup(Search.this);
             HashMap<String,String> params=new HashMap<>();
+            if(CountryId==null)
+            {
+                CountryId="";
+            }
             params.put("country",CountryId);
             params.put("key",searchval);
             RequestQueue requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
