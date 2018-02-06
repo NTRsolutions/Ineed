@@ -86,7 +86,7 @@ import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
  * Created by Muhib.
  * Contact Number : +91 9796173066
  */
-public class DashboardJobseeker extends Fragment implements ImageInputHelper.ImageActionListener, View.OnClickListener {
+public class DashboardJobseeker extends Fragment implements View.OnClickListener {
     private final int  REQUEST_CAMERA=0, SELECT_FILE = 1;
     private String userChoosenTask;
     boolean result;
@@ -99,7 +99,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     String img,language, userId, obj, skills, name="", dob = "", desig = "", nationality =  "",
             exp ="", loc = "", salary = "",permitCountry = "",jobtype="", jobtypeid ="",currentComp="",gender="", expMonth="", expYear="",mobile ="", workpermit="",workpermitid;
     RequestQueue requestQueue;
-    private ImageInputHelper imageInputHelper;
     JobseekerProileData jobseekerProileData;
     List<JobseekerProileData.EducationsListBean>educationsListBeans ;
     List<JobseekerProileData.WorksListBean>worksListBeans;
@@ -123,8 +122,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
         loginData = new LoginData();
         jobseekerProileData = new JobseekerProileData();
         tinyDB = new TinyDB(getContext());
-        imageInputHelper = new ImageInputHelper(this);
-        imageInputHelper.setImageActionListener(this);
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Profile");
         appPermissions = new AppPermissions(getActivity());
@@ -226,7 +223,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                     updateObj();
 
                 } else {
-                    Utillity.message(getActivity(),"Please enter company name");
+                    Utillity.message(getActivity(),"Please enter objective");
                 }
             }
         });
@@ -420,31 +417,6 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
     }
 
 
-    @Override
-    public void onImageSelectedFromGallery(Uri uri, File imageFile) {
-        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
-    }
-
-    @Override
-    public void onImageTakenFromCamera(Uri uri, File imageFile) {
-        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
-
-    }
-
-    @Override
-    public void onImageCropped(Uri uri, File imageFile) {
-        try {
-            // getting bitmap from uri
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-
-            // showing bitmap in image view
-//            imgUser.setImageBitmap(bitmap);
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void getProfile(String userId){
             educationsListBeans = new ArrayList<>();
@@ -522,19 +494,21 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                                 salary = jobseekerProileData.getUser_list().getProfile_summary_currentsalary();
                             }
                             if (jsonObject.getString("profile_summary_positions").length()>1&&jsonObject.getString("profile_summary_positions").length()>1){
+                                if (jobseekerProileData.getUser_list().getProfile_summary_positions()!=null){
+                                    desig = jobseekerProileData.getUser_list().getProfile_summary_positions();
 
-                                desig = jobseekerProileData.getUser_list().getProfile_summary_positions();
-                                jobtype = jobseekerProileData.getUser_list().getProfile_summary_jobtype();
+                                }
+                                if (jobseekerProileData.getUser_list().getProfile_summary_jobtype()!=null){
+                                    jobtype = jobseekerProileData.getUser_list().getProfile_summary_jobtype();
+                                }
+                                if (jobseekerProileData.getUser_list().getProfile_summary_companyname()!=null){
+                                    currentComp =  jobseekerProileData.getUser_list().getProfile_summary_companyname();
+                                    txtDesignation.setText(desig+ " | "+ currentComp
+                                            +" | " + jobtype);
+                                }
                                 jobtypeid = jobseekerProileData.getUser_list().getProfile_summary_jobtype_id();
-                                currentComp =  jobseekerProileData.getUser_list().getProfile_summary_companyname();
-                                txtDesignation.setText(desig.toUpperCase()+ " | "+ currentComp
-                                +" | " + jobtype);
 
                             }
-//                                if (jsonObject.getString("profile_summary_totalyear").length()>1&&jsonObject.getString("profile_summary_totalyear").length()>1){
-//                                    txtExp.setText(jobseekerProileData.getUser_list().getProfile_summary_totalyear()+" year");
-//                                    exp = jobseekerProileData.getUser_list().getProfile_summary_totalyear();
-//                                }
                             if (jobseekerProileData.getUser_list().getProfile_summary_totalexpyear()!=null){
                                 if (jobseekerProileData.getUser_list().getProfile_summary_totalexpmonths()!=null){
                                     expYear = jobseekerProileData.getUser_list().getProfile_summary_totalexpyear();
@@ -838,7 +812,7 @@ public class DashboardJobseeker extends Fragment implements ImageInputHelper.Ima
                         JSONObject jsonObject = new JSONObject(response.toString());
                         if (jsonObject.getString("status").equals("true")){
                             edtSkills.setEnabled(false);
-                            Utillity.message(getContext(), "Objective updated successfully");
+                            Utillity.message(getContext(), " Updated successfully");
                             skillsLayout.setVisibility(View.GONE);
                             getProfile(userId);
                         } else {

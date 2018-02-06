@@ -460,7 +460,6 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             HashMap<String, String> params = new HashMap<>();
             params.put("user_id",userid);
             params.put("employertype",empType);
-            params.put("user_id",userid);
             params.put("job_title",jobtitle);
             params.put("company_name",companyName);
             params.put("working_from",workingfrom);
@@ -468,8 +467,11 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             params.put("industry", indId);
             params.put("notice",noticeid);
             params.put("department",deptid);
-            params.put("jobtypeid", jobtypeid);
+            params.put("jobtype", jobtypeid);
             params.put("salary", salaryId);
+
+            /*user_id=533&employertype=c&job_title=sssssss&company_name=sssssssss&working_from=2015-5-5&working_to=
+            2016-8-4&notice=2&industry=5&department=6&salary=5&jobtype=4*/
 
             CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_WORK,
                     params, this.success(), this.errorListener());
