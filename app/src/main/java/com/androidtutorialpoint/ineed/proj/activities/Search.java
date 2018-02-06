@@ -1,5 +1,6 @@
 package com.androidtutorialpoint.ineed.proj.activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
@@ -34,6 +35,7 @@ import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.adapters.SearchAdapter;
+import com.androidtutorialpoint.ineed.proj.fragment.DashboardJobseeker;
 import com.androidtutorialpoint.ineed.proj.models.CountryList;
 import com.androidtutorialpoint.ineed.proj.models.SearchModel;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
@@ -65,6 +67,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     Button txt_filter;
     ArrayList<SearchModel.ProfileListBean> filtserch = new ArrayList<>();
     int value=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +77,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         txt_filter=findViewById(R.id.txt_filter);
         txt_filter.setOnClickListener(this);
         et_search.setOnEditorActionListener(this);
-        // linearLayout= (LinearLayout) findViewById(R.id.ll_linear);
+        // linearLayout= (LinearLayout) findViewById(R.jobseekerid.ll_linear);
         select_country=findViewById(R.id.sp_selectCountry);
         // linearLayout.setOnClickListener(this);
         Intent it=getIntent();
@@ -85,6 +88,9 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         recsearch.setLayoutManager(layoutManager);
         recsearch.setAdapter(searchAdapte);
         searchAdapte.setclick(this);
+
+        search();
+
     }
 
     private void getcountrylist() {
@@ -94,7 +100,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             RequestQueue requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
             CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.COUNTRY,params,this.sucesslistener(),this.errorlistener());
             customRequest.setRetryPolicy(new DefaultRetryPolicy(30000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
             requestQueue.add(customRequest);
         }
         else
@@ -111,6 +116,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         super.onResume();
         setuptoolbar();
     }
+
     private Response.Listener<JSONObject> sucesslistener()
     {
         return new Response.Listener<JSONObject>() {
@@ -142,7 +148,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                         handlespinner();
                     }
                 } catch (Exception e) {
-                    Utillity.message(getApplicationContext(),""+e);
+                    Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
+
                 }
 
 
@@ -180,7 +187,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             @Override
             public void onErrorResponse(VolleyError error) {
                 Utillity.hidepopup();
-                Utillity.message(getApplicationContext(),"Error in Network");
+                Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
+
                 Log.d("Error Respons",""+error);
             }
         };
@@ -201,9 +209,11 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             job.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent it=new Intent(Search.this,DashboardActivity.class);
-                    it.putExtra("Login","search");
-                    startActivity(it);
+                    getViewed(jobseekerid);
+//                    Intent resultIntent = new Intent();
+//                    resultIntent.putExtra("jobseekerid", jobseekerid);
+//                    setResult(Activity.RESULT_OK, resultIntent);
+//                    finish();
                     dialog.dismiss();
                 }
             });
@@ -495,10 +505,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             value=4;
         }
     }
-
-
-    private void agefiter(String Age)
-    {
+    private void agefiter(String Age) {
           /*AGE Filter*/
         String[] sp = Age.split("-");
         String first = sp[0];
@@ -565,7 +572,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         switch (item.getItemId())
         {
             case android.R.id.home:
-                onBackPressed();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -577,12 +584,24 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if(v.getId()==R.id.et_search)
         {
-            InputMethodManager inputMethodManager= (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromInputMethod(getCurrentFocus().getWindowToken(),0);
+            Utillity.hideSoftKeyboard(Search.this);
             search();
-
         }
         return false;
+    }
+
+    public void getViewed(String jobseekerid) {
+        if (Utillity.isNetworkConnected(this)) {
+            Utillity.showloadingpopup(Search.this);
+            HashMap<String, String> params = new HashMap<>();
+            params.put("employer_id", HomeActivity.userid);
+            params.put("user_id", jobseekerid);
+            RequestQueue requestQueue = VolleySingelton.getsInstance().getmRequestQueue();
+            CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.EMP_JOBSEEKER_VIEWED,
+                    params, this.viewedsucess(), this.errorlistener());
+            customRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            requestQueue.add(customRequest);
+        }
     }
 
     private void search() {
@@ -609,8 +628,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             snackbar.show();
         }
     }
-    private Response.Listener<JSONObject> sucess()
-    {
+    private Response.Listener<JSONObject> sucess() {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -645,6 +663,19 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         };
     }
 
+    private Response.Listener<JSONObject> viewedsucess() {
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d("TAG", "onResponse: "+response.toString());
+                Utillity.hidepopup();
+                Gson gson=new Gson();
+
+            }
+        };
+    }
+    public static String jobseekerid;
+
     @Override
     public void itemclick(View v, int position) {
         if(set.equalsIgnoreCase("login")) {
@@ -652,8 +683,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         }
         else
         {
-            int idd = Integer.parseInt(searchlist.get(position).getUser_id());
-            Utillity.message(getApplication(), "" + idd);
+            setupoverlay();
+            jobseekerid = searchlist.get(position).getUser_id();
         }
     }
 }

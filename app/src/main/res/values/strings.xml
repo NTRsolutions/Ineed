@@ -2,7 +2,7 @@
     <string name="app_name">Ineed</string>
 
     <!--Global-->
-    <string name="internetConnection">Check Your Internet Connection</string>
+    <string name="internetConnection">App is not able to get connected due to internet connection, please check your internet connectivity</string>
     <string name="fieldsmeand">All fields are Mandatory</string>
     <string name="validemail">Please Enter Valid userid</string>
     <string name="pleasewait">Please Wait...</string>

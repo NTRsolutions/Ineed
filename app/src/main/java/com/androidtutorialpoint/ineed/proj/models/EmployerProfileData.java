@@ -7,9 +7,10 @@ package com.androidtutorialpoint.ineed.proj.models;
 
 public class EmployerProfileData {
 
+
     /**
      * status : true
-     * profile_detail : {"user_fname":"","user_lname":null,"user_email":"rs@g.i","user_company":"","user_phone":"","user_image":"","user_package_id":"PRO","user_package_price":"145","user_package_credit":"119","user_package_expire_date":"2018-04-13","user_credit_use":1}
+     * profile_detail : {"user_fname":"rakhi singh","user_lname":null,"user_email":"rakhi@gmail.com","user_company":"ask ","user_phone":"9958187466","user_image":"63.png","user_package_id":"PRO","user_package_price":"2000","user_package_credit":"500","user_package_expire_date":"2018-07-11","user_credit_use":2}
      */
 
     private boolean status;
@@ -33,17 +34,17 @@ public class EmployerProfileData {
 
     public static class ProfileDetailBean {
         /**
-         * user_fname :
+         * user_fname : rakhi singh
          * user_lname : null
-         * user_email : rs@g.i
-         * user_company :
-         * user_phone :
-         * user_image :
+         * user_email : rakhi@gmail.com
+         * user_company : ask
+         * user_phone : 9958187466
+         * user_image : 63.png
          * user_package_id : PRO
-         * user_package_price : 145
-         * user_package_credit : 119
-         * user_package_expire_date : 2018-04-13
-         * user_credit_use : 1
+         * user_package_price : 2000
+         * user_package_credit : 500
+         * user_package_expire_date : 2018-07-11
+         * user_credit_use : 2
          */
 
         private String user_fname;

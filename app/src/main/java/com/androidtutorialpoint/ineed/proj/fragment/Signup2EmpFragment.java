@@ -24,6 +24,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
+import com.androidtutorialpoint.ineed.proj.Utils.AppGlobal;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.LoginActivity;
 import com.androidtutorialpoint.ineed.proj.activities.SignUpActivity;
@@ -37,6 +38,7 @@ import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -57,12 +59,13 @@ import static com.androidtutorialpoint.ineed.proj.activities.SignUpActivity.sele
 public class Signup2EmpFragment extends Fragment implements EmpPackageAdapter.Clicklistner{
     View view;
     RequestQueue requestQueue;
+    AppGlobal appGlobal = AppGlobal.getInstancess();
     Gson gson = new Gson();
     List<EmpPackage.ResponseBean.EmployerDataBean> jobSeekerPackage;
     RecyclerView recyclerView;
     EmpPackageAdapter packageAdapter;
     TinyDB sharpref;
-    String language, usertype;
+    String language, usertype,transaction_id, userId;
     TextView txtlogin;
     Button bt_next;
 
@@ -71,11 +74,12 @@ public class Signup2EmpFragment extends Fragment implements EmpPackageAdapter.Cl
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.signup2empfrag, container, false);
         bt_next = (Button) view.findViewById(R.id.bt_next);
-
+        appGlobal.context=getActivity();
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
         jobSeekerPackage = new ArrayList<>();
         sharpref=new TinyDB(getContext());
         language=sharpref.getString("language_id");
+        userId = SignUpActivity.userid;
 
         bt_next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,10 +185,63 @@ public class Signup2EmpFragment extends Fragment implements EmpPackageAdapter.Cl
     @Override
     public void itemclick(View v, int post) {
 
-        Signup3frag thirFragment=new Signup3frag();
         price = jobSeekerPackage.get(post).getEmployers_package_prize();
         packageId = jobSeekerPackage.get(post).getEmployers_package_id();
-        getActivity(). getSupportFragmentManager().beginTransaction().replace(R.id.flContent,thirFragment)
-                .addToBackStack(null).commit();
+        if (Integer.parseInt(price)>0){
+            Signup3frag thirFragment=new Signup3frag();
+            getActivity(). getSupportFragmentManager().beginTransaction().replace(R.id.flContent,thirFragment)
+                    .addToBackStack(null).commit();
+        } else {
+            transaction_id = "free";
+            upgradePackage();
+        }
     }
+
+
+    public void upgradePackage() {
+        if (transaction_id == null) {
+            Utillity.message(getActivity(), "Please make payment");
+        } else {
+            if (!transaction_id.isEmpty()) {
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put("user_type", usertype);
+                params.put("language", language);
+                params.put("transaction_id", transaction_id);
+                params.put("package_id", packageId);
+                params.put("user_id", userId);
+                CustomRequest customRequest = new CustomRequest(com.android.volley.Request.Method.POST, ApiList.MAKE_PAYMENT, params,
+                        this.successSign(), this.error());
+                requestQueue.add(customRequest);
+            } else {
+                Utillity.message(getActivity(), "Please make payment before signup ");
+            }
+        }
+    }
+
+    private com.android.volley.Response.Listener<JSONObject> successSign()
+    {
+        Utillity.showloadingpopup(getActivity());
+        return new com.android.volley.Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Utillity.hidepopup();
+                if (response!=null){
+                    try {
+                        if (response.getString("status").equals("true")){
+                            Utillity.message(getActivity(), "Process completed");
+                            appGlobal.setLoginData(response.toString());
+                            startActivity(new Intent(getActivity(), LoginActivity.class));
+                        }
+                        else {
+                            Utillity.message(getActivity(),"Something went wrong");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+    }
+
 }

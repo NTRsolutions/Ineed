@@ -49,6 +49,7 @@ public class EmpPackageAdapter extends RecyclerView.Adapter<EmpPackageAdapter.My
             holder.txtValidity.setText("Valid for "+jobSeekerPackage.get(position).getEmployers_package_time_frame()+" months");
             holder.txtPckgType.setText(jobSeekerPackage.get(position).getEmployers_package_name().toUpperCase());
             holder.txtCredit.setText(jobSeekerPackage.get(position).getEmployers_package_credit() + " Credits");
+            holder.txtCredit.setVisibility(View.VISIBLE);
 
         }
 

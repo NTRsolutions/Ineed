@@ -1,13 +1,18 @@
 package com.androidtutorialpoint.ineed.proj.models;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
+import com.mukesh.permissions.AppPermissions;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import org.bouncycastle.util.encoders.Base64;
@@ -34,7 +39,7 @@ public class ImageInputHelper {
     public static final int REQUEST_PICTURE_FROM_CAMERA = 24;
     public static final int REQUEST_CROP_PICTURE = 25;
     private static final String TAG = "ImageInputHelper";
-
+    private AppPermissions mRuntimePermission;
     private File tempFileFromSource = null;
     private Uri tempUriFromSource = null;
 
@@ -51,6 +56,8 @@ public class ImageInputHelper {
     public ImageInputHelper(Fragment fragment) {
         this.fragment = fragment;
         this.mContext = fragment.getActivity();
+        mRuntimePermission = new AppPermissions(mContext);
+
     }
 
     public void setImageActionListener(ImageActionListener imageActionListener) {
@@ -77,6 +84,26 @@ public class ImageInputHelper {
     }
 
 
+   /* @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case REQUEST_PICTURE_FROM_CAMERA:
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(getActivity(), "Camera Permissions not granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Camera Permissions granted", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case REQUEST_PICTURE_FROM_GALLERY:
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(getActivity(), "Gallery Permissions not granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Gallery Permissions granted", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }*/
 
     /**
      * Starts an intent for selecting image from gallery. The result is returned to the
@@ -94,13 +121,20 @@ public class ImageInputHelper {
             }
         }
 
-        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUriFromSource);
-        if (fragment == null) {
-            mContext.startActivityForResult(intent, REQUEST_PICTURE_FROM_GALLERY);
+        if (mRuntimePermission.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUriFromSource);
+            if (fragment == null) {
+                mContext.startActivityForResult(intent, REQUEST_PICTURE_FROM_GALLERY);
+            } else {
+                fragment.startActivityForResult(intent, REQUEST_PICTURE_FROM_GALLERY);
+            }
         } else {
-            fragment.startActivityForResult(intent, REQUEST_PICTURE_FROM_GALLERY);
+            mRuntimePermission.requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, REQUEST_PICTURE_FROM_GALLERY);
         }
+
+
     }
 
     /**
@@ -110,23 +144,29 @@ public class ImageInputHelper {
     public void takePhotoWithCamera() {
         checkListener();
 
-        if (tempFileFromSource == null) {
-            try {
-                tempFileFromSource = File.createTempFile("choose", "png", mContext.getExternalCacheDir());
-                tempUriFromSource = Uri.fromFile(tempFileFromSource);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (mRuntimePermission.hasPermission(Manifest.permission.CAMERA)) {
+            if (tempFileFromSource == null) {
+                try {
+                    tempFileFromSource = File.createTempFile("choose", "png", mContext.getExternalCacheDir());
+                    tempUriFromSource = Uri.fromFile(tempFileFromSource);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUriFromSource);
+            if (fragment == null) {
+                mContext.startActivityForResult(intent, REQUEST_PICTURE_FROM_CAMERA);
+            } else {
+                fragment.startActivityForResult(intent, REQUEST_PICTURE_FROM_CAMERA);
+            }
+        } else {
+            mRuntimePermission.requestPermission(Manifest.permission.CAMERA, REQUEST_PICTURE_FROM_CAMERA);
         }
 
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUriFromSource);
-        if (fragment == null) {
-            mContext.startActivityForResult(intent, REQUEST_PICTURE_FROM_CAMERA);
-        } else {
-            fragment.startActivityForResult(intent, REQUEST_PICTURE_FROM_CAMERA);
-        }
     }
+
+
 
     public void requestCropImage(Uri uri, int outputX, int outputY, int aspectX, int aspectY) {
         checkListener();

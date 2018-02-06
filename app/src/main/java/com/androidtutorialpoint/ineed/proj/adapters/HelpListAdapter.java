@@ -45,6 +45,8 @@ public class HelpListAdapter extends ExpandableRecyclerViewAdapter<TitleViewHold
 
     @Override
     public void onBindGroupViewHolder(TitleViewHolder holder, int flatPosition, ExpandableGroup group) {
-        holder.setTitletext(group.getTitle());
+        String data = group.getTitle();
+
+        holder.setTitletext(data);
     }
 }

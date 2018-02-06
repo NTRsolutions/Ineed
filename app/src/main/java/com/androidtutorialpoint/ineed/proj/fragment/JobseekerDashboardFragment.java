@@ -39,6 +39,7 @@ import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
 import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
 import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.google.gson.Gson;
+import com.mukesh.permissions.AppPermissions;
 import com.mukesh.tinydb.TinyDB;
 
 import org.json.JSONObject;
@@ -56,6 +57,8 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
     View view;
     String userId;
     LoginData loginData = new LoginData();
+    private AppPermissions mRuntimePermission;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,11 +67,13 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
         view = inflater.inflate(R.layout.fragment_jobseeker_dashboard, container, false);
 
         tinyDB = new TinyDB(getContext());
+        mRuntimePermission = new AppPermissions(getActivity());
+
         String data = tinyDB.getString("login_data");
         loginData= gson.fromJson(data, LoginData.class);
         userId = loginData.getUser_detail().getUser_id();
 
-//        find id
+//        find jobseekerid
         txtMyProfile = (TextView) view.findViewById(R.id.jobseekerdash_txtMyProfile);
         txtExpiry = (TextView) view.findViewById(R.id.jobseekerdash_expiryDate);
         txtViewedProfile = (TextView) view.findViewById(R.id.jobseekerdash_viewNo);
@@ -113,13 +118,13 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
             customRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             requestQueue.add(customRequest);
         }
-        else
-        {
-            Snackbar snackbar=Snackbar.make(view.findViewById(android.R.id.content),getResources().getString(R.string.internetConnection),Snackbar.LENGTH_LONG);
-            View snackbarview=snackbar.getView();
-            snackbarview.setBackgroundColor(getResources().getColor(R.color.appbasecolor));
-            snackbar.show();
-        }
+//        else
+//        {
+//            Snackbar snackbar=Snackbar.make(view.findViewById(android.R.id.content),getResources().getString(R.string.internetConnection),Snackbar.LENGTH_LONG);
+//            View snackbarview=snackbar.getView();
+//            snackbarview.setBackgroundColor(getResources().getColor(R.color.appbasecolor));
+//            snackbar.show();
+//        }
     }
     private Response.Listener<JSONObject> sucess()
     {

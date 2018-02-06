@@ -57,12 +57,12 @@ public class DialogActivity extends AppCompatActivity {
     ActionBar actionBar;
     TinyDB tinyDB;
     AppGlobal appGlobal = AppGlobal.getInstancess();
-    private String  language,transaction_id, email, userId  ;
+    private String  language,transaction_id, email  ;
     public FortCallBackManager fortCallback;
     Gson gson = new Gson();
     RequestQueue requestQueue;
     LoginData loginData = new LoginData();
-    public static String user_type, price,sdk_token, package_id;
+    public static String user_type, price,sdk_token, package_id,userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

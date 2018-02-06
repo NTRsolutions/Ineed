@@ -57,9 +57,9 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
-      //  fl_jobtype=findViewById(R.id.sp_jobtype);
+      //  fl_jobtype=findViewById(R.jobseekerid.sp_jobtype);
         fl_experience=findViewById(R.id.sp_experience);
-      //  fl_noticeperiod=findViewById(R.id.sp_noticeperiod);
+      //  fl_noticeperiod=findViewById(R.jobseekerid.sp_noticeperiod);
         fl_ctc=findViewById(R.id.sp_ctc);
         fl_age=findViewById(R.id.sp_age);
         fl_gender=findViewById(R.id.sp_gender);

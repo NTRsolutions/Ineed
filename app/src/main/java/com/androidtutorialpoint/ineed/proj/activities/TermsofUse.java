@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -34,6 +35,8 @@ public class TermsofUse extends AppCompatActivity {
     String language;
     TinyDB tinyDB;
     TextView txtTerms;
+    WebView view;
+    String text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,8 @@ public class TermsofUse extends AppCompatActivity {
         setuptoolbar();
         tinyDB = new TinyDB(getApplicationContext());
         language = tinyDB.getString("language_id");
-        txtTerms =  findViewById(R.id.terms_of_use);
+        view = (WebView) findViewById(R.id.textContent);
+
     }
 
     private void setuptoolbar() {
@@ -86,7 +90,6 @@ public class TermsofUse extends AppCompatActivity {
 
     }
 
-
     private Response.Listener<JSONObject> sucesslistener()
     {
         return new Response.Listener<JSONObject>() {
@@ -105,19 +108,19 @@ public class TermsofUse extends AppCompatActivity {
                     if(status=true)
                     {
                         String detailtext=aboutUsModel.getResponse().getTerm_list().getCms_language_content();
-                        txtTerms.setText(detailtext);
-                        // Utillity.message(getApplicationContext(),""+detailtext);
-
+                        text = "<html><body><p align=\"justify\">";
+                        text+= detailtext;
+                        text+= "</p></body></html>";
+                        view.loadData(text, "text/html", "utf-8");
                     }
                     else
                     {
-                        Utillity.message(getApplicationContext(),"Error");
-
+                        Utillity.message(getApplicationContext(),"No data found");
                     }
                 }
                 catch (Exception e)
                 {
-                    Utillity.message(getApplicationContext(),""+e);
+                    Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
                 }
 
                 Log.d("Response",""+response);
@@ -132,7 +135,7 @@ public class TermsofUse extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Utillity.hidepopup();
                 Utillity.message(getApplicationContext(),""+error);
-                Log.d("Error Respons",""+error);
+                Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
             }
         };
     }

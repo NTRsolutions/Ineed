@@ -72,8 +72,8 @@ public class Splash2Activity extends AppCompatActivity {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setTitle("Select Language");
         dialog.setContentView(R.layout.language_selector);
-        ListView listView=(ListView) dialog.findViewById(R.id.list_language);
-        progressbar=(ProgressBar) dialog.findViewById(R.id.progressbar);
+        ListView listView=(ListView) dialog.findViewById(R.jobseekerid.list_language);
+        progressbar=(ProgressBar) dialog.findViewById(R.jobseekerid.progressbar);
         languageAdapter =new LanguageAdapter(getApplicationContext(),langlist);
         listView.setAdapter(languageAdapter);
         dialog.show();*/
@@ -97,7 +97,7 @@ public class Splash2Activity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-              //  Language=((TextView)view.findViewById(R.id.txt_languagename)).getText().toString();
+              //  Language=((TextView)view.findViewById(R.jobseekerid.txt_languagename)).getText().toString();
                 LanguageId=((TextView)view.findViewById(R.id.txt_languageid)).getText().toString();
                 sharpref.putString("language_id",LanguageId);
                 addlanguage(LanguageId);

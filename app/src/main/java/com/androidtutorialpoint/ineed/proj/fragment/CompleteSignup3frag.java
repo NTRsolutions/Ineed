@@ -96,7 +96,7 @@ public class CompleteSignup3frag extends Fragment {
         price = getArguments().getString("price");
 
         txtlogin= (TextView)view.findViewById(R.id.txt_sign_Login3);
-//        radioButton = (RadioGroup) view.findViewById(R.id.radiogroup);
+//        radioButton = (RadioGroup) view.findViewById(R.jobseekerid.radiogroup);
         txtlogin.setMovementMethod(LinkMovementMethod.getInstance());
         txtlogin.setText(noAccount, TextView.BufferType.SPANNABLE);
         txtlogin.setVisibility(View.GONE);

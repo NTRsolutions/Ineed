@@ -75,7 +75,6 @@ ActionBar actionBar;
         tinyDB = new TinyDB(getApplicationContext());
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
 
-
         image1= (ImageView) findViewById(R.id.image1);
         image2= (ImageView) findViewById(R.id.image2);
         image3= (ImageView) findViewById(R.id.image3);
@@ -142,6 +141,7 @@ ActionBar actionBar;
         {
             case android.R.id.home:
                 onBackPressed();
+                Utillity.hideSoftKeyboard(SignUpActivity.this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -151,14 +151,16 @@ ActionBar actionBar;
 
     @Override
     public void onBackPressed() {
-        if(getSupportFragmentManager().getBackStackEntryCount() >0)
+
+        super.onBackPressed();
+       /* if(getSupportFragmentManager().getBackStackEntryCount() >0)
         {
             super.onBackPressed();
         }
         else
             {
                 startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
-        }
+        }*/
     }
 
     @Override
@@ -177,7 +179,7 @@ ActionBar actionBar;
 
     private void requestOperation(String command, String sdk_token) {
         final String ECI = "ECOMMERCE";
-        final String CUSTOMER_EMAIL = "a@s.in";
+        final String CUSTOMER_EMAIL = email;
         final String LANGUAGE = language;
         final String CURRENCY = "SAR";
         int amt = Integer.parseInt(price)*100;
@@ -235,13 +237,11 @@ ActionBar actionBar;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     final String ACCESS_TOKEN =  "qa2s6awTpBNc04Q65T8v";
-    final String MERCHANT_IDENTIFIER =  "GjitDYjm";
+    final String MERCHANT_IDENTIFIER = "GjitDYjm";
     final String REQUEST_PHRASE = "PASS" ;
-
 
     private void createFORTMobileSDKToken() {
         OkHttpClient client = new OkHttpClient();

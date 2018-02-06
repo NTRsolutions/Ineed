@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -57,12 +58,12 @@ public class LoginActivity extends AppCompatActivity {
         loginData = new LoginData();
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
 
-//        find id
+//        find jobseekerid
         txt_forget= (TextView) findViewById(R.id.txt_forgetpass);
         txtSignUp= (TextView) findViewById(R.id.txt_sign_up);
         et_email= (TextInputEditText) findViewById(R.id.tiet_email);
         et_password=(TextInputEditText) findViewById(R.id.tiet_password);
-        //   txt_login= (TextView) findViewById(R.id.login);
+        //   txt_login= (TextView) findViewById(R.jobseekerid.login);
         txt_skip= (TextView) findViewById(R.id.txt_skp);
 
 //        set click listener
@@ -88,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this,ResetPasswordsActivity.class));
             }
         });
+
         if(language!=null && !language.isEmpty())
         {
             if (language.equals("en"))
@@ -102,7 +104,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
-                        finish();
                     }
 
                     @Override
@@ -126,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View widget) {
                         startActivity(new Intent(LoginActivity.this,SignUpActivity.class));
-                        finish();
                     }
 
                     @Override
@@ -137,9 +137,9 @@ public class LoginActivity extends AppCompatActivity {
                 };
                 spannable.setSpan(clickableSpan,i,j+2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-
         }
     }
+
 
     public void loginclick(View v)
     {
@@ -157,6 +157,8 @@ public class LoginActivity extends AppCompatActivity {
                     params.put("language",language);
                     CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.LOGIN,params,
                             this.success(),this.error());
+                    customRequest.setRetryPolicy(new DefaultRetryPolicy(300000,
+                            DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                     requestQueue.add(customRequest);
                 }
                 else
@@ -177,15 +179,8 @@ public class LoginActivity extends AppCompatActivity {
         {
             Utillity.message(this,getResources().getString(R.string.fieldsmeand));
         }
-
-
     }
 
-    @Override
-    public void onBackPressed() {
-
-        finish();
-    }
 
     private Response.Listener<JSONObject> success()
     {   Utillity.showloadingpopup(this);
@@ -199,16 +194,8 @@ public class LoginActivity extends AppCompatActivity {
                     if (loginData.isStatus()== true){
                         appGlobal.setLoginData(response.toString());
                         Utillity.message(getApplicationContext(), loginData.getMsg());
-//                        if (loginData.getUser_detail().getUser_payment_id().equals("7")){
-//                            startActivity(new Intent(LoginActivity.this,DialogActivity.class));
-//
-//                        } else {
-//                            startActivity(new Intent(LoginActivity.this,HomeActivity.class));
-//                        }
                         startActivity(new Intent(LoginActivity.this,HomeActivity.class));
                         finish();
-
-
                     } else {
                         Utillity.message(getApplicationContext(), loginData.getMsg());
                     }
@@ -229,4 +216,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
     }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Utillity.hideSoftKeyboard(LoginActivity.this);
+    }
+
 }

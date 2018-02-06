@@ -20,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.androidtutorialpoint.ineed.R;
@@ -63,7 +64,10 @@ public class Utillity {
     public static void message(Context context,String Msg) {
         Toast.makeText(context,Msg,Toast.LENGTH_SHORT).show();
     }
-
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
     public static Boolean isNetworkConnected(Context context) {
         ConnectivityManager connectivityManager= (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo=connectivityManager.getActiveNetworkInfo();

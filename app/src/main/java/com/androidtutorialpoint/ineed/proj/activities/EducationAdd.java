@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -34,9 +33,9 @@ import java.util.HashMap;
 public class EducationAdd extends AppCompatActivity implements View.OnClickListener {
     ActionBar actionBar;
     LinearLayout bottom_toolbar;
-    TextView txt_save,txt_cancel;
+    TextView txt_save,txt_cancel, txtremoveedu;
     EditText edtCourseTitle, edtSpeci, edtyear, edtInsti;
-    String courseTitle="", speci="", year=" ", insti= " ", userid, eduId=" ";
+    String courseTitle="", speci="", year=" ", insti= " ", userid, eduId="";
     TinyDB tinyDB;
     LoginData loginData = new LoginData();
     Gson gson = new Gson();
@@ -53,12 +52,14 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         loginData = gson.fromJson(loginPrefData, LoginData.class);
         userid = loginData.getUser_detail().getUser_id();
 
-//        find id
+//        find jobseekerid
         edtCourseTitle = findViewById(R.id.txt_edu_course_title);
         edtInsti = findViewById(R.id.txt_institute);
         edtSpeci = findViewById(R.id.txt_Specialization);
         edtyear = findViewById(R.id.txt_edu_year);
+        txtremoveedu = findViewById(R.id.txtedu_remove);
 
+        txtremoveedu.setOnClickListener(this);
        if (getIntent().hasExtra("title")){
            courseTitle = getIntent().getStringExtra("title");
        }
@@ -78,14 +79,17 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
             eduId = getIntent().getStringExtra("eduId");
         }
 
-        edtyear.setText(year);
-        edtSpeci.setText(speci);
-        edtInsti.setText(insti);
-        edtCourseTitle.setText(courseTitle);
+        edtyear.setText(year.trim());
+        edtSpeci.setText(speci.trim());
+        edtInsti.setText(insti.trim());
+        edtCourseTitle.setText(courseTitle.trim());
 
         txt_cancel.setOnClickListener(this);
         txt_save.setOnClickListener(this);
 
+        if (eduId.length()>0){
+            txtremoveedu.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -115,6 +119,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId())
         {
             case android.R.id.home:
+                Utillity.hideSoftKeyboard(EducationAdd.this);
                 onBackPressed();
                 return true;
             default:
@@ -127,10 +132,10 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         switch (v.getId())
         {
             case R.id.txt_save:
-                year = edtyear.getText().toString();
-                courseTitle = edtCourseTitle.getText().toString();
-                insti = edtInsti.getText().toString();
-                speci = edtSpeci.getText().toString();
+                year = edtyear.getText().toString().trim();
+                courseTitle = edtCourseTitle.getText().toString().trim();
+                insti = edtInsti.getText().toString().trim();
+                speci = edtSpeci.getText().toString().trim();
 
                 if (!year.isEmpty()){
                     if (!courseTitle.isEmpty()){
@@ -157,6 +162,13 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.txt_cancel:
                 finish();
+                break;
+            case R.id.txtedu_remove:
+                if (eduId!=null && eduId.length()>0){
+                    deletEdu();
+                } else {
+                    txtremoveedu.setVisibility(View.GONE);
+                }
                 break;
         }
     }
@@ -195,7 +207,8 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
             params.put("specilization", speci);
             params.put("institute", insti);
             params.put("year", year);
-            CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_EDU, params, this.success(), this.errorListener());
+            CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_EDU, params,
+                    this.success(), this.errorListener());
             queue.add(customRequest);
 
         } else {
@@ -204,6 +217,37 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
             snackbarview.setBackgroundColor(getResources().getColor(R.color.appbasecolor));
             snackbar.show();
         }
+    }
+
+    public void deletEdu(){
+        Utillity.showloadingpopup(EducationAdd.this);
+        RequestQueue queue = VolleySingelton.getsInstance().getmRequestQueue();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("user_id",userid);
+        params.put("jobseeker_education_id",eduId);
+
+        CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_EDU_EXP_DELETE,
+                params, this.deletsuccess(), this.errorListener());
+        queue.add(customRequest);
+    }
+    private Response.Listener<JSONObject> deletsuccess() {
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (response!=null){
+                    try {
+                        if (response.getString("status").equals("true")){
+                            Utillity.message(EducationAdd.this, "Education deleted");
+                            finish();
+                        } else {
+                            Utillity.message(EducationAdd.this, "Connection error");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
     }
 
     private Response.ErrorListener errorListener()
@@ -227,6 +271,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
                     try {
                         if (response.getString("status").equals("true")){
                             Utillity.message(getApplicationContext(), "Education added successfully");
+                            Utillity.hideSoftKeyboard(EducationAdd.this);
                             finish();
                         } else {
                             Utillity.message(getApplicationContext(), "Education not added");

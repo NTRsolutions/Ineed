@@ -77,13 +77,13 @@ public class GalFragment extends Fragment implements ImageInputHelper.ImageActio
 
     @Override
     public void onImageSelectedFromGallery(Uri uri, File imageFile) {
-        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
+      //  imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
 
     }
 
     @Override
     public void onImageTakenFromCamera(Uri uri, File imageFile) {
-        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
+     //   imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
 
     }
 

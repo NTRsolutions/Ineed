@@ -36,8 +36,7 @@
                         android:layout_gravity="center"
                         android:layout_width="120dp"
                         android:layout_height="120dp"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/gfgf"/>
+                        android:scaleType="fitCenter" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -52,7 +51,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Name "
                     android:gravity="center"
                     android:id="@+id/etProfile_name"
                     android:textSize="16sp"
@@ -129,7 +127,6 @@
                             android:id="@+id/et_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Harish Kumar"
                             android:padding="4dp"
                             android:textSize="14sp"
                             android:maxLines="1"
@@ -141,7 +138,6 @@
                             android:id="@+id/et_company"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Harish Kumar"
                             android:padding="4dp"
                             android:textSize="14sp"
                             android:maxLines="1"
@@ -153,7 +149,6 @@
                             android:id="@+id/et_email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Harish@gmail.com"
                             android:padding="4dp"
                             android:textSize="14sp"
                             android:maxLines="1"
@@ -165,7 +160,6 @@
                             android:id="@+id/et_phone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="+91 8881238761"
                             android:padding="4dp"
                             android:textSize="14sp"
                             android:maxLines="1"
@@ -300,7 +294,6 @@
                             android:id="@+id/et_package"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Premium"
                             android:textColor="@color/black"
                             android:padding="4dp"
                             android:textSize="14sp"
@@ -313,7 +306,6 @@
                             android:id="@+id/et_expired"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="25 December 2017"
                             android:padding="4dp"
                             android:textSize="14sp"
                             android:maxLines="1"
@@ -325,7 +317,6 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="50"
                             android:id="@+id/credit_point"
                             android:padding="4dp"
                             android:singleLine="true"
@@ -339,7 +330,6 @@
                             android:id="@+id/credit_left"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="20"
                             android:padding="4dp"
                             android:singleLine="true"
                             android:textColor="@color/black"

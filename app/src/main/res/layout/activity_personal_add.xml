@@ -59,16 +59,19 @@
                     android:gravity="center_vertical"
                     android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:text="@string/age"/>
+                    android:text="DOB"/>
 
-                <EditText
+                <TextView
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:hint="Age"
+                    android:layout_height="match_parent"
+                    android:hint="DOB"
+                    android:gravity="center_vertical"
+                    android:enabled="true"
+                    android:drawableRight="@drawable/ic_calendar"
                     android:imeOptions="actionNext"
                     android:inputType="number"
-                    android:id="@+id/edt_age"/>
+                    android:id="@+id/edt_dob"/>
 
             </LinearLayout>
             <LinearLayout
@@ -94,6 +97,54 @@
                     android:id="@+id/edt_personal_desi"/>
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="Current Company"/>
+
+                <EditText
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:hint="Current Company"
+                    android:id="@+id/edt_personal_curent"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/black"
+                    android:text="Job Type"/>
+
+
+                <Spinner
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/spinner_jobtype"/>
+
+            </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -156,14 +207,17 @@
                     android:text="@string/experience"/>
 
 
-                <EditText
-                    android:layout_weight="1"
+                <Spinner
                     android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:hint="@string/experience"
-                    android:id="@+id/spinner_exp"/>
+                    android:layout_weight="1"
+                    android:id="@+id/edit_personal_year"/>
+                <Spinner
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:id="@+id/edit_personal_month"/>
+
 
             </LinearLayout>
             <LinearLayout
@@ -233,14 +287,11 @@
                     android:text="@string/salary"/>
 
 
-                <EditText
+                <Spinner
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:id="@+id/spinner_salary"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:hint="@string/salary"/>
+                    android:id="@+id/spinner_salary" />
 
             </LinearLayout>
             <LinearLayout

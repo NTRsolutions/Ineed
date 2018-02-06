@@ -69,44 +69,102 @@
     <string name="company">Company</string>
     <string name="phone">Phone</string>
 
-    <!-- Profile-->
-    <string name="contact">Contact no</string>
-    <string name="designation">Designation</string>
-    <string name="experience">Experience</string>
-    <string name="resume">Resume</string>
-    <string name="dob">Date of Birth</string>
-    <string name="gender">Gender</string>
-    <string name="location">Location</string>
-    <string name="skills">Skills</string>
-    <string name="workexper">Work experience</string>
-    <string name="proftitle">Profile Title:</string>
-    <string name="totalexp">Total Experience:</string>
-    <string name="largesttimesizehandled">Largest Team Size Handled:</string>
-    <string name="currentsalary">Current/Latest Annual Salary:</string>
-    <string name="noticeperiod">Notice Period:</string>
-
-    <string name="plandetails">Plan details</string>
-    <string name="packkage">Package</string>
-    <string name="Expired">Expired</string>
-    <string name="creditpoint">Credit Point</string>
-    <string name="credituse">Credit Use</string>
-    <string name="creditleft">Credit Left</string>
-    <string name="title_activity_home">HomeActivity</string>
-    <string name="Cancel">Cancel</string>
-    <string name="Save">Save</string>
 
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+        <!--fragment jobseeker dashboard-->
+        <string name="txtNameViewProfile"> Viewed by employer</string>
+        <string name="txtExpiryDate">Expiry Date</string>
+        <string name="txtCurrentPlan">Current Plan</string>
+        <string name="txtMyProfile">My Profile</string>
 
-    <string name="action_settings">Settings</string>
 
-    <!--fragment job seeker-->
+        <!--jobseeker profile-->
+        <string name="txtWorkPermit_name">Indian, with Saudi arabia\n work permit</string>
+        <string name="txtDesignation">Php Developer</string>
+        <string name="txtName">Harish Kumar Shakya</string>
+        <string name="txtAge">" "( Age 29 yr )</string>
+        <string name="txtMobile">+91-995891919</string>
+        <string name="txtEmail">Harishkumar12@gmail.com</string>
+        <string name="txtObjectvie">My objective</string>
+        <string name="txtSkillsValue">PHP, HTML </string>
+        <string name="txtObjValue">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book</string>
 
-    <string name="language_select">Please select language</string>
+        <!--work experience view-->
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+        <string name="txtJobTitle">Job Title</string>
+        <string name="txtCompanyName">Company Name</string>
+        <string name="txtWorkingFrom">Working From</string>
+        <string name="txtNotice">Notice</string>
+        <string name="txtIndustry">Industry</string>
+        <string name="txtDepartment">Department</string>
+        <string name="txtAdd">Add</string>
+        <!--education course title -->
+        <string name="edu_course_title">Course Title </string>
+        <string name="edu_Specialization">Specialization </string>
+        <string name="edu_institute">Institute </string>
+        <string name="edu_year">Year </string>
+
+        <!--resume view-->
+        <string name="resume_view">View </string>
+        <string name="resume_download">Download </string>
+        <string name="my_resume">My Resume </string>
+
+        <string name="age">Age</string>
+        <string name="workpermit">Work Permit</string>
+        <string name="salary">Salary</string>
+        <string name="phonenumber">Phone Number</string>
+        <!-- TODO: Remove or change this placeholder text -->
+        <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+
+
+
+
+
+        <!-- Profile-->
+        <string name="contact">Contact no</string>
+        <string name="designation">Designation</string>
+        <string name="experience">Experience</string>
+        <string name="resume">Resume</string>
+        <string name="dob">Date of Birth</string>
+        <string name="gender">Gender</string>
+        <string name="location">Location</string>
+        <string name="skills">Skills</string>
+        <string name="current_exp">Current</string>
+
+        <string name="workexper">Work experience</string>
+        <string name="education">Education</string>
+
+        <string name="proftitle">Profile Title:</string>
+        <string name="totalexp">Total Experience:</string>
+        <string name="largesttimesizehandled">Largest Team Size Handled:</string>
+        <string name="currentsalary">Current/Latest Annual Salary:</string>
+        <string name="noticeperiod">Notice Period:</string>
+
+        <string name="plandetails">Plan details</string>
+        <string name="packkage">Package</string>
+        <string name="Expired">Expired</string>
+        <string name="creditpoint">Credit Point</string>
+        <string name="credituse">Credit Use</string>
+        <string name="creditleft">Credit Left</string>
+        <string name="title_activity_home">HomeActivity</string>
+        <string name="Cancel">Cancel</string>
+        <string name="Save">Save</string>
+    <string name="help_drawer">Help</string>
+    <string name="filter">Filter</string>
+
+    <string name="email_id">Email</string>
+        <string name="navigation_drawer_open">Open navigation drawer</string>
+        <string name="navigation_drawer_close">Close navigation drawer</string>
+
+        <string name="action_settings">Settings</string>
+
+        <!--fragment job seeker-->
+
+        <string name="language_select">Please select language</string>
 
 
 </resources>
+
+

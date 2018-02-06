@@ -1,15 +1,21 @@
 package com.androidtutorialpoint.ineed.proj.fragment;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -41,48 +48,65 @@ import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.mukesh.permissions.AppPermissions;
 import com.mukesh.tinydb.TinyDB;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
+import static android.app.Activity.RESULT_OK;
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 
-public class DashboardEmpFragment extends Fragment implements ImageInputHelper.ImageActionListener{
+public class DashboardEmpFragment extends Fragment {
+    private final int  REQUEST_CAMERA=0, SELECT_FILE = 1;
+    private String userChoosenTask;
+    boolean result;
+    AppPermissions appPermissions;
     EditText etEmail,etName,etcontact,etcompany;
     TextView txt_proftitle,txt_personal,txtSave,txtCancle, txtProfileView, txtPackage, txtExpired, txtCredit,
             txtUpgrade, txtLeft;
     LinearLayout ll_savecancel;
-    private ImageInputHelper imageInputHelper;
     ImageView imgUser, imgCamera;
     String img,language, userId, name, company, email, phone;
     TinyDB tinyDB;
     LoginData loginData;
     EmployerProfileData profileDetailMOdel = new EmployerProfileData();
-
     RequestQueue requestQueue;
+    private static final int ALL_REQUEST_CODE = 3;
+    private static final String[] ALL_PERMISSIONS = {
+
+            Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE,
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_dashboard_emp, container, false);
-        imageInputHelper = new ImageInputHelper(this);
-        imageInputHelper.setImageActionListener(this);
         loginData = new LoginData();
+        appPermissions = new AppPermissions(getActivity());
         tinyDB = new TinyDB(getContext());
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
+        String loginPrefData = tinyDB.getString("login_data");
+        loginData = gson.fromJson(loginPrefData, LoginData.class);
+        userId = loginData.getUser_detail().getUser_id();
+        language = tinyDB.getString("language_id");
 
-//             find id
+//             find empid
         txtCredit = view.findViewById(R.id.credit_point);
         txtUpgrade = view.findViewById(R.id.txtUpgradePlan);
         txtCancle = view.findViewById(R.id.txt_cancel);
@@ -107,37 +131,18 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 startActivity(new Intent(getActivity(), ProfileViewed.class));
             }
         });
+        if (appPermissions.hasPermission(ALL_PERMISSIONS)){
+            result = true;
+        } else {
+            appPermissions.requestPermission(getActivity(), ALL_PERMISSIONS, ALL_REQUEST_CODE);
+        }
 
         imgCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Add Photo!");
-                builder.setItems(options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int item) {
-                        if (options[item].equals("Take Photo"))
-                        {
-                            imageInputHelper.takePhotoWithCamera();
-
-                        }
-                        else if (options[item].equals("Choose from Gallery"))
-                        {
-                            imageInputHelper.selectImageFromGallery();
-
-                        }
-                        else if (options[item].equals("Cancel")) {
-                            dialog.dismiss();
-                        }
-                    }
-                });
-                builder.show();
+               selectImage();
             }
         });
-
         etcontact.setEnabled(false);
         etEmail.setEnabled(false);
         etcompany.setEnabled(false);
@@ -180,10 +185,10 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         txtSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = etEmail.getText().toString();
-                name = etName.getText().toString();
-                phone = etcontact.getText().toString();
-                company = etcompany.getText().toString();
+                email = etEmail.getText().toString().trim();
+                name = etName.getText().toString().trim();
+                phone = etcontact.getText().toString().trim();
+                company = etcompany.getText().toString().trim();
                 if (Utillity.CheckEmail(email)){
                     if (Utillity.CheckPhone(phone)){
                         if (!company.isEmpty()){
@@ -203,6 +208,8 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 }
             }
         });
+
+
         return view;
     }
 
@@ -232,55 +239,126 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                 etcompany.setEnabled(true);
                 etName.setEnabled(true);
                 ll_savecancel.setVisibility(View.VISIBLE);
-
             }
         }
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        imageInputHelper.onActivityResult(requestCode, resultCode, data);
+    private void selectImage() {
+        final CharSequence[] items = { "Take Photo", "Choose from Library",
+                "Cancel" };
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (items[item].equals("Take Photo")) {
+                    userChoosenTask ="Take Photo";
+                    if (appPermissions.hasPermission( Manifest.permission.CAMERA)){
+                        result = true;
+                        cameraIntent();
+                    } else {
+                        appPermissions.requestPermission(getActivity(),  Manifest.permission.CAMERA, REQUEST_CAMERA);
+                    }
+                } else if (items[item].equals("Choose from Library")) {
+                    userChoosenTask ="Choose from Library";
+                    if (appPermissions.hasPermission( Manifest.permission.READ_EXTERNAL_STORAGE)){
+                        result = true;
+                        galleryIntent();
+                        Toast.makeText(getContext(), "All granted gal"+result, Toast.LENGTH_SHORT).show();
+                    } else {
+
+                        appPermissions.requestPermission(getActivity(),  Manifest.permission.READ_EXTERNAL_STORAGE, SELECT_FILE);
+
+                    }
+
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
     }
 
-    @Override
-    public void onImageSelectedFromGallery(Uri uri, File imageFile) {
-        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
-
+    private void galleryIntent()
+    {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"),SELECT_FILE);
     }
 
-    @Override
-    public void onImageTakenFromCamera(Uri uri, File imageFile) {
-        imageInputHelper.requestCropImage(uri, 800, 450, 16, 9);
-
+    private void cameraIntent()
+    {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent,REQUEST_CAMERA);
     }
 
-    @Override
-    public void onImageCropped(Uri uri, File imageFile) {
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+
+        FileOutputStream fo;
         try {
-            // getting bitmap from uri
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-
-            // showing bitmap in image view
-            Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(imgUser);
-            img = Utillity.BitMapToString(bitmap);
-            uploading(img);
-
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        imgUser.setImageBitmap(thumbnail);
+        Glide.with(this).load(thumbnail).apply(RequestOptions.circleCropTransform()).into(imgUser);
+
+        img = Utillity.BitMapToString(thumbnail);
+        uploading(img);
     }
+
+    @SuppressWarnings("deprecation")
+    private void onSelectFromGalleryResult(Intent data) {
+
+        Bitmap bm=null;
+        if (data != null) {
+            try {
+                bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+                Glide.with(this).load(bm).apply(RequestOptions.circleCropTransform()).into(imgUser);
+
+                img = Utillity.BitMapToString(bm);
+                uploading(img);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        }
+    }
+
+
 
     Gson gson = new Gson();
     @Override
     public void onResume() {
         super.onResume();
-        String loginPrefData = tinyDB.getString("login_data");
-        loginData = gson.fromJson(loginPrefData, LoginData.class);
-        userId = loginData.getUser_detail().getUser_id();
-        language = tinyDB.getString("language_id");
-
         getProfile();
     }
 
@@ -325,7 +403,6 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
         };
     }
 
-
     private Response.Listener<JSONObject> success() {
         Utillity.showloadingpopup(getActivity());
         return new Response.Listener<JSONObject>() {
@@ -348,19 +425,20 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                                    etcompany.setText(profileDetailMOdel.getProfile_detail().getUser_company());
                                    txtExpired.setText(profileDetailMOdel.getProfile_detail().getUser_package_expire_date());
                                    txtCredit.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_package_credit()));
+                                   txtPackage.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_package_id()));
                                    txtLeft.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_credit_use()));
                                    txt_proftitle.setText(profileDetailMOdel.getProfile_detail().getUser_fname());
-                                   if (profileDetailMOdel.getProfile_detail().getUser_image()!=null){
+                                   if (profileDetailMOdel.getProfile_detail().getUser_image()!=null && profileDetailMOdel.getProfile_detail().getUser_image().length()>0){
                                        String url = ApiList.IMG_BASE+profileDetailMOdel.getProfile_detail().getUser_image();
                                        GetImage task = new GetImage();
-                                       // Execute the task
-                                       task.execute(new String[] { url });
+                                       if (url!=null&&url.length()>0){
+                                           task.execute(new String[] { url });
+                                       }
                                    }
                                     else {
                                        Glide.with(getContext()).load(R.drawable.gfgf)
                                                .apply(RequestOptions.circleCropTransform()).into(imgUser);
                                    }
-
                                }
                             }
                         } else {
@@ -440,7 +518,7 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
                             Utillity.message(getContext(), "Updated successfully");
                             getProfile();
                         } else {
-                            Utillity.message(getContext(), "Connection error");
+                            Utillity.message(getContext(), getResources().getString(R.string.internetConnection));
                         }
 
                     } catch (JSONException e) {
@@ -451,7 +529,6 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
             }
         };
     }
-
 
     public class GetImage extends AsyncTask<String, Void, Bitmap> {
         @Override
@@ -519,6 +596,4 @@ public class DashboardEmpFragment extends Fragment implements ImageInputHelper.I
             return stream;
         }
     }
-
-
 }

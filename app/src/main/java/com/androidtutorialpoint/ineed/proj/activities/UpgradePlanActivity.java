@@ -78,7 +78,6 @@ public class UpgradePlanActivity extends AppCompatActivity {
         userId = loginData.getUser_detail().getUser_id();
         language=tinyDB.getString("language_id");
 
-
         if(loginData.getUser_detail().getUser_type().equals("2"))     // Checking is it Jobseeker
         {
             JobPlanFragment istFragment=new JobPlanFragment();
@@ -145,6 +144,7 @@ public class UpgradePlanActivity extends AppCompatActivity {
         requestMap.put("command",command);
         requestMap.put("merchant_reference",MERCHANT_REFERENCE);
         requestMap.put("amount",AMOUNT);
+
         requestMap.put("currency",CURRENCY);
         requestMap.put("language",LANGUAGE);
         requestMap.put("customer_email",CUSTOMER_EMAIL);
@@ -269,7 +269,7 @@ public class UpgradePlanActivity extends AppCompatActivity {
         requestOperation("PURCHASE" ,sdk_token) ;
     }
 
-    public void upgradePackage(View view) {
+    public void upgradePackage(View view ) {
         if (transaction_id == null) {
             Utillity.message(getApplicationContext(), "Please make payment");
         } else {
