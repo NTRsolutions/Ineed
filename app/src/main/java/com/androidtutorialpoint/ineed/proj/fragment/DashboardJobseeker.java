@@ -3,6 +3,7 @@ package com.androidtutorialpoint.ineed.proj.fragment;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -36,6 +37,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.AddSkillsActivity;
@@ -98,18 +100,18 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
     Gson gson;
     LoginData loginData;
     String img,language, userId, obj, skills, name="", dob = "", desig = "", nationality =  "",
-            exp ="", loc = "", salary = "",permitCountry = "",jobtype="", jobtypeid ="",currentComp="",gender="", expMonth="", expYear="",mobile ="", workpermit="",workpermitid;
+            exp ="", loc = "",jobseekerid, salary = "",permitCountry = "",jobtype="", jobtypeid ="",currentComp="",gender="", expMonth="", expYear="",mobile ="", workpermit="",workpermitid;
     RequestQueue requestQueue;
     JobseekerProileData jobseekerProileData;
     List<JobseekerProileData.EducationsListBean>educationsListBeans ;
     List<JobseekerProileData.WorksListBean>worksListBeans;
     View view;
     TinyDB tinyDB;
-    LinearLayout workLayout,workview, eduLayout, eduView, skillsLayout, noticeLayout, toLayout;
+    LinearLayout workLayout,workview, eduLayout,skillAdd, eduView, skillsLayout, noticeLayout, toLayout;
     TextView txtResumeView, txtResumeUpload, txtSkillsEditHeading, txtSaveObj, txtCancle, txt_personal, txtName, txtDob, txtDesignation, txtNationaliaty,
             txtExp, txtCurrentLocation, txtSalary,txtWorkSalary, txtJobtype, txtMobile, txtEmail, txtWorkingexp,txtJobTitle, txtCompanyName, txtJobHeading, txtWorkingFrom, txtWrokingTo,
-    txtNotice, txtIndustry, txtDepartment,txtSaveSkills, txtCancelSkill, txtTo,txtCoursetype, txtSpecilization, txtInstitute, txtYear, txtDepartMent,txt_addwk;
-    EditText edtobjective, edtSkills;
+    txtNotice, txtIndustry, txtDepartment, txtTo,txtCoursetype, txtSpecilization, txtInstitute, txtYear, txtDepartMent,txt_addwk;
+    EditText edtobjective;
     private static final int ALL_REQUEST_CODE = 3;
     ArrayList<Skills>skillsList = new ArrayList<>();
 
@@ -124,31 +126,23 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
         jobseekerProileData = new JobseekerProileData();
         tinyDB = new TinyDB(getContext());
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
-        ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Profile");
         appPermissions = new AppPermissions(getActivity());
+
+        if (getArguments()!=null && getArguments().containsKey("id")){
+            jobseekerid = getArguments().getString("id");
+        }
+       /* if (jobseekerid!=null){
+            ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Profile");
+        }*/
+        //        find id
         workLayout = view.findViewById(R.id.work_exp);
-        skillsLayout = view.findViewById(R.id.ll_savecancelskills);
         workview = view.findViewById(R.id.layout_work_exp);
         eduLayout = view.findViewById(R.id.edu_exp);
         eduView = view.findViewById(R.id.layout_edu_exp);
         txtResumeView = view.findViewById(R.id.txt_resume_view);
         txtResumeUpload = view.findViewById(R.id.txt_resume_upload);
+        skillAdd = view.findViewById(R.id.txt_skills_value);
 
-        for (int i=0;i<=5;i++){
-            skillsList.add(new Skills("HTML","2"));
-        }
-        Log.d(TAG, "onCreateView: "+skillsList.size());
-
-        String jsonStudents = gson.toJson(skillsList);
-        System.out.println("jsonStudents = " + jsonStudents);
-
-        // Converts JSON string into a collection of Student object.
-        Type type = new TypeToken<List<Skills>>() {}.getType();
-        List<Skills> studentList = gson.fromJson(jsonStudents, type);
-
-
-//        Log.d(TAG, "onCreateView: "+jsonArray);
-//        find id
         imgCamera =  view.findViewById(R.id.edt_img_camera);
         imgUser =  view.findViewById(R.id.edt_img_profile);
         imgedit=view.findViewById(R.id.edt_personal_img_edit);
@@ -163,13 +157,12 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
         txtMobile = view.findViewById(R.id.jobseerker_profileMobile);
         txtEmail = view.findViewById(R.id.jobseerker_profileEmail);
         edtobjective = view.findViewById(R.id.txt_objective);
-        edtSkills = view.findViewById(R.id.txt_skills_value);
+//        edtSkills = view.findViewById(R.id.txt_skills_value);
         txtCancle = view.findViewById(R.id.txt_cancel);
         txtSaveObj = view.findViewById(R.id.txt_save);
         txtaddeduc = view.findViewById(R.id.btnAddEducation);
         txtSkillsEditHeading = view.findViewById(R.id.txt_skills_heading);
-        txtSaveSkills = view.findViewById(R.id.txt_saveskills);
-        txtCancelSkill = view.findViewById(R.id.txt_cancelskills);
+
         ll_savecancel = (LinearLayout) view.findViewById(R.id.ll_savecancel);
         txt_personal = (TextView) view.findViewById(R.id.txt_objective_heading);
         txt_addwk=view.findViewById(R.id.btnAddwk);
@@ -178,14 +171,12 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
         txtaddeduc.setOnClickListener(this);
         txtSkillsEditHeading.setOnClickListener(this);
         imgedit.setOnClickListener(this);
-        txtSaveSkills.setOnClickListener(this);
-        txtCancelSkill.setOnClickListener(this);
+
         if (appPermissions.hasPermission(ALL_PERMISSIONS)){
             result = true;
         } else {
             appPermissions.requestPermission(getActivity(), ALL_PERMISSIONS, ALL_REQUEST_CODE);
         }
-
         txt_addwk.setOnClickListener(this);
         txt_personal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -415,15 +406,16 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
             else if (requestCode == REQUEST_CAMERA)
                 onCaptureImageResult(data);
         }
-
-
     }
 
     public void getProfile(String userId){
             educationsListBeans = new ArrayList<>();
             worksListBeans = new ArrayList<>();
+            value_split=null;
+            value_year=null;
             workLayout.removeAllViews();
             eduLayout.removeAllViews();
+            skillAdd.removeAllViews();
 
             if (worksListBeans!=null){
                 worksListBeans.clear();
@@ -439,7 +431,19 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                 Utillity.message(getContext(),getResources().getString(R.string.language_select));
             }
         }
-
+    private void addLayout(String s, String y) {
+        LayoutInflater layoutInflater =
+                (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View layout=layoutInflater.inflate(R.layout.skilllist, null);
+        TextView txtSkill = layout.findViewById(R.id.skills_edtskills);
+        TextView txtYear = layout.findViewById(R.id.skills_edtyear);
+        txtSkill.setText(s);
+        txtYear.setText(y+" year");
+        skillAdd.setVisibility(View.VISIBLE);
+        skillAdd.addView(layout);
+    }
+    String[] value_split;
+    String[] value_year;
     private Response.Listener<JSONObject>   success() {
 
         Utillity.showloadingpopup(getActivity());
@@ -487,7 +491,19 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                                 edtobjective.setText(jobseekerProileData.getUser_list().getProfile_summary_resumeheadline());
                             }
                             if (jsonObject.getString("profile_summary_skills").length()>1&&jsonObject.getString("profile_summary_skills").length()>1){
-                                edtSkills.setText(jobseekerProileData.getUser_list().getProfile_summary_skills());
+                                String skll = jobseekerProileData.getUser_list().getProfile_summary_skills();
+                                String yera = jobseekerProileData.getUser_list().getProfile_summary_exp();
+                                value_split = skll.split(",");
+                                value_year = yera.split(",");
+
+                                Log.d(TAG, "onResponse: "+gson.toJson(value_split));
+                                for (int i=0;i<value_split.length;i++){
+                                    String s = value_split[i];
+                                    String y=value_year[i];
+                                    addLayout(s,y);
+                                }
+
+
                             }
                             if (jsonObject.getString("profile_summary_currentsalary")!=null){
                                 Log.d(TAG, "onResponse: "+jobseekerProileData.getUser_list().getProfile_summary_currentsalary());
@@ -500,14 +516,14 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
 
                                 }
                                 if (jobseekerProileData.getUser_list().getProfile_summary_jobtype()!=null){
-                                    jobtype = jobseekerProileData.getUser_list().getProfile_summary_jobtype();
+                                    jobtype = (String) jobseekerProileData.getUser_list().getProfile_summary_jobtype();
                                 }
                                 if (jobseekerProileData.getUser_list().getProfile_summary_companyname()!=null){
                                     currentComp =  jobseekerProileData.getUser_list().getProfile_summary_companyname();
                                     txtDesignation.setText(desig+ " | "+ currentComp
                                             +" | " + jobtype);
                                 }
-                                jobtypeid = jobseekerProileData.getUser_list().getProfile_summary_jobtype_id();
+                                jobtypeid = (String) jobseekerProileData.getUser_list().getProfile_summary_jobtype_id();
 
                             }
                             if (jobseekerProileData.getUser_list().getProfile_summary_totalexpyear()!=null){
@@ -770,13 +786,14 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
             case R.id.txt_skills_heading:
 //                edtSkills.setEnabled(true);
 //                skillsLayout.setVisibility(View.VISIBLE);
-                startActivity(new Intent(getActivity(), AddSkillsActivity.class));
+                startActivity(new Intent(getActivity(), AddSkillsActivity.class)
+                        .putExtra("year",value_year).putExtra("skill",value_split));
                 break;
             case R.id.txt_resume_upload:
                 startActivity(new Intent(getActivity(), UploadResumeActivity.class));
                 break;
-            case R.id.txt_saveskills:
-                skills = edtSkills.getText().toString();
+          /*  case R.id.txt_saveskills:
+//                skills = edtSkills.getText().toString();
 
                 if (!skills.isEmpty()){
                     updateSkill();
@@ -786,10 +803,10 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                 }
                 break;
             case R.id.txt_cancelskills:
-                edtSkills.setEnabled(false);
+//                edtSkills.setEnabled(false);
                 skillsLayout.setVisibility(View.GONE);
                 getProfile(userId);
-                break;
+                break;*/
         }
     }
 
@@ -813,7 +830,7 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                     try {
                         JSONObject jsonObject = new JSONObject(response.toString());
                         if (jsonObject.getString("status").equals("true")){
-                            edtSkills.setEnabled(false);
+//                            edtSkills.setEnabled(false);
                             Utillity.message(getContext(), " Updated successfully");
                             skillsLayout.setVisibility(View.GONE);
                             getProfile(userId);

@@ -38,8 +38,8 @@ public class SkillsModel {
          * yesr : 2
          */
 
-        private String skills;
-        private String yesr;
+        public String skills;
+        public String yesr;
 
         public String getSkills() {
             return skills;

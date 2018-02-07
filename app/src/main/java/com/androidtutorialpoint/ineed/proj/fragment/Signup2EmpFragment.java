@@ -111,7 +111,7 @@ public class Signup2EmpFragment extends Fragment implements EmpPackageAdapter.Cl
             }
         };
 
-        spannable.setSpan(clickableSpan, i, j + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+      //  spannable.setSpan(clickableSpan, i, j + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.signup2emp_recycler);
 

@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView txtSignUp,txt_forget,txt_login,txt_skip;
     TextInputEditText et_email,et_password;
     TinyDB sharpref;
-    String language,Email,Password;
+    String language,Email,Password, stauts, jobseekerid;
     Gson gson = new Gson();
     LoginData loginData;
     AppGlobal appGlobal = AppGlobal.getInstancess();
@@ -69,6 +69,10 @@ public class LoginActivity extends AppCompatActivity {
         et_password=(TextInputEditText) findViewById(R.id.tiet_password);
         //   txt_login= (TextView) findViewById(R.jobseekerid.login);
         txt_skip= (TextView) findViewById(R.id.txt_skp);
+        if (getIntent().hasExtra("search")){
+            stauts = getIntent().getStringExtra("search");
+            jobseekerid = getIntent().getStringExtra("id");
+        }
 
 //        set click listener
         txt_skip.setOnClickListener(new View.OnClickListener() {
@@ -199,6 +203,13 @@ public class LoginActivity extends AppCompatActivity {
                         appGlobal.setLoginData(response.toString());
                         Utillity.message(getApplicationContext(), loginData.getMsg());
                         startActivity(new Intent(LoginActivity.this,HomeActivity.class));
+                        if (stauts!=null){
+                            if (stauts.equals("search")){
+
+                                startActivity(new Intent(LoginActivity.this,JobseekerDetailActivity.class)
+                                        .putExtra("id", jobseekerid));
+                            }
+                        }
                         finish();
                     } else {
                         Utillity.message(getApplicationContext(), loginData.getMsg());

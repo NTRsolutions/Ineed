@@ -243,7 +243,6 @@ public class DashboardEmpFragment extends Fragment {
         }
     }
 
-
     private void selectImage() {
         final CharSequence[] items = { "Take Photo", "Choose from Library",
                 "Cancel" };

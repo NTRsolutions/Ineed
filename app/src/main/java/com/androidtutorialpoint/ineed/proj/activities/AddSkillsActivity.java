@@ -13,17 +13,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
 import com.androidtutorialpoint.ineed.proj.models.SkillsModel;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
-import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
 import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.google.gson.Gson;
 import com.mukesh.tinydb.TinyDB;
@@ -33,7 +31,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.Call;
@@ -51,9 +48,11 @@ public class AddSkillsActivity extends AppCompatActivity implements View.OnClick
     Gson gson = new Gson();
     LoginData loginData = new LoginData();
     TinyDB tinyDB;
-    LinearLayout skillLayout, skillsView,bottom_toolbar;
+    LinearLayout skillLayout, container,bottom_toolbar;
     TextView txtAddSkills,txt_save,txt_cancel;
-
+    String[] value_skiil;
+    String[] value_year;
+    String s="",y="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,13 +63,25 @@ public class AddSkillsActivity extends AppCompatActivity implements View.OnClick
         String loginPrefData = tinyDB.getString("login_data");
         loginData = gson.fromJson(loginPrefData, LoginData.class);
         userId = loginData.getUser_detail().getUser_id();
-
+        if (getIntent().hasExtra("year")){
+            value_year = getIntent().getStringArrayExtra("year");
+        }
+        if (getIntent().hasExtra("skill")){
+            value_skiil = getIntent().getStringArrayExtra("skill");
+        }
         txtAddSkills = findViewById(R.id.addmore_skills);
         skillLayout = findViewById(R.id.skill_layout);
-        skillsView = findViewById(R.id.layout_skills);
-
+        container = findViewById(R.id.layout_skills);
+        container.setVisibility(View.GONE);
         txtAddSkills.setOnClickListener(this);
         setupbottomtoolbar();
+        if (value_skiil!=null && value_skiil.length>0){
+            for (int i=0;i<value_skiil.length;i++){
+                s = value_skiil[i];
+                y=value_year[i];
+                addLayout(s,y);
+            }
+        }
 
     }
 
@@ -82,31 +93,12 @@ public class AddSkillsActivity extends AppCompatActivity implements View.OnClick
         txt_cancel.setOnClickListener(this);
     }
 
-   /* public void updateSkill(String list){
-
-        CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_SKILLS,params,
-                this.successSkills(),this.error());
-        requestQueue.add(customRequest);
-    }*/
-    private Response.ErrorListener error() {
-        return new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("TAG", "onErrorResponse: "+error.toString());
-                Utillity.message(getApplicationContext(), getResources().getString(R.string.internetConnection));
-                Utillity.hidepopup();
-            }
-        };
-    }
     public static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
     final OkHttpClient okHttpClient = new OkHttpClient();
     public void updateSkilll(final String skills){
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
-
                 RequestBody requestBody = RequestBody.create(MEDIA_TYPE,skills);
                 final okhttp3.Request request = new okhttp3.Request.Builder()
                         .url( ApiList.JOBSEEKER_SKILLS)
@@ -132,49 +124,78 @@ public class AddSkillsActivity extends AppCompatActivity implements View.OnClick
                     public void onResponse(Call call, okhttp3.Response response) throws IOException {
                         Utillity.hidepopup();
                         String msg = response.body().string();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                        Log.d(TAG, "run: "+msg);
+                        if (response.body()!=null){
+                            try {
+                                final JSONObject jsonObject = new JSONObject(msg);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            if (jsonObject.getString("status").equals("true")){
+                                                Utillity.message(getApplicationContext(), " Updated successfully");
+                                                finish();
 
+                                            } else {
+                                                Utillity.message(getApplicationContext(), getResources().getString(R.string.internetConnection));
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        });
+
+                        }
+
                     }
                 });
             }
         });
 
     }
+    private void addLayoutf() {
+        LayoutInflater layoutInflater =
+                (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View layout=layoutInflater.inflate(R.layout.skill_view, null);
 
+        container.setVisibility(View.VISIBLE);
 
+        ImageView buttonRemove = (ImageView) layout.findViewById(R.id.skills_delete);
+        buttonRemove.setOnClickListener(new View.OnClickListener(){
 
-
-
-    private Response.Listener<JSONObject> successSkills() {
-        Utillity.showloadingpopup(this);
-        return new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONObject response) {
-                Utillity.hidepopup();
-                Log.d(TAG, "onResponse:data "+response.toString());
-                if (response!=null){
-                    try {
-                        JSONObject jsonObject = new JSONObject(response.toString());
-                        if (jsonObject.getString("status").equals("true")){
-//                            edtSkills.setEnabled(false);
-                            Utillity.message(getApplicationContext(), " Updated successfully");
-
-                        } else {
-                            Utillity.message(getApplicationContext(), "Connection error");
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        };
+            public void onClick(View v) {
+                ((LinearLayout)layout.getParent()).removeView(layout);
+            }});
+        container.addView(layout);
     }
+
+    private void addLayout(String s, String y) {
+        LayoutInflater layoutInflater =
+                (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View layout=layoutInflater.inflate(R.layout.skill_view, null);
+
+        container.setVisibility(View.VISIBLE);
+        TextView txtSkill = layout.findViewById(R.id.skills_edtskills);
+        TextView txtYear = layout.findViewById(R.id.skills_edtyear);
+        if (s.length()>0 && y.length()>0){
+            txtSkill.setText(s);
+            txtYear.setText(y);
+        }
+
+        ImageView buttonRemove = (ImageView) layout.findViewById(R.id.skills_delete);
+        buttonRemove.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                ((LinearLayout)layout.getParent()).removeView(layout);
+            }});
+        container.addView(layout);
+    }
+
     ActionBar actionBar;
     Toolbar toolbar;
     private void setuptoolbar() {
@@ -207,75 +228,56 @@ public class AddSkillsActivity extends AppCompatActivity implements View.OnClick
     List<EditText> edtYearList = new ArrayList<>();
     String skillss, year;
 
-    List<SkillsModel.SkiilsListBean>skiilsListBeans = new ArrayList<>();
-    SkillsModel.SkiilsListBean skiilsListBean = new SkillsModel.SkiilsListBean();
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.addmore_skills:
-                LayoutInflater layoutInflater =
-                        (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                final View addView = layoutInflater.inflate(R.layout.skill_view, null);
-                ImageView buttonRemove = (ImageView) addView.findViewById(R.id.skills_delete);
-                txtSkils = addView.findViewById(R.id.skills_edtskills);
-                txtYear = addView.findViewById(R.id.skills_edtyear);
-                edtSkillList.add(txtSkils);
-                edtYearList.add(txtYear);
 
-                buttonRemove.setOnClickListener(new View.OnClickListener(){
-
-                    @Override
-                    public void onClick(View v) {
-                        ((LinearLayout)addView.getParent()).removeView(addView);
-                    }});
-
-                skillsView.addView(addView);
+                addLayoutf();
 
               break;
-            case R.id.txt_save:{
-                ArrayList<String>skills = new ArrayList<>();
-                ArrayList<String>years = new ArrayList<>();
-                StringBuilder stringBuilder = new StringBuilder();
-                for (EditText editText : edtSkillList) {
-                    stringBuilder.append(editText.getText().toString());
-                    skills.add((editText.getText().toString()));
-                }
-                for (EditText editText : edtYearList) {
-                    stringBuilder.append(editText.getText().toString());
-                    years.add((editText.getText().toString()));
-                }
+            case R.id.txt_save:
 
-                for (String s : skills){
-                    Log.d(TAG, "onClick: "+s);
-                }
-                Log.d(TAG, "onClick: "+ gson.toJson(years)+  gson.toJson(skills));
-                System.out.println(years+  " "+ skills);
-                for (int i=0;i<years.size();i++){
-//                    for (int k =0;k<skills.size();k++){
-                            System.out.println(years.get(i));
-                        skiilsListBean.setSkills(skills.get(i));
-                        skiilsListBean.setYesr(years.get(i));
-                        skiilsListBeans.add(skiilsListBean);
-//                    }
-                }
-            }
-            //
-            skillsModel.setUser_id(Integer.parseInt(userId));
-            skillsModel.setSkiils_list(skiilsListBeans);
-            String s = gson.toJson(skillsModel);
+               if (container.getVisibility()==View.VISIBLE){
+                   List<SkillsModel.SkiilsListBean>skiilsListBeans = new ArrayList<>();
+                   final LinearLayout container = (LinearLayout) findViewById(R.id.layout_skills);
+                   Log.d(TAG, "validateOtherAdditionalCost: "+container.getChildCount());
+                   for (int indexChild = 0; indexChild < container.getChildCount(); indexChild++) {
+                       View childView = container.getChildAt(indexChild);
+                       EditText tvyear = (EditText) childView.findViewById(R.id.skills_edtyear);
+                       EditText tvskill = (EditText) childView.findViewById(R.id.skills_edtskills);
+                       String cost = tvyear.getText().toString().trim();
+                       String costClient = tvskill.getText().toString().trim();
 
-            updateSkilll(s);
+                       if (!cost.isEmpty() || !costClient.isEmpty()) {
+                           if (!cost.isEmpty() && !costClient.isEmpty() ) {
+                               SkillsModel.SkiilsListBean bean=new SkillsModel.SkiilsListBean();
+                               System.out.println(cost + costClient);
+                               bean.setSkills(costClient);
+                               bean.setYesr(cost);
+                               skiilsListBeans.add(bean);
+                           }
 
+                           else
+                           {
+                               Toast.makeText(getApplicationContext(), "Please fill all the fields", Toast.LENGTH_SHORT).show();
+                           }
+                       }
+                   }
+                   Log.d(TAG, "validateOtherAdditionalCost: "+skiilsListBeans.size());
+                   skillsModel.setUser_id(Integer.parseInt(userId));
+                   skillsModel.setSkiils_list(skiilsListBeans);
+                   String s = gson.toJson(skillsModel);
 
-            for (SkillsModel.SkiilsListBean skiilsListBean: skiilsListBeans){
-                Log.d(TAG, "onClick: "+skiilsListBean.getSkills());
-            }
+                   updateSkilll(s);
+               }
                 break;
             case R.id.txt_cancel:
                 finish();
                 break;
-
-
         }
     }
+
+
 }

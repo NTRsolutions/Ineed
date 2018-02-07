@@ -94,7 +94,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private void setuptoolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
         TextView textView= (TextView)toolbar.findViewById(R.id.toolbar_txt);
-        textView.setText(getResources().getString(R.string.forgotpass));
+        textView.setText(getResources().getString(R.string.changepassword));
         setSupportActionBar(toolbar);
         actionBar=getSupportActionBar();
         if(actionBar!=null)

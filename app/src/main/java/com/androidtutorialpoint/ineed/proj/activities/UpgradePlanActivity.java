@@ -168,6 +168,7 @@ public class UpgradePlanActivity extends AppCompatActivity {
                             Log.d(TAG, "onSuccess: "+fortResponseMap.toString());
                             transaction_id = fortResponseMap.get("fort_id");
                             Utillity.message(getApplicationContext(), "Payment successful ");
+                            upgradePackage(transaction_id);
                         }
                         @Override
                         public void onFailure(Map<String, String> requestParamsMap, Map<String, String> fortResponseMap) {
@@ -269,9 +270,9 @@ public class UpgradePlanActivity extends AppCompatActivity {
         requestOperation("PURCHASE" ,sdk_token) ;
     }
 
-    public void upgradePackage(View view ) {
+    public void upgradePackage(String transaction_id ) {
         if (transaction_id == null) {
-            Utillity.message(getApplicationContext(), "Please make payment");
+           // Utillity.message(getApplicationContext(), "Please make payment");
         } else {
             if (!transaction_id.isEmpty()) {
 
@@ -285,7 +286,7 @@ public class UpgradePlanActivity extends AppCompatActivity {
                         this.success(), this.error());
                 requestQueue.add(customRequest);
             } else {
-                Utillity.message(getApplicationContext(), "Please make payment before signup ");
+                //Utillity.message(getApplicationContext(), "Please make payment before signup ");
             }
         }
     }

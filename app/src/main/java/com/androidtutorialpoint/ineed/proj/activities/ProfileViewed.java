@@ -1,5 +1,6 @@
 package com.androidtutorialpoint.ineed.proj.activities;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -57,9 +58,12 @@ public class ProfileViewed extends AppCompatActivity implements ProfileViewdAdap
         userId = loginData.getUser_detail().getUser_id();
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
         recyclerView = findViewById(R.id.viewed_recycler);
-
-//        profileViewdAdapter.setclick(this);
-
+        profileViewdAdapter = new ProfileViewdAdapter(getApplicationContext(), profileListBean);
+//        set recyclerview
+        RecyclerView.LayoutManager mlayoutManager=new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mlayoutManager);
+        recyclerView.setAdapter(profileViewdAdapter);
+        profileViewdAdapter.setclick(this);
 
     }
 
@@ -100,11 +104,7 @@ public class ProfileViewed extends AppCompatActivity implements ProfileViewdAdap
                             profileListBeans = gson.fromJson(response.toString(), ViewedProflie.class);
                             profileListBean.addAll(profileListBeans.getProfile_list());
 
-                            profileViewdAdapter = new ProfileViewdAdapter(getApplicationContext(), profileListBean);
-//        set recyclerview
-                            RecyclerView.LayoutManager mlayoutManager=new LinearLayoutManager(getApplicationContext());
-                            recyclerView.setLayoutManager(mlayoutManager);
-                            recyclerView.setAdapter(profileViewdAdapter);
+
                             profileViewdAdapter.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {
@@ -153,10 +153,12 @@ public class ProfileViewed extends AppCompatActivity implements ProfileViewdAdap
         }
 
     }
-    public static String jobseekerid;
+    public String jobseekerid;
     @Override
     public void itemclick(View v, int post) {
         jobseekerid = profileListBean.get(post).getJobseeker_id();
+        startActivity(new Intent(ProfileViewed.this,
+                JobseekerDetailActivity.class).putExtra("id",jobseekerid));
 
     }
 }

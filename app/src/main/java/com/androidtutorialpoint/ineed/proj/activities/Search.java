@@ -207,10 +207,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                 @Override
                 public void onClick(View view) {
                     getViewed(jobseekerid);
-                   Intent resultIntent = new Intent();
-                   resultIntent.putExtra("jobseekerid", jobseekerid);
-                    setResult(Activity.RESULT_OK, resultIntent);
-                   finish();
+                    startActivity(new Intent(Search.this,
+                            JobseekerDetailActivity.class).putExtra("id",jobseekerid));
                     dialog.dismiss();
                 }
             });
@@ -229,7 +227,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             job.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(Search.this,LoginActivity.class));
+                    startActivity(new Intent(Search.this,LoginActivity.class)
+                            .putExtra("search","search").putExtra("id", jobseekerid));
                     dialog.dismiss();
                 }
             });
@@ -680,6 +679,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     @Override
     public void itemclick(View v, int position) {
         if(set.equalsIgnoreCase("login")) {
+            jobseekerid = searchlist.get(position).getUser_id();
             setupoverlay();
         }
         else

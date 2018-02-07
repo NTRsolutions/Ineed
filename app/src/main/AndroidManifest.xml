@@ -94,8 +94,10 @@
                 tools:replace="android:resource" />
         </provider>
 
-        <activity android:name=".proj.activities.AddSkillsActivity" />
-        <activity android:name=".proj.activities.JobseekerDetailActivity"></activity>
+        <activity android:name=".proj.activities.AddSkillsActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".proj.activities.JobseekerDetailActivity"
+            android:windowSoftInputMode="stateHidden"></activity>
     </application>
 
 </manifest>

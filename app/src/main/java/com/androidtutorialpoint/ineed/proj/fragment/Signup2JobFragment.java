@@ -119,7 +119,7 @@ public class Signup2JobFragment extends Fragment implements PackageAdapter.Click
                 ds.setUnderlineText(false);
             }
         };
-        spannable.setSpan(clickableSpan,i,j+2,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannable.setSpan(clickableSpan,i,j+2,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         packageAdapter = new PackageAdapter(getContext(), jobSeekerPackage);
 //        set recyclerview
