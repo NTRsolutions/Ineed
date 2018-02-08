@@ -32,11 +32,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
@@ -81,6 +83,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.androidtutorialpoint.ineed.proj.activities.Search.jobseekerid;
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
@@ -96,7 +101,8 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
     AppPermissions appPermissions;
     TextView txtaddeduc;
     LinearLayout ll_savecancel;
-    ImageView imgUser, imgCamera,imgedit;
+    CircleImageView imgUser;
+    ImageView  imgCamera,imgedit;
     Gson gson;
     LoginData loginData;
     String img,language, userId, obj, skills, name="", dob = "", desig = "", nationality =  "",
@@ -109,7 +115,7 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
     TinyDB tinyDB;
     LinearLayout workLayout,workview, eduLayout,skillAdd, eduView, skillsLayout, noticeLayout, toLayout;
     TextView txtResumeView, txtResumeUpload, txtSkillsEditHeading, txtSaveObj, txtCancle, txt_personal, txtName, txtDob, txtDesignation, txtNationaliaty,
-            txtExp, txtCurrentLocation, txtSalary,txtWorkSalary, txtJobtype, txtMobile, txtEmail, txtWorkingexp,txtJobTitle, txtCompanyName, txtJobHeading, txtWorkingFrom, txtWrokingTo,
+            txtExp, txtGender,txtCurrentLocation, txtSalary,txtWorkSalary, txtJobtype, txtMobile, txtEmail, txtWorkingexp,txtJobTitle, txtCompanyName, txtJobHeading, txtWorkingFrom, txtWrokingTo,
     txtNotice, txtIndustry, txtDepartment, txtTo,txtCoursetype, txtSpecilization, txtInstitute, txtYear, txtDepartMent,txt_addwk;
     EditText edtobjective;
     private static final int ALL_REQUEST_CODE = 3;
@@ -142,7 +148,7 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
         txtResumeView = view.findViewById(R.id.txt_resume_view);
         txtResumeUpload = view.findViewById(R.id.txt_resume_upload);
         skillAdd = view.findViewById(R.id.txt_skills_value);
-
+        txtGender =view.findViewById(R.id.jobseeker_profileGender);
         imgCamera =  view.findViewById(R.id.edt_img_camera);
         imgUser =  view.findViewById(R.id.edt_img_profile);
         imgedit=view.findViewById(R.id.edt_personal_img_edit);
@@ -294,9 +300,6 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
             txtResumeUpload.setVisibility(View.GONE);
             getProfile(jobseekerid);
         }
-
-
-
     }
 
     private void selectImage() {
@@ -322,7 +325,6 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                     if (appPermissions.hasPermission( Manifest.permission.READ_EXTERNAL_STORAGE)){
                         result = true;
                         galleryIntent();
-                        Toast.makeText(getContext(), "All granted gal"+result, Toast.LENGTH_SHORT).show();
                     } else {
 
                         appPermissions.requestPermission(getActivity(),  Manifest.permission.READ_EXTERNAL_STORAGE, SELECT_FILE);
@@ -372,10 +374,8 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
         }
 
         imgUser.setImageBitmap(thumbnail);
-        Glide.with(this).load(thumbnail).apply(RequestOptions.circleCropTransform()).into(imgUser);
-
         img = Utillity.BitMapToString(thumbnail);
-        uploading(img);
+        setImg(img);
     }
 
     @SuppressWarnings("deprecation")
@@ -385,10 +385,10 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
         if (data != null) {
             try {
                 bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
-                Glide.with(this).load(bm).apply(RequestOptions.circleCropTransform()).into(imgUser);
-
+                imgUser.setImageBitmap(bm);
                 img = Utillity.BitMapToString(bm);
-                uploading(img);
+
+                setImg(img);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -459,18 +459,20 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                             JSONObject jsonObject = response.getJSONObject("user_list");
                             jobseekerProileData = gson.fromJson(response.toString(), JobseekerProileData.class);
                             if (jsonObject.getString("user_fname")!=null && jsonObject.getString("user_fname").length()>1){
-                                txtName.setText(jobseekerProileData.getUser_list().getUser_fname());
                                 name = jobseekerProileData.getUser_list().getUser_fname();
+                                txtName.setText(name);
                             }
                             if (jsonObject.getString("user_phone").length()>1&&jsonObject.getString("user_phone").length()>1){
                                 txtMobile.setText(jobseekerProileData.getUser_list().getUser_phone());
                                 mobile = jobseekerProileData.getUser_list().getUser_phone();
                             }
-                            if (jsonObject.getString("user_dob").length()>1&&jsonObject.getString("user_dob").length()>1){
+                            if (jsonObject.getString("user_dob").length()>1){
                                 dob = jobseekerProileData.getUser_list().getUser_dob();
-                                gender =  jobseekerProileData.getUser_list().getUser_gender();
-                                txtDob.setText(dob+ ",  "+gender);
+                                txtDob.setText(dob);
                             }
+                            gender =  jobseekerProileData.getUser_list().getUser_gender();
+                            txtGender.setText(gender);
+
                             if (!jsonObject.getString("user_nationality").equals("0") &&jsonObject.getString("user_nationality").length()>1){
                                 nationality  = jobseekerProileData.getUser_list().getUser_nationality();
                                 String workpc ;
@@ -493,17 +495,17 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                             if (jsonObject.getString("profile_summary_skills").length()>1&&jsonObject.getString("profile_summary_skills").length()>1){
                                 String skll = jobseekerProileData.getUser_list().getProfile_summary_skills();
                                 String yera = jobseekerProileData.getUser_list().getProfile_summary_exp();
-                                value_split = skll.split(",");
-                                value_year = yera.split(",");
+                                if (skll!=null&&yera!=null){
+                                    value_split = skll.split(",");
+                                    value_year = yera.split(",");
 
-                                Log.d(TAG, "onResponse: "+gson.toJson(value_split));
-                                for (int i=0;i<value_split.length;i++){
-                                    String s = value_split[i];
-                                    String y=value_year[i];
-                                    addLayout(s,y);
+                                    Log.d(TAG, "onResponse: "+gson.toJson(value_split));
+                                    for (int i=0;i<value_split.length;i++){
+                                        String s = value_split[i];
+                                        String y=value_year[i];
+                                        addLayout(s,y);
+                                    }
                                 }
-
-
                             }
                             if (jsonObject.getString("profile_summary_currentsalary")!=null){
                                 Log.d(TAG, "onResponse: "+jobseekerProileData.getUser_list().getProfile_summary_currentsalary());
@@ -545,8 +547,9 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                                 // Execute the task
                                 task.execute(new String[] { url });
                             } else {
-                                Glide.with(getContext()).load(R.drawable.gfgf)
-                                        .apply(RequestOptions.circleCropTransform()).into(imgUser);
+                                imgUser.setImageResource(R.drawable.gfgf);
+                            /*    Glide.with(getContext()).load(R.drawable.gfgf)
+                                        .apply(RequestOptions.circleCropTransform()).into(imgUser);*/
                             }
                             if (jsonObject.getString("user_resume")!=null  && jsonObject.getString("user_resume").length()>0){
                                 final String text = ApiList.IMG_BASE+jsonObject.getString("user_resume");
@@ -792,34 +795,37 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
             case R.id.txt_resume_upload:
                 startActivity(new Intent(getActivity(), UploadResumeActivity.class));
                 break;
-          /*  case R.id.txt_saveskills:
-//                skills = edtSkills.getText().toString();
-
-                if (!skills.isEmpty()){
-                    updateSkill();
-
-                } else {
-                    Utillity.message(getActivity(),"Please enter company name");
-                }
-                break;
-            case R.id.txt_cancelskills:
-//                edtSkills.setEnabled(false);
-                skillsLayout.setVisibility(View.GONE);
-                getProfile(userId);
-                break;*/
         }
     }
 
-    public void updateSkill(){
-        HashMap<String,String> params=new HashMap<>();
-        params.put("skills",skills);
-        params.put("user_id",userId);
-        CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_SKILLS,params,
-                this.successSkills(),this.error());
-        requestQueue.add(customRequest);
+    public void setImg(final String img){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiList.JOBSEEKER_PROFILE_PIC, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "onResponse:img "+response);
+                getProfile(userId);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: "+error);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String,String>hashMap = new HashMap<>();
+                hashMap.put("user_image",img);
+                hashMap.put("user_id",userId);
+                return hashMap;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(stringRequest);
     }
 
-    private Response.Listener<JSONObject> successSkills() {
+    private Response.Listener<JSONObject> successimg() {
         Utillity.showloadingpopup(getActivity());
         return new Response.Listener<JSONObject>() {
             @Override
@@ -832,10 +838,9 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                         if (jsonObject.getString("status").equals("true")){
 //                            edtSkills.setEnabled(false);
                             Utillity.message(getContext(), " Updated successfully");
-                            skillsLayout.setVisibility(View.GONE);
-                            getProfile(userId);
+//                            getProfile(userId);
                         } else {
-                            Utillity.message(getContext(), "Connection error");
+                            Utillity.message(getContext(), getResources().getString(R.string.internetConnection));
                         }
 
                     } catch (JSONException e) {
@@ -852,9 +857,11 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
         params.put("user_image",img);
         params.put("user_id",userId);
         CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_PROFILE_PIC,params,
-                this.successSkills(),this.error());
+                this.successimg(),this.error());
+        customRequest.setRetryPolicy(new DefaultRetryPolicy(30000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(customRequest);
     }
+
     public class GetImage extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected void onPreExecute() {
@@ -877,9 +884,9 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
             Utillity.hidepopup();
             imgUser.setImageBitmap(result);
             img = Utillity.BitMapToString(result);
-
-            Glide.with(getActivity()).load(result)
-                    .apply(RequestOptions.circleCropTransform()).into(imgUser);
+//
+//            Glide.with(getActivity()).load(result)
+//                    .apply(RequestOptions.circleCropTransform()).into(imgUser);
         }
 
         // Creates Bitmap from InputStream and returns it

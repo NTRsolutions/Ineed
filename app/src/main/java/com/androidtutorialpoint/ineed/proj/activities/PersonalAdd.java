@@ -47,7 +47,7 @@ import java.util.Locale;
 public class PersonalAdd extends AppCompatActivity implements View.OnClickListener {
     ActionBar actionBar;
     Toolbar toolbar;
-    String CountryId, userEmail,exp="", locid,salary,age, expYear, gender, userid, workPermit,nationalityId,
+    String CountryId, userEmail,exp="", locid,salary,age, expYear, gender="", userid, workPermit,nationalityId,
             name, desi, no,currentcomp="", dob,jobType, jobtypeid, salaryId,permitCountry,permitCountryId="",
             workpermitcount="", expMonth;
     LinearLayout bottom_toolbar;
@@ -100,6 +100,9 @@ public class PersonalAdd extends AppCompatActivity implements View.OnClickListen
         no = getIntent().getStringExtra("mobile");
         nationalityId = getIntent().getStringExtra("nat");
         gender = getIntent().getStringExtra("gender");
+        if (gender.length()==0){
+            gender = "male";
+        }
         dob = getIntent().getStringExtra("dob");
         jobtypeid = getIntent().getStringExtra("jobTypeid");
         currentcomp = getIntent().getStringExtra("currentComp");

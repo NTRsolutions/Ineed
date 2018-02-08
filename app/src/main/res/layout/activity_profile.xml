@@ -33,12 +33,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center">
-                        <ImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/edt_img_profile"
-                            android:layout_gravity="center"
                             android:layout_width="110dp"
                             android:layout_height="110dp"
-                            android:scaleType="fitCenter" />
+                            app:civ_border_width="2dp"
+                            app:civ_border_color="#FFF"/>
 
                         <ImageView
                             android:id="@+id/edt_img_camera"
@@ -71,17 +72,34 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:paddingTop="10dp"
+                        android:text="name"
                         android:textColor="@color/white"
                         android:textSize="@dimen/small_size"
                         android:textStyle="bold" />
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textSize="10sp"
-                        android:id="@+id/jobseeker_profileAge"
-                        android:textColor="@color/white"
-                       />
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textSize="10sp"
+                            android:id="@+id/jobseeker_profileAge"
+                            android:textColor="@color/white"
+                            />
+                        <TextView
+                            android:paddingLeft="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textSize="10sp"
+                            android:id="@+id/jobseeker_profileGender"
+                            android:textColor="@color/white"
+                            />
+                    </LinearLayout>
+
+
 
                 </LinearLayout>
                 <TextView

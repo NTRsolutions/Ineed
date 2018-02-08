@@ -67,6 +67,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import static android.app.Activity.RESULT_OK;
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
@@ -80,7 +82,8 @@ public class DashboardEmpFragment extends Fragment {
     TextView txt_proftitle,txt_personal,txtSave,txtCancle, txtProfileView, txtPackage, txtExpired, txtCredit,
             txtUpgrade, txtLeft;
     LinearLayout ll_savecancel;
-    ImageView imgUser, imgCamera;
+    ImageView  imgCamera;
+    CircleImageView imgUser;
     String img,language, userId, name, company, email, phone;
     TinyDB tinyDB;
     LoginData loginData;
@@ -122,7 +125,7 @@ public class DashboardEmpFragment extends Fragment {
         etcontact = (EditText) view.findViewById(R.id.et_phone);
         txt_personal = (TextView) view.findViewById(R.id.txt_personal);
         txt_proftitle = (TextView) view.findViewById(R.id.etProfile_name);
-        imgUser = (ImageView) view.findViewById(R.id.emp_img_profilew) ;
+        imgUser = view.findViewById(R.id.emp_img_profilew) ;
         imgCamera = (ImageView) view.findViewById(R.id.emp_img_camera);
 
         txtProfileView.setOnClickListener(new View.OnClickListener() {
@@ -266,7 +269,7 @@ public class DashboardEmpFragment extends Fragment {
                     if (appPermissions.hasPermission( Manifest.permission.READ_EXTERNAL_STORAGE)){
                         result = true;
                         galleryIntent();
-                        Toast.makeText(getContext(), "All granted gal"+result, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(), "All granted gal"+result, Toast.LENGTH_SHORT).show();
                     } else {
 
                         appPermissions.requestPermission(getActivity(),  Manifest.permission.READ_EXTERNAL_STORAGE, SELECT_FILE);
@@ -316,8 +319,6 @@ public class DashboardEmpFragment extends Fragment {
         }
 
         imgUser.setImageBitmap(thumbnail);
-        Glide.with(this).load(thumbnail).apply(RequestOptions.circleCropTransform()).into(imgUser);
-
         img = Utillity.BitMapToString(thumbnail);
         uploading(img);
     }
@@ -329,8 +330,7 @@ public class DashboardEmpFragment extends Fragment {
         if (data != null) {
             try {
                 bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
-                Glide.with(this).load(bm).apply(RequestOptions.circleCropTransform()).into(imgUser);
-
+                imgUser.setImageBitmap(bm);
                 img = Utillity.BitMapToString(bm);
                 uploading(img);
             } catch (IOException e) {
@@ -434,8 +434,8 @@ public class DashboardEmpFragment extends Fragment {
                                        }
                                    }
                                     else {
-                                       Glide.with(getContext()).load(R.drawable.gfgf)
-                                               .apply(RequestOptions.circleCropTransform()).into(imgUser);
+                                       imgUser.setImageResource(R.drawable.gfgf);
+
                                    }
                                }
                             }
@@ -551,8 +551,6 @@ public class DashboardEmpFragment extends Fragment {
             imgUser.setImageBitmap(result);
             img = Utillity.BitMapToString(result);
 
-            Glide.with(getActivity()).load(result)
-                    .apply(RequestOptions.circleCropTransform()).into(imgUser);
         }
 
         // Creates Bitmap from InputStream and returns it

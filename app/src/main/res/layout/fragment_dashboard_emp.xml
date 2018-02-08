@@ -30,13 +30,14 @@
                     android:layout_width="wrap_content"
                     android:layout_gravity="center"
                     android:layout_height="wrap_content">
-
-                    <ImageView
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/emp_img_profilew"
-                        android:layout_gravity="center"
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
-                        android:scaleType="fitCenter" />
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="#FFF"/>
+
 
                     <ImageView
                         android:layout_width="wrap_content"
