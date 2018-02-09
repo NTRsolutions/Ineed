@@ -226,7 +226,7 @@
                         android:gravity="center_vertical"
                         android:drawablePadding="5dp"
                         android:textSize="@dimen/extra_small_size"
-                        android:drawableLeft="@drawable/ic_phone"
+                        android:drawableLeft="@drawable/ic_phone_white"
                         android:id="@+id/jobseerker_profileMobile"/>
                     <TextView
                         android:layout_width="0dp"

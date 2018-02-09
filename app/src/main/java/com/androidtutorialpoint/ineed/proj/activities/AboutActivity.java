@@ -57,7 +57,7 @@ public class AboutActivity extends AppCompatActivity {
     private void setuptoolbar() {
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
         TextView textView= (TextView)toolbar.findViewById(R.id.toolbar_txt);
-        textView.setText("About");
+        textView.setText("About Us");
         setSupportActionBar(toolbar);
         actionBar=getSupportActionBar();
         if(actionBar!=null)

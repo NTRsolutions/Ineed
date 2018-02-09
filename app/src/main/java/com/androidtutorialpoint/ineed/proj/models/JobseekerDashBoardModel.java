@@ -1,13 +1,14 @@
 package com.androidtutorialpoint.ineed.proj.models;
 
 /**
- * Created by Muhib.
- * Contact Number : +91 9796173066
+ * Created by Rakhi.
+ * Contact Number : +91 9958187463
  */
 public class JobseekerDashBoardModel {
+
     /**
      * status : true
-     * jobseeker_dashboard : {"user_viewed":1,"user_package_id":"Basic","user_package_expire_date":"2018-02-05"}
+     * jobseeker_dashboard : {"user_viewed":4,"user_package_id":"Basic","user_price":"10","user_stardate":"2018-01-30","user_package_expire_date":"2018-03-30"}
      */
 
     private boolean status;
@@ -31,14 +32,17 @@ public class JobseekerDashBoardModel {
 
     public static class JobseekerDashboardBean {
         /**
-         * user_viewed : 1
+         * user_viewed : 4
          * user_package_id : Basic
-         * user_package_expire_date : 2018-02-05
+         * user_price : 10
+         * user_stardate : 2018-01-30
+         * user_package_expire_date : 2018-03-30
          */
 
         private int user_viewed;
-
         private String user_package_id;
+        private String user_price;
+        private String user_stardate;
         private String user_package_expire_date;
 
         public int getUser_viewed() {
@@ -55,6 +59,22 @@ public class JobseekerDashBoardModel {
 
         public void setUser_package_id(String user_package_id) {
             this.user_package_id = user_package_id;
+        }
+
+        public String getUser_price() {
+            return user_price;
+        }
+
+        public void setUser_price(String user_price) {
+            this.user_price = user_price;
+        }
+
+        public String getUser_stardate() {
+            return user_stardate;
+        }
+
+        public void setUser_stardate(String user_stardate) {
+            this.user_stardate = user_stardate;
         }
 
         public String getUser_package_expire_date() {

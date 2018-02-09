@@ -81,7 +81,6 @@ public class ContactUsActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     public void getContactUs(String fname, String lName, String  email, String phone, String msg){
@@ -125,7 +124,7 @@ public class ContactUsActivity extends AppCompatActivity {
                 {
                     if (response.getString("status").equals("true")){
                         Utillity.message(getApplicationContext(),"Message send successfully.");
-                        finish();
+                        refresh();
                     } else {
                         Utillity.message(getApplicationContext(),"Message not sent.");
                     }
@@ -139,6 +138,14 @@ public class ContactUsActivity extends AppCompatActivity {
                 Log.d("Response",""+response);
             }
         };
+    }
+
+    public void refresh(){
+        edtEmail.setText("");
+        edtFName.setText("");
+        edtMsg.setText("");
+        edtPhone.setText("");
+        edtLName.setText("");
     }
 
     private Response.ErrorListener errorlistener()

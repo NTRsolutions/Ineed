@@ -87,7 +87,6 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.androidtutorialpoint.ineed.proj.activities.Search.jobseekerid;
 import static com.helpshift.support.webkit.CustomWebViewClient.TAG;
 
 /**
@@ -188,6 +187,7 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
             @Override
             public void onClick(View view) {
                 edtobjective.setEnabled(true);
+                edtobjective.requestFocus();
                 ll_savecancel.setVisibility(View.VISIBLE);
             }
         });
@@ -385,6 +385,9 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
         if (data != null) {
             try {
                 bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bm.compress(Bitmap.CompressFormat.JPEG, 90, bos);
+                byte[] bitmapdata = bos.toByteArray();
                 imgUser.setImageBitmap(bm);
                 img = Utillity.BitMapToString(bm);
 
@@ -490,7 +493,9 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
 
 
                             if (jsonObject.getString("profile_summary_resumeheadline").length()>1&&jsonObject.getString("profile_summary_resumeheadline").length()>1){
-                                edtobjective.setText(jobseekerProileData.getUser_list().getProfile_summary_resumeheadline());
+                                edtobjective.setText(" ");
+                                edtobjective.append(jobseekerProileData.getUser_list().getProfile_summary_resumeheadline());
+
                             }
                             if (jsonObject.getString("profile_summary_skills").length()>1&&jsonObject.getString("profile_summary_skills").length()>1){
                                 String skll = jobseekerProileData.getUser_list().getProfile_summary_skills();
@@ -803,7 +808,18 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "onResponse:img "+response);
-                getProfile(userId);
+                try {
+                    JSONObject jsonObject = new JSONObject(response.toString());
+                    if (jsonObject.getString("status").equals("true")){
+                        Utillity.message(getContext(), "Profile updated successfully");
+                        getProfile(userId);
+
+                    } else {
+                        Utillity.message(getContext(), "Profile not updated");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override

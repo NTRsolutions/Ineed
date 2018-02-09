@@ -275,7 +275,7 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
             tinyDB.remove("login_data");
             startActivity(new Intent(HomeActivity.this,LoginActivity.class));
-            Search.jobseekerid = null;
+
             finish();
         } else if (id == R.id.nav_help){
             startActivity(new Intent(HomeActivity.this,HelpActivity.class));
