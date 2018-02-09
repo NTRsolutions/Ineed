@@ -51,7 +51,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     ArrayList<String> gender =new ArrayList<>();
     ActionBar actionBar;
     Button bt_fliteredSearch;
-    String Experience,Ctc,Age,Gender;
+    String Experience,Ctc,Age,Gender,Iexpe,Ictc,Iage,Igender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +67,11 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         bt_fliteredSearch.setOnClickListener(this);
         getfilterApi();
         setuptoolbar();
+        Intent intent=getIntent();
+        Iexpe=intent.getStringExtra("Exp");
+        Ictc=intent.getStringExtra("ctc");
+        Iage=intent.getStringExtra("age");
+        Igender=intent.getStringExtra("gender");
     }
 
     private void getfilterApi() {
@@ -141,50 +146,147 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void handelspinners() {
-      /*  Job Type*/
-        ArrayAdapter<String> ageadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,age);
-        ageadapter.setDropDownViewResource(R.layout.spinnerfilterdesign);
-        fl_age.setAdapter(ageadapter);
-        fl_age.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*  age Type*/
+        if(Iage==null || Iage.isEmpty())
+        {
+            ArrayAdapter<String> ageadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,age);
+            ageadapter.setDropDownViewResource(R.layout.spinnerfilterdesign);
+            fl_age.setAdapter(ageadapter);
+            fl_age.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if(position>0) {
+                        Age = (String) parent.getItemAtPosition(position);
+                    }
+                    else
+                    {
+                        Age="";
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    Gender="";
+                }
+            });  
+        }
+        else 
+        {
+            editAgeSpinner();
+        }
+      /*  ctc Type*/
+       if(Ictc==null || Ictc.isEmpty())
+       {
+           ArrayAdapter<String> ctcadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,ctc);
+           ctcadapter.setDropDownViewResource(R.layout.spinnerfilterdesign);
+           fl_ctc.setAdapter(ctcadapter);
+           fl_ctc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                   if(position>0) {
+                       Ctc = String.valueOf(parent.getItemAtPosition(position));
+                   }
+                   else
+                   {
+                       Ctc="";
+                   }
+               }
+
+               @Override
+               public void onNothingSelected(AdapterView<?> parent) {
+                   Gender="";
+               }
+           });
+       }
+       else
+       {
+           editCtcSpinner();
+       }
+
+       if(Iexpe==null || Iexpe.isEmpty())
+       {
+           ArrayAdapter<String> expadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,exp);
+           expadapter.setDropDownViewResource(R.layout.spinnerfilterdesign);
+           fl_experience.setAdapter(expadapter);
+           fl_experience.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                   if (position>0) {
+                       Experience = String.valueOf(parent.getItemAtPosition(position));
+                   }
+                   else
+                   {
+                       Experience="";
+                   }
+               }
+
+               @Override
+               public void onNothingSelected(AdapterView<?> parent) {
+                   Gender="";
+               }
+           });
+       }
+       else
+       {
+           editExperienceSpinner();
+       }
+       if(Igender==null || Igender.isEmpty())
+       {
+           ArrayAdapter<String> genderadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,gender);
+           genderadapter.setDropDownViewResource(R.layout.spinnerfilterdesign);
+           fl_gender.setAdapter(genderadapter);
+           fl_gender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+               @Override
+               public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                   if(position>0)
+                       Gender= (String) parent.getItemAtPosition(position);
+                   else
+                       Gender="";
+               }
+
+               @Override
+               public void onNothingSelected(AdapterView<?> parent) {
+                   Gender="";
+               }
+           });
+       }
+       else
+       {
+           editGenderSpinner();
+       }
+
+    }
+
+    private void editGenderSpinner() {
+        ArrayAdapter<String> genderadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,gender);
+        genderadapter.setDropDownViewResource(R.layout.spinnerfilterdesign);
+        fl_gender.setAdapter(genderadapter);
+        int i=genderadapter.getPosition(Igender);
+        fl_gender.setSelection(i);
+        Gender=Igender;
+        fl_gender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position>0) {
-                    Age = (String) parent.getItemAtPosition(position);
-                }
+                if(position>0)
+                    Gender= (String) parent.getItemAtPosition(position);
                 else
-                {
-                    Age="";
-                }
+                    Gender="";
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Gender="";
+                Gender=Igender;
             }
         });
-        ArrayAdapter<String> ctcadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,ctc);
-        ctcadapter.setDropDownViewResource(R.layout.spinnerfilterdesign);
-        fl_ctc.setAdapter(ctcadapter);
-        fl_ctc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position>0) {
-                    Ctc = String.valueOf(parent.getItemAtPosition(position));
-                }
-                else
-                {
-                    Ctc="";
-                }
-            }
+    }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Gender="";
-            }
-        });
+    private void editExperienceSpinner() {
         ArrayAdapter<String> expadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,exp);
         expadapter.setDropDownViewResource(R.layout.spinnerfilterdesign);
         fl_experience.setAdapter(expadapter);
+        int i=expadapter.getPosition(Iexpe);
+        fl_experience.setSelection(i);
+        Experience=Iexpe;
         fl_experience.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -199,26 +301,64 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Gender="";
+                Experience=Iexpe;
             }
         });
-        ArrayAdapter<String> genderadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,gender);
-        genderadapter.setDropDownViewResource(R.layout.spinnerfilterdesign);
-        fl_gender.setAdapter(genderadapter);
-        fl_gender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+    }
+
+    private void editCtcSpinner() {
+        ArrayAdapter<String> ctcadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,ctc);
+        ctcadapter.setDropDownViewResource(R.layout.spinnerfilterdesign);
+        fl_ctc.setAdapter(ctcadapter);
+        int i=ctcadapter.getPosition(Ictc);
+        fl_ctc.setSelection(i);
+        Ctc=Ictc;
+        fl_ctc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position>0)
-            Gender= (String) parent.getItemAtPosition(position);
+                if(position>0) {
+                    Ctc = String.valueOf(parent.getItemAtPosition(position));
+                }
                 else
-                    Gender="";
+                {
+                    Ctc="";
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Gender="";
+                Ctc=Ictc;;
             }
         });
+
+    }
+
+    private void editAgeSpinner() {
+        ArrayAdapter<String> ageadapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinnerfilterdesign,age);
+        ageadapter.setDropDownViewResource(R.layout.spinnerfilterdesign);
+        fl_age.setAdapter(ageadapter);
+        int i=ageadapter.getPosition(Iage);
+        fl_age.setSelection(i);
+        Age=Iage;
+        fl_age.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position>0) {
+                    Age = (String) parent.getItemAtPosition(position);
+                }
+                else
+                {
+                    Age="";
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Age=Iage;
+            }
+        });
+
     }
 
     private Response.ErrorListener errorlistener()
@@ -249,6 +389,7 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         Intent it= new Intent();
+
         it.putExtra("experi",Experience);
         it.putExtra("ctc",Ctc);
         it.putExtra("age",Age);

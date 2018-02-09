@@ -60,6 +60,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     List<CountryList.CountryListBean> countrylst=new ArrayList<>();
     ArrayList<String> Cname,Cid;
     List<SearchModel.ProfileListBean> searchlist=new ArrayList<>();
+    List<SearchModel.ProfileListBean> searchlist1=new ArrayList<>();
+
     RecyclerView recsearch;
     EditText et_search;
     Gson gson;
@@ -172,7 +174,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 CountryId="";
-
             }
         });
     }
@@ -183,9 +184,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             @Override
             public void onErrorResponse(VolleyError error) {
                 Utillity.hidepopup();
-                Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
-
-                Log.d("Error Respons",""+error);
+             //   Utillity.message(getApplicationContext(),getResources().getString(R.string.internetConnection));
+                Log.d("Error in network",""+error);
             }
         };
     }
@@ -247,7 +247,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
 
         dialog.show();
     }
-
+    String experi,ctc,Age,Gender;
     @Override
     public void onClick(View view) {
         switch (view.getId())
@@ -255,7 +255,19 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             case R.id.txt_filter:
                 //  startActivity(new Intent(Search.this,FilterActivity.class));
                 value=0;
-                startActivityForResult(new Intent(Search.this,FilterActivity.class),FILTER_REQUEST);
+                Intent intent=new Intent(Search.this,FilterActivity.class);
+                intent.putExtra("Exp",experi);
+                intent.putExtra("ctc",ctc);
+                intent.putExtra("age",Age);
+                intent.putExtra("gender",Gender);
+                filtserch.clear();
+                if(searchlist1.size()>0)
+                {
+                    searchlist.clear();
+                    searchlist.addAll(searchlist1);
+                    searchlist1.clear();
+                }
+                startActivityForResult(intent,FILTER_REQUEST);
                 break;
         }
         //setupoverlay();
@@ -270,11 +282,11 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             Log.d("gender",Gender);
             searchAdapte.getFilter().filter(Gender);*/
             if(data!=null) {
-                String experi = data.getStringExtra("experi");
-                String ctc = data.getStringExtra("ctc");
-                String Age = data.getStringExtra("age");
-                String Gender = data.getStringExtra("gender");
-
+                experi = data.getStringExtra("experi");
+                ctc = data.getStringExtra("ctc");
+                Age = data.getStringExtra("age");
+                Gender = data.getStringExtra("gender");
+                value=-1;
                 if (!experi.isEmpty()) {
                     experfilter(experi);
                 }
@@ -303,6 +315,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                         as.addAll(filtserch);
                         filtserch.clear();
                         filtserch.addAll(as);
+                        searchlist1.addAll(searchlist);
                         searchlist.clear();
                         searchlist.addAll(filtserch);
                         searchAdapte.notifyDataSetChanged();
@@ -310,10 +323,11 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                     else
                     {
                         Utillity.message(this,"No record Found");
-                        if(txt_filter.getVisibility()==View.VISIBLE)
+                      /*  if(txt_filter.getVisibility()==View.VISIBLE)
                         {
                             txt_filter.setVisibility(View.GONE);
-                        }
+                        }*/
+                        searchlist1.addAll(searchlist);
                         searchlist.clear();
                         value=0;
                         searchAdapte.notifyDataSetChanged();
@@ -346,7 +360,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         if(value<=0) {
             if (filtserch.size()>0 ) {
                 ArrayList<SearchModel.ProfileListBean> tab = new ArrayList<>();
-
                 for(int i=0;i<filtserch.size();i++)
                 {
                     SearchModel.ProfileListBean sModel=filtserch.get(i);
@@ -462,7 +475,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         }
     }
     private void genderfilter(String Gender) {
-
         Log.d("gender",Gender);
         if(value<=0) {
 
@@ -654,6 +666,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                         {
                             Utillity.message(getApplicationContext(),"No Record Found");
                         }
+
                     }
                     searchAdapte.notifyDataSetChanged();
                 } catch (Exception e) {
