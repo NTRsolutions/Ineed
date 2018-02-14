@@ -365,7 +365,7 @@ public class DashboardEmpFragment extends Fragment {
     }
 
     public void setImg(final String img){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiList.JOBSEEKER_PROFILE_PIC, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiList.EMP_PROFILE_PIC, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "onResponse:img "+response);
