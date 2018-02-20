@@ -10,7 +10,7 @@ public class EmployerProfileData {
 
     /**
      * status : true
-     * profile_detail : {"user_fname":"rakhi singh","user_lname":null,"user_email":"rakhi@gmail.com","user_company":"ask ","user_phone":"9958187466","user_image":"63.png","user_package_id":"PRO","user_package_price":"2000","user_package_credit":"500","user_package_expire_date":"2018-07-11","user_credit_use":2}
+     * profile_detail : {"user_fname":"","user_lname":null,"user_email":"op@g.in","user_company":"","user_phone":"","user_image":"","user_package_id":"SUPER","user_package_price":"95","user_package_credit":"69","user_package_start":"2018-02-09","user_package_expire_date":"2018-05-09","user_credit_use":11}
      */
 
     private boolean status;
@@ -34,17 +34,18 @@ public class EmployerProfileData {
 
     public static class ProfileDetailBean {
         /**
-         * user_fname : rakhi singh
+         * user_fname :
          * user_lname : null
-         * user_email : rakhi@gmail.com
-         * user_company : ask
-         * user_phone : 9958187466
-         * user_image : 63.png
-         * user_package_id : PRO
-         * user_package_price : 2000
-         * user_package_credit : 500
-         * user_package_expire_date : 2018-07-11
-         * user_credit_use : 2
+         * user_email : op@g.in
+         * user_company :
+         * user_phone :
+         * user_image :
+         * user_package_id : SUPER
+         * user_package_price : 95
+         * user_package_credit : 69
+         * user_package_start : 2018-02-09
+         * user_package_expire_date : 2018-05-09
+         * user_credit_use : 11
          */
 
         private String user_fname;
@@ -56,6 +57,7 @@ public class EmployerProfileData {
         private String user_package_id;
         private String user_package_price;
         private String user_package_credit;
+        private String user_package_start;
         private String user_package_expire_date;
         private int user_credit_use;
 
@@ -129,6 +131,14 @@ public class EmployerProfileData {
 
         public void setUser_package_credit(String user_package_credit) {
             this.user_package_credit = user_package_credit;
+        }
+
+        public String getUser_package_start() {
+            return user_package_start;
+        }
+
+        public void setUser_package_start(String user_package_start) {
+            this.user_package_start = user_package_start;
         }
 
         public String getUser_package_expire_date() {

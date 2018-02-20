@@ -92,6 +92,7 @@
                 android:text="1800-459-5500"
                 android:textColor="@color/appbasecolor"
                 android:padding="1dp"
+                android:visibility="gone"
                 android:gravity="center"/>
             <ImageView
                 android:layout_margin="7dp"
@@ -111,7 +112,7 @@
                 android:layout_margin="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="UAE Dubai"
+                android:text="Al Hamriya Building, office 137, Al Hamriya, Dubai- UAE"
                 android:textColor="@color/black"
                 android:padding="1dp"
                 android:gravity="center"/>
@@ -129,11 +130,12 @@
                 android:textColor="@color/black"
                 android:padding="1dp"
                 android:gravity="center"/>
+
             <TextView
                 android:layout_margin="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="+765-123-456-987"
+                android:text="0971562424444"
                 android:textColor="@color/black"
                 android:padding="1dp"
                 android:gravity="center"/>
@@ -141,15 +143,7 @@
                 android:layout_margin="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Admin@gamil.com"
-                android:textColor="@color/black"
-                android:padding="1dp"
-                android:gravity="center"/>
-            <TextView
-                android:layout_margin="2dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="www.ineed.com"
+                android:text="support@ineed.biz"
                 android:textColor="@color/black"
                 android:padding="1dp"
                 android:gravity="center"/>

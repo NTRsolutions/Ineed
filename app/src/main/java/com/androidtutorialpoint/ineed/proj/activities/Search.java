@@ -42,6 +42,7 @@ import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
 import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ import java.util.Set;
 
 public class Search extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener, SearchAdapter.Clickitem {
     private static final int FILTER_REQUEST = 222 ;
-    String set,CountryId;
+    String set="",CountryId;
     LinearLayout linearLayout;
     ActionBar actionBar;
     Spinner select_country;
@@ -189,8 +190,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         };
     }
 
-    private void
-    setupoverlay() {
+    private void setupoverlay() {
         final Dialog dialog=new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.search_overlay_popup);
@@ -198,7 +198,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         TextView textView=(TextView)dialog.findViewById(R.id.txt_msg);
         final Button job=(Button)dialog.findViewById(R.id.overjob);
         Button emp=(Button)dialog.findViewById(R.id.overemp);
-        if(set.equalsIgnoreCase("search"))
+        /*if(set.equalsIgnoreCase("search"))
         {
             relativeLayout.setBackgroundResource(R.drawable.card);
             textView.setText("Are you sure you want to view detail,it will deduct one credit from your account");
@@ -218,7 +218,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                 }
             });
         }
-        else if(set.equalsIgnoreCase("login"))
+        else */if(set.equalsIgnoreCase("login"))
         {
             textView.setText("To view details please get Login");
             job.setText("Login");
@@ -228,6 +228,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                 public void onClick(View view) {
                     startActivity(new Intent(Search.this,LoginActivity.class)
                             .putExtra("search","search").putExtra("id", jobseekerid));
+                    finish();
                     dialog.dismiss();
                 }
             });
@@ -663,7 +664,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                         }
                         else
                         {
-                            Utillity.message(getApplicationContext(),"No Record Found");
+                            Utillity.message(getApplicationContext(),"No record Found Data");
                         }
 
                     }
@@ -678,7 +679,47 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     private Response.Listener<JSONObject> viewedsucess() {
         return new Response.Listener<JSONObject>() {
             @Override
+            /*{"msg":"all ready viewed"}*/
             public void onResponse(JSONObject response) {
+                if (response!=null){
+                    try {
+                        String msg = response.getString("msg");
+                        if (!msg.equals("all ready viewed")) {
+                            final Dialog dialog = new Dialog(Search.this, android.R.style.Theme_Translucent_NoTitleBar);
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            dialog.setContentView(R.layout.search_overlay_popup);
+                            RelativeLayout relativeLayout = (RelativeLayout) dialog.findViewById(R.id.rela_backgrnd);
+                            TextView textView = (TextView) dialog.findViewById(R.id.txt_msg);
+                            final Button job = (Button) dialog.findViewById(R.id.overjob);
+                            Button emp = (Button) dialog.findViewById(R.id.overemp);
+
+                                relativeLayout.setBackgroundResource(R.drawable.card);
+                                textView.setText("Are you sure you want to view details, It will deduct one credit from your account");
+                                job.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        startActivity(new Intent(Search.this,
+                                                JobseekerDetailActivity.class).putExtra("id", jobseekerid));
+                                        dialog.dismiss();
+                                    }
+                                });
+                            emp.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            dialog.setCanceledOnTouchOutside(false);
+                            dialog.setCancelable(false);
+                            dialog.show();
+                        } else {
+                            startActivity(new Intent(Search.this,
+                                    JobseekerDetailActivity.class).putExtra("id", jobseekerid));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
                 Log.d("TAG", "onResponse: "+response.toString());
                 Utillity.hidepopup();
                 Gson gson=new Gson();
@@ -686,7 +727,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
             }
         };
     }
-    public static String jobseekerid;
+    public String jobseekerid;
 
     @Override
     public void itemclick(View v, int position) {
@@ -696,8 +737,9 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         }
         else
         {
-            setupoverlay();
             jobseekerid = searchlist.get(position).getUser_id();
+            getViewed(jobseekerid);
+
         }
     }
 }

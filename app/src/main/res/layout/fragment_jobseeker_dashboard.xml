@@ -6,7 +6,10 @@
     android:background="@drawable/background"
     tools:context="com.androidtutorialpoint.ineed.proj.fragment.JobseekerDashboardFragment">
 
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,11 +81,73 @@
                     android:textSize="@dimen/extra_small_size" />
 
             </LinearLayout>
+            <LinearLayout
+                style="@style/BlueBorderButtonTheme"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/jobseekerdash_Planprice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:padding="3dp"
+                    android:text=""
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/extra_large_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:padding="5dp"
+                    android:text="Price"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/extra_small_size" />
+
+            </LinearLayout>
+            <LinearLayout
+                style="@style/BlueBorderButtonTheme"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/jobseekerdash_plan_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:padding="3dp"
+                    android:text=""
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="@dimen/extra_large_size"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:padding="5dp"
+                    android:text="Start From"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/extra_small_size" />
+
+            </LinearLayout>
 
             <LinearLayout
                 style="@style/BlueBorderButtonTheme"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -131,7 +196,7 @@
             <LinearLayout
                 style="@style/BlueBorderButtonTheme"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:layout_marginTop="13dp"
                 android:background="@color/colorPrimaryDark"
                 android:gravity="center"
@@ -149,4 +214,6 @@
             </LinearLayout>
 
         </LinearLayout>
+
+    </ScrollView>
 </RelativeLayout>

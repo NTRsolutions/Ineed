@@ -51,7 +51,7 @@ import static android.content.ContentValues.TAG;
 
 
 public class JobseekerDashboardFragment extends Fragment implements View.OnClickListener{
-    TextView txtMyProfile, txtExpiry, txtViewedProfile, txtPlan, txtUpgrade;
+    TextView txtMyProfile, txtExpiry, txtPrice,txtStart,txtViewedProfile, txtPlan, txtUpgrade;
     TinyDB tinyDB;
     Gson gson = new Gson();
     View view;
@@ -79,6 +79,8 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
         txtViewedProfile = (TextView) view.findViewById(R.id.jobseekerdash_viewNo);
         txtPlan = (TextView) view.findViewById(R.id.jobseekerdash_currentPlan);
         txtUpgrade = view.findViewById(R.id.jobseekerdash_upgrade);
+        txtPrice = view.findViewById(R.id.jobseekerdash_Planprice);
+        txtStart = view.findViewById(R.id.jobseekerdash_plan_start);
 
         ((HomeActivity) getActivity()).getSupportActionBar().setTitle("Dashboard");
 //        set onclick
@@ -142,22 +144,20 @@ public class JobseekerDashboardFragment extends Fragment implements View.OnClick
                 {
                     if (dashBoardModel.getJobseeker_dashboard().getUser_package_id().equals("Expired")){
                         setupoverlay();
-
                     } else {
                         txtExpiry.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_expire_date());
                         txtPlan.setText(dashBoardModel.getJobseeker_dashboard().getUser_package_id());
                         int id=dashBoardModel.getJobseeker_dashboard().getUser_viewed();
                         txtViewedProfile.setText(String.valueOf(id));
+                        txtPrice.setText("$ "+dashBoardModel.getJobseeker_dashboard().getUser_price());
+                        txtStart.setText(dashBoardModel.getJobseeker_dashboard().getUser_stardate());
                     }
-
                 }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.d("Error",""+e);
                     Utillity.message(getContext(),"Error");
-
                 }
-
             }
         };
     }

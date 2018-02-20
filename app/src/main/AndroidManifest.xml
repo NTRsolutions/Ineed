@@ -53,8 +53,8 @@
         <activity
             android:name=".proj.activities.HomeActivity"
             android:label="@string/title_activity_home"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".proj.activities.ProfileViewed" />
         <activity
             android:name=".proj.activities.DialogActivity"

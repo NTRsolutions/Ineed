@@ -268,19 +268,25 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:text="Price"
+                            android:padding="4dp"
+                            />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Package Effective from"
+                            android:padding="4dp"
+                            />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:text="@string/Expired"
                             android:padding="4dp"
                             />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/creditpoint"
-                            android:padding="4dp"
-                            />
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/credituse"
+                            android:text="Number of Credit"
                             android:padding="4dp"
                             />
                     </LinearLayout>
@@ -298,11 +304,35 @@
                             android:textColor="@color/black"
                             android:padding="4dp"
                             android:textSize="14sp"
+                            android:text="Qucil"
                             android:maxLines="1"
-                            android:inputType="textEmailAddress"
                             android:imeOptions="actionNext"
                             android:background="@android:color/transparent"
                             />
+                        <TextView
+                            android:id="@+id/et_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="4dp"
+                            android:textSize="14sp"
+                            android:maxLines="1"
+                            android:text="price"
+                            android:textColor="@color/black"
+                            android:imeOptions="actionNext"
+                            android:background="@android:color/transparent"
+                            />
+                        <TextView
+                            android:id="@+id/et_start_from"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="4dp"
+                            android:textSize="14sp"
+                            android:maxLines="1"
+                            android:textColor="@color/black"
+                            android:imeOptions="actionNext"
+                            android:background="@android:color/transparent"
+                            />
+
                         <TextView
                             android:id="@+id/et_expired"
                             android:layout_width="match_parent"
@@ -311,7 +341,6 @@
                             android:textSize="14sp"
                             android:maxLines="1"
                             android:textColor="@color/black"
-                            android:inputType="textEmailAddress"
                             android:imeOptions="actionNext"
                             android:background="@android:color/transparent"
                             />
@@ -327,7 +356,7 @@
 
                             />
                         <TextView
-
+                            android:visibility="gone"
                             android:id="@+id/credit_left"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

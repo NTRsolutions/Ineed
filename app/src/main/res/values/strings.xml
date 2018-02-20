@@ -56,7 +56,7 @@
     <string name="changepassword">Change Password</string>
     <string name="upgradesubscription">Upgrade Subscription</string>
 
-    <string name="abouttitle">About</string>
+    <string name="abouttitle">About Us</string>
     <string name="terms">Terms of Use</string>
     <string name="Logout">Log Out</string>
 
@@ -93,7 +93,7 @@
 
     <string name="plandetails">Plan details</string>
     <string name="packkage">Package</string>
-    <string name="Expired">Expired</string>
+    <string name="Expired">Package Expiry Date</string>
     <string name="creditpoint">Credit Point</string>
     <string name="credituse">Credit Use</string>
     <string name="creditleft">Credit Left</string>

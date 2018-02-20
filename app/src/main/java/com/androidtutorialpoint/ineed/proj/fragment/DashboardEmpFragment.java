@@ -30,10 +30,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.LoginActivity;
@@ -66,6 +70,7 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -80,7 +85,7 @@ public class DashboardEmpFragment extends Fragment {
     AppPermissions appPermissions;
     EditText etEmail,etName,etcontact,etcompany;
     TextView txt_proftitle,txt_personal,txtSave,txtCancle, txtProfileView, txtPackage, txtExpired, txtCredit,
-            txtUpgrade, txtLeft;
+            txtUpgrade, txtLeft,txtPrice,txtstart;
     LinearLayout ll_savecancel;
     ImageView  imgCamera;
     CircleImageView imgUser;
@@ -126,6 +131,9 @@ public class DashboardEmpFragment extends Fragment {
         txt_personal = (TextView) view.findViewById(R.id.txt_personal);
         txt_proftitle = (TextView) view.findViewById(R.id.etProfile_name);
         imgUser = view.findViewById(R.id.emp_img_profilew) ;
+        txtPrice= view.findViewById(R.id.et_price);
+        txtstart= view.findViewById(R.id.et_start_from);
+
         imgCamera = (ImageView) view.findViewById(R.id.emp_img_camera);
 
         txtProfileView.setOnClickListener(new View.OnClickListener() {
@@ -320,7 +328,7 @@ public class DashboardEmpFragment extends Fragment {
 
         imgUser.setImageBitmap(thumbnail);
         img = Utillity.BitMapToString(thumbnail);
-        uploading(img);
+        setImg(img);
     }
 
     @SuppressWarnings("deprecation")
@@ -330,9 +338,12 @@ public class DashboardEmpFragment extends Fragment {
         if (data != null) {
             try {
                 bm = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bm.compress(Bitmap.CompressFormat.JPEG, 90, bos);
+                byte[] bitmapdata = bos.toByteArray();
                 imgUser.setImageBitmap(bm);
                 img = Utillity.BitMapToString(bm);
-                uploading(img);
+                setImg(img);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -352,6 +363,48 @@ public class DashboardEmpFragment extends Fragment {
         }
 
     }
+
+    public void setImg(final String img){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ApiList.EMP_PROFILE_PIC, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "onResponse:img "+response);
+                if (response!=null){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.toString());
+                        if (jsonObject.getString("status").equals("true")){
+                            Utillity.message(getContext(), "Profile updated successfully");
+                            getProfile();
+
+                        } else {
+                            Utillity.message(getContext(), "Profile not updated");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "onErrorResponse: "+error);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String,String>hashMap = new HashMap<>();
+                hashMap.put("user_image",img);
+                hashMap.put("user_id",userId);
+                return hashMap;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(30000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(stringRequest);
+    }
+
 
     Gson gson = new Gson();
     @Override
@@ -422,10 +475,13 @@ public class DashboardEmpFragment extends Fragment {
                                    etcontact.setText(profileDetailMOdel.getProfile_detail().getUser_phone());
                                    etcompany.setText(profileDetailMOdel.getProfile_detail().getUser_company());
                                    txtExpired.setText(profileDetailMOdel.getProfile_detail().getUser_package_expire_date());
-                                   txtCredit.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_package_credit()));
+                                   txtCredit.setText(String.valueOf("View up to "+profileDetailMOdel.getProfile_detail().getUser_package_credit()+" CV"));
                                    txtPackage.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_package_id()));
                                    txtLeft.setText(String.valueOf(profileDetailMOdel.getProfile_detail().getUser_credit_use()));
                                    txt_proftitle.setText(profileDetailMOdel.getProfile_detail().getUser_fname());
+                                   txtPrice.setText("$ "+profileDetailMOdel.getProfile_detail().getUser_package_price());
+                                   txtstart.setText(profileDetailMOdel.getProfile_detail().getUser_package_start());
+
                                    if (profileDetailMOdel.getProfile_detail().getUser_image()!=null && profileDetailMOdel.getProfile_detail().getUser_image().length()>0){
                                        String url = ApiList.IMG_BASE+profileDetailMOdel.getProfile_detail().getUser_image();
                                        GetImage task = new GetImage();
@@ -492,41 +548,6 @@ public class DashboardEmpFragment extends Fragment {
         };
     }
 
-
-    public void uploading(String img){
-        HashMap<String,String> params=new HashMap<>();
-        params.put("user_image",img);
-        params.put("user_id",userId);
-        CustomRequest customRequest=new CustomRequest(Request.Method.POST, ApiList.EMP_PROFILE_PIC,params,
-                this.successIMg(),this.error());
-        requestQueue.add(customRequest);
-    }
-
-    private Response.Listener<JSONObject> successIMg() {
-        Utillity.showloadingpopup(getActivity());
-        return new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Utillity.hidepopup();
-                Log.d(TAG, "onResponse:data "+response.toString());
-                if (response!=null){
-                    try {
-                        JSONObject jsonObject = new JSONObject(response.toString());
-                        if (jsonObject.getString("status").equals("true")){
-                            Utillity.message(getContext(), "Updated successfully");
-                            getProfile();
-                        } else {
-                            Utillity.message(getContext(), getResources().getString(R.string.internetConnection));
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        };
-    }
 
     public class GetImage extends AsyncTask<String, Void, Bitmap> {
         @Override
