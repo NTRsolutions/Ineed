@@ -1,6 +1,5 @@
 package com.androidtutorialpoint.ineed.proj.activities;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
