@@ -191,8 +191,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         };
     }
 
-    private void
-    setupoverlay() {
+    private void setupoverlay() {
         final Dialog dialog=new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.search_overlay_popup);
