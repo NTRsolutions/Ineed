@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <uses-feature android:name="android.hardware.camera" />
 
@@ -17,9 +17,9 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:largeHeap="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".proj.activities.SplashActivity"
@@ -43,7 +43,9 @@
         <activity
             android:name=".proj.activities.SignUpActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".proj.activities.Search" android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name=".proj.activities.Search"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".proj.activities.ResetPasswordsActivity" />
         <activity
             android:name=".proj.activities.ContactUsActivity"
@@ -53,8 +55,8 @@
         <activity
             android:name=".proj.activities.HomeActivity"
             android:label="@string/title_activity_home"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".proj.activities.ProfileViewed" />
         <activity
             android:name=".proj.activities.DialogActivity"
@@ -96,10 +98,13 @@
                 tools:replace="android:resource" />
         </provider>
 
-        <activity android:name=".proj.activities.AddSkillsActivity"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".proj.activities.JobseekerDetailActivity"
-            android:windowSoftInputMode="stateHidden"></activity>
+        <activity
+            android:name=".proj.activities.AddSkillsActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".proj.activities.JobseekerDetailActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".proj.activities.PaymentHistoryActivity"></activity>
     </application>
 
 </manifest>

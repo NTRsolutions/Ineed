@@ -189,7 +189,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
     private Response.Listener<JSONObject> success()
     {   Utillity.showloadingpopup(this);
         return new Response.Listener<JSONObject>() {

@@ -8,12 +8,11 @@ import java.util.List;
 
 public class JobseekerProileData {
 
-
     /**
      * status : true
-     * user_list : {"user_id":"373","user_fname":"rs","user_username":"rp","user_email":"rp@g.in","user_phone":"9966996699","user_age":"23","user_country_id":null,"user_country_name":null,"user_workpermit":"yes","user_permitcountry_id":"8","user_permitcountry":"Antarctica","user_nationality":"Indian","user_image":"33.png","user_resume":"95.pdf","user_payment_id":"8","user_package_price":"10","user_package_credit":"0","user_package_startdate":"2018-01-24","user_package_expire_date":"2018-03-24","user_package_id":"Basic","user_gender":"male","user_dob":"","profile_summary_id":"34","profile_summary_seekerid":"373","profile_summary_totalexpyear":"6","profile_summary_totalexpmonths":"6","profile_summary_currentsalary_id":"3","profile_summary_currentsalary":"50000-100000","profile_summary_companyname":"","profile_summary_positions":"Android","profile_summary_currentcountry_id":"13","profile_summary_currentcountry":"Australia","profile_summary_jobtype_id":null,"profile_summary_jobtype":null,"profile_summary_noticeperiod_id":null,"profile_summary_noticeperiod":null,"profile_summary_resumeheadline":"hii","profile_summary_skills":"php,HTML,css,HTML2,HTML5,core php","profile_summary_exp":"2,3,2,2,4,2"}
-     * works_list : [{"jobseeker_workexp_id":"134","jobseeker_workexp_seekerid":"373","jobseeker_workexp_employertype":"p","positions":"tesrr","jobseeker_workexp_totalyear":"0.3","jobseeker_workexp_noticeperiod_id":"","jobseeker_workexp_noticeperiod":"","jobseeker_workexp_companyname":"xff","jobseeker_workexp_companyindus_id":"7","jobseeker_workexp_companyindus":"Export/Import","jobseeker_workexp_dept_id":"5","jobseeker_workexp_dept":"Web Developer","jobseeker_workexp_jobtype_id":"2","jobseeker_workexp_jobtype":"Part -Time","jobseeker_workexp_annualsalary_id":"10","jobseeker_workexp_annualsalary":"500001-700000"}]
-     * educations_list : [{"jobseeker_education_id":"82","jobseeker_education_seekerid":"373","jobseeker_education_seekertype":"2","jobseeker_education_course":"B.tech","jobseeker_education_special":"computer","jobseeker_education_institute":"delhi","jobseeker_education_coursetype":"","jobseeker_education_year":"2010"},{"jobseeker_education_id":"69","jobseeker_education_seekerid":"373","jobseeker_education_seekertype":"2","jobseeker_education_course":"test","jobseeker_education_special":"sdd","jobseeker_education_institute":"ggh","jobseeker_education_coursetype":"","jobseeker_education_year":"566"}]
+     * user_list : {"user_id":"206","user_fname":"sonu","user_username":"pq","user_email":"sonu@gmail.com","user_phone":"6564332","user_age":"23","user_country_id":"101","user_country_name":"India","user_workpermit":"no","user_permitcountry_id":null,"user_permitcountry":null,"user_nationality":"indian","user_image":"45.png","user_resume":"97..docx","user_payment_id":"8","user_package_price":"12","user_package_credit":"0","user_package_startdate":"2018-02-23","user_package_expire_date":"2018-05-23","user_package_id":"STANDARD","user_gender":"Male","user_dob":"06/09/1995","profile_summary_id":"19","profile_summary_seekerid":"206","profile_summary_totalexpyear":"5","profile_summary_totalexpmonths":"4","profile_summary_currentsalary_id":"5","profile_summary_currentsalary":"150001-200000","profile_summary_companyname":"ask Online","profile_summary_positions":"html","profile_summary_currentcountry_id":"6","profile_summary_currentcountry":"Angola","profile_summary_jobtype_id":"1","profile_summary_jobtype":"Full- Time","profile_summary_noticeperiod_id":"6","profile_summary_noticeperiod":"25 Days","profile_summary_resumeheadline":"dfdhgdfghdrgthdtryuyu","profile_summary_skills":"php,HTML,css,c,c++,obje","profile_summary_exp":"2,3,2,2,3,2"}
+     * works_list : [{"jobseeker_workexp_id":"181","jobseeker_workexp_seekerid":"206","jobseeker_workexp_employertype":"p","positions":"ios developer","jobseeker_workexp_totalyear":"0.0","jobseeker_workexp_noticeperiod_id":"","jobseeker_workexp_noticeperiod":"","jobseeker_workexp_from":"0000-00-00","jobseeker_workexp_to":"0000-00-00","jobseeker_workexp_companyname":"tycho","jobseeker_workexp_companyindus_id":"1","jobseeker_workexp_companyindus":"Accounting/Finance/Insurance","jobseeker_workexp_dept_id":"1","jobseeker_workexp_dept":"System Analysis","jobseeker_workexp_jobtype_id":"1","jobseeker_workexp_jobtype":"Full- Time","jobseeker_workexp_annualsalary_id":"3","jobseeker_workexp_annualsalary":"50000-100000"},{"jobseeker_workexp_id":"176","jobseeker_workexp_seekerid":"206","jobseeker_workexp_employertype":"c","positions":"sssssss","jobseeker_workexp_totalyear":"0.0","jobseeker_workexp_from":"0000-00-00","jobseeker_workexp_noticeperiod_id":"2","jobseeker_workexp_noticeperiod":"5 Days","jobseeker_workexp_companyname":"sssssssss","jobseeker_workexp_companyindus_id":"5","jobseeker_workexp_companyindus":"Education/Teaching/Training","jobseeker_workexp_dept_id":"6","jobseeker_workexp_dept":"Project Manager IT /Software","jobseeker_workexp_jobtype_id":null,"jobseeker_workexp_jobtype":null,"jobseeker_workexp_annualsalary_id":"5","jobseeker_workexp_annualsalary":"150001-200000"}]
+     * educations_list : [{"jobseeker_education_id":"80","jobseeker_education_seekerid":"206","jobseeker_education_seekertype":"2","jobseeker_education_course":"mba","jobseeker_education_special":"hr","jobseeker_education_institute":"ignou","jobseeker_education_coursetype":"Part Time","jobseeker_education_year":"2013"},{"jobseeker_education_id":"79","jobseeker_education_seekerid":"206","jobseeker_education_seekertype":"2","jobseeker_education_course":"mca","jobseeker_education_special":"computer","jobseeker_education_institute":"ignou","jobseeker_education_coursetype":"Full Time","jobseeker_education_year":"2012"}]
      */
 
     private boolean status;
@@ -55,45 +54,45 @@ public class JobseekerProileData {
 
     public static class UserListBean {
         /**
-         * user_id : 373
-         * user_fname : rs
-         * user_username : rp
-         * user_email : rp@g.in
-         * user_phone : 9966996699
+         * user_id : 206
+         * user_fname : sonu
+         * user_username : pq
+         * user_email : sonu@gmail.com
+         * user_phone : 6564332
          * user_age : 23
-         * user_country_id : null
-         * user_country_name : null
-         * user_workpermit : yes
-         * user_permitcountry_id : 8
-         * user_permitcountry : Antarctica
-         * user_nationality : Indian
-         * user_image : 33.png
-         * user_resume : 95.pdf
+         * user_country_id : 101
+         * user_country_name : India
+         * user_workpermit : no
+         * user_permitcountry_id : null
+         * user_permitcountry : null
+         * user_nationality : indian
+         * user_image : 45.png
+         * user_resume : 97..docx
          * user_payment_id : 8
-         * user_package_price : 10
+         * user_package_price : 12
          * user_package_credit : 0
-         * user_package_startdate : 2018-01-24
-         * user_package_expire_date : 2018-03-24
-         * user_package_id : Basic
-         * user_gender : male
-         * user_dob :
-         * profile_summary_id : 34
-         * profile_summary_seekerid : 373
-         * profile_summary_totalexpyear : 6
-         * profile_summary_totalexpmonths : 6
-         * profile_summary_currentsalary_id : 3
-         * profile_summary_currentsalary : 50000-100000
-         * profile_summary_companyname :
-         * profile_summary_positions : Android
-         * profile_summary_currentcountry_id : 13
-         * profile_summary_currentcountry : Australia
-         * profile_summary_jobtype_id : null
-         * profile_summary_jobtype : null
-         * profile_summary_noticeperiod_id : null
-         * profile_summary_noticeperiod : null
-         * profile_summary_resumeheadline : hii
-         * profile_summary_skills : php,HTML,css,HTML2,HTML5,core php
-         * profile_summary_exp : 2,3,2,2,4,2
+         * user_package_startdate : 2018-02-23
+         * user_package_expire_date : 2018-05-23
+         * user_package_id : STANDARD
+         * user_gender : Male
+         * user_dob : 06/09/1995
+         * profile_summary_id : 19
+         * profile_summary_seekerid : 206
+         * profile_summary_totalexpyear : 5
+         * profile_summary_totalexpmonths : 4
+         * profile_summary_currentsalary_id : 5
+         * profile_summary_currentsalary : 150001-200000
+         * profile_summary_companyname : ask Online
+         * profile_summary_positions : html
+         * profile_summary_currentcountry_id : 6
+         * profile_summary_currentcountry : Angola
+         * profile_summary_jobtype_id : 1
+         * profile_summary_jobtype : Full- Time
+         * profile_summary_noticeperiod_id : 6
+         * profile_summary_noticeperiod : 25 Days
+         * profile_summary_resumeheadline : dfdhgdfghdrgthdtryuyu
+         * profile_summary_skills : php,HTML,css,c,c++,obje
+         * profile_summary_exp : 2,3,2,2,3,2
          */
 
         private String user_id;
@@ -102,11 +101,11 @@ public class JobseekerProileData {
         private String user_email;
         private String user_phone;
         private String user_age;
-        private Object user_country_id;
-        private Object user_country_name;
+        private String user_country_id;
+        private String user_country_name;
         private String user_workpermit;
-        private String user_permitcountry_id;
-        private String user_permitcountry;
+        private Object user_permitcountry_id;
+        private Object user_permitcountry;
         private String user_nationality;
         private String user_image;
         private String user_resume;
@@ -128,10 +127,10 @@ public class JobseekerProileData {
         private String profile_summary_positions;
         private String profile_summary_currentcountry_id;
         private String profile_summary_currentcountry;
-        private Object profile_summary_jobtype_id;
-        private Object profile_summary_jobtype;
-        private Object profile_summary_noticeperiod_id;
-        private Object profile_summary_noticeperiod;
+        private String profile_summary_jobtype_id;
+        private String profile_summary_jobtype;
+        private String profile_summary_noticeperiod_id;
+        private String profile_summary_noticeperiod;
         private String profile_summary_resumeheadline;
         private String profile_summary_skills;
         private String profile_summary_exp;
@@ -184,19 +183,19 @@ public class JobseekerProileData {
             this.user_age = user_age;
         }
 
-        public Object getUser_country_id() {
+        public String getUser_country_id() {
             return user_country_id;
         }
 
-        public void setUser_country_id(Object user_country_id) {
+        public void setUser_country_id(String user_country_id) {
             this.user_country_id = user_country_id;
         }
 
-        public Object getUser_country_name() {
+        public String getUser_country_name() {
             return user_country_name;
         }
 
-        public void setUser_country_name(Object user_country_name) {
+        public void setUser_country_name(String user_country_name) {
             this.user_country_name = user_country_name;
         }
 
@@ -208,19 +207,19 @@ public class JobseekerProileData {
             this.user_workpermit = user_workpermit;
         }
 
-        public String getUser_permitcountry_id() {
+        public Object getUser_permitcountry_id() {
             return user_permitcountry_id;
         }
 
-        public void setUser_permitcountry_id(String user_permitcountry_id) {
+        public void setUser_permitcountry_id(Object user_permitcountry_id) {
             this.user_permitcountry_id = user_permitcountry_id;
         }
 
-        public String getUser_permitcountry() {
+        public Object getUser_permitcountry() {
             return user_permitcountry;
         }
 
-        public void setUser_permitcountry(String user_permitcountry) {
+        public void setUser_permitcountry(Object user_permitcountry) {
             this.user_permitcountry = user_permitcountry;
         }
 
@@ -392,35 +391,35 @@ public class JobseekerProileData {
             this.profile_summary_currentcountry = profile_summary_currentcountry;
         }
 
-        public Object getProfile_summary_jobtype_id() {
+        public String getProfile_summary_jobtype_id() {
             return profile_summary_jobtype_id;
         }
 
-        public void setProfile_summary_jobtype_id(Object profile_summary_jobtype_id) {
+        public void setProfile_summary_jobtype_id(String profile_summary_jobtype_id) {
             this.profile_summary_jobtype_id = profile_summary_jobtype_id;
         }
 
-        public Object getProfile_summary_jobtype() {
+        public String getProfile_summary_jobtype() {
             return profile_summary_jobtype;
         }
 
-        public void setProfile_summary_jobtype(Object profile_summary_jobtype) {
+        public void setProfile_summary_jobtype(String profile_summary_jobtype) {
             this.profile_summary_jobtype = profile_summary_jobtype;
         }
 
-        public Object getProfile_summary_noticeperiod_id() {
+        public String getProfile_summary_noticeperiod_id() {
             return profile_summary_noticeperiod_id;
         }
 
-        public void setProfile_summary_noticeperiod_id(Object profile_summary_noticeperiod_id) {
+        public void setProfile_summary_noticeperiod_id(String profile_summary_noticeperiod_id) {
             this.profile_summary_noticeperiod_id = profile_summary_noticeperiod_id;
         }
 
-        public Object getProfile_summary_noticeperiod() {
+        public String getProfile_summary_noticeperiod() {
             return profile_summary_noticeperiod;
         }
 
-        public void setProfile_summary_noticeperiod(Object profile_summary_noticeperiod) {
+        public void setProfile_summary_noticeperiod(String profile_summary_noticeperiod) {
             this.profile_summary_noticeperiod = profile_summary_noticeperiod;
         }
 
@@ -451,22 +450,24 @@ public class JobseekerProileData {
 
     public static class WorksListBean {
         /**
-         * jobseeker_workexp_id : 134
-         * jobseeker_workexp_seekerid : 373
+         * jobseeker_workexp_id : 181
+         * jobseeker_workexp_seekerid : 206
          * jobseeker_workexp_employertype : p
-         * positions : tesrr
-         * jobseeker_workexp_totalyear : 0.3
+         * positions : ios developer
+         * jobseeker_workexp_totalyear : 0.0
          * jobseeker_workexp_noticeperiod_id :
          * jobseeker_workexp_noticeperiod :
-         * jobseeker_workexp_companyname : xff
-         * jobseeker_workexp_companyindus_id : 7
-         * jobseeker_workexp_companyindus : Export/Import
-         * jobseeker_workexp_dept_id : 5
-         * jobseeker_workexp_dept : Web Developer
-         * jobseeker_workexp_jobtype_id : 2
-         * jobseeker_workexp_jobtype : Part -Time
-         * jobseeker_workexp_annualsalary_id : 10
-         * jobseeker_workexp_annualsalary : 500001-700000
+         * jobseeker_workexp_from : 0000-00-00
+         * jobseeker_workexp_to : 0000-00-00
+         * jobseeker_workexp_companyname : tycho
+         * jobseeker_workexp_companyindus_id : 1
+         * jobseeker_workexp_companyindus : Accounting/Finance/Insurance
+         * jobseeker_workexp_dept_id : 1
+         * jobseeker_workexp_dept : System Analysis
+         * jobseeker_workexp_jobtype_id : 1
+         * jobseeker_workexp_jobtype : Full- Time
+         * jobseeker_workexp_annualsalary_id : 3
+         * jobseeker_workexp_annualsalary : 50000-100000
          */
 
         private String jobseeker_workexp_id;
@@ -476,6 +477,8 @@ public class JobseekerProileData {
         private String jobseeker_workexp_totalyear;
         private String jobseeker_workexp_noticeperiod_id;
         private String jobseeker_workexp_noticeperiod;
+        private String jobseeker_workexp_from;
+        private String jobseeker_workexp_to;
         private String jobseeker_workexp_companyname;
         private String jobseeker_workexp_companyindus_id;
         private String jobseeker_workexp_companyindus;
@@ -540,6 +543,22 @@ public class JobseekerProileData {
 
         public void setJobseeker_workexp_noticeperiod(String jobseeker_workexp_noticeperiod) {
             this.jobseeker_workexp_noticeperiod = jobseeker_workexp_noticeperiod;
+        }
+
+        public String getJobseeker_workexp_from() {
+            return jobseeker_workexp_from;
+        }
+
+        public void setJobseeker_workexp_from(String jobseeker_workexp_from) {
+            this.jobseeker_workexp_from = jobseeker_workexp_from;
+        }
+
+        public String getJobseeker_workexp_to() {
+            return jobseeker_workexp_to;
+        }
+
+        public void setJobseeker_workexp_to(String jobseeker_workexp_to) {
+            this.jobseeker_workexp_to = jobseeker_workexp_to;
         }
 
         public String getJobseeker_workexp_companyname() {
@@ -617,14 +636,14 @@ public class JobseekerProileData {
 
     public static class EducationsListBean {
         /**
-         * jobseeker_education_id : 82
-         * jobseeker_education_seekerid : 373
+         * jobseeker_education_id : 80
+         * jobseeker_education_seekerid : 206
          * jobseeker_education_seekertype : 2
-         * jobseeker_education_course : B.tech
-         * jobseeker_education_special : computer
-         * jobseeker_education_institute : delhi
-         * jobseeker_education_coursetype :
-         * jobseeker_education_year : 2010
+         * jobseeker_education_course : mba
+         * jobseeker_education_special : hr
+         * jobseeker_education_institute : ignou
+         * jobseeker_education_coursetype : Part Time
+         * jobseeker_education_year : 2013
          */
 
         private String jobseeker_education_id;

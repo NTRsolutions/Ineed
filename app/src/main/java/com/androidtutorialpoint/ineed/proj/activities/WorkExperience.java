@@ -36,6 +36,7 @@ import com.mukesh.tinydb.TinyDB;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,7 +51,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
     TextView txt_save,txt_cancel, txtFrom, txtTo, txtDelete;
     EditText edtJobtitle, edtCompanyName;
     String jobtitle="", noticeid = " ", indu ,noticePeriod=" ",salaryedit = " ",jobtypeedit= " ", departType="",indId =" ",id, companyName, workingfrom=" ", deptid=" ",workingTo=" ", userid,name, desi,
-            empType="", salaryId="", jobtypeid="", jobTypename=" ", salaryName=" ";
+            empType="", salaryId="", jobtypeid="",jobTypename=" ", salaryName=" ";
     Spinner spinner_indus, spinner_notice, spinner_department, spinner_jobtype, spinner_salary;
     ArrayList<String> noticeName, noticeId, industryName, industryId, departmenyName, deptIdList,
             salaryList, salaryListid, jobtypeList, jobTypeIdList;
@@ -76,20 +77,20 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         userid = loginData.getUser_detail().getUser_id();
 
 //        find jobseekerid
-        spinner_jobtype = findViewById(R.id.work_experience_spi_jobtype);
-        spinner_salary = findViewById(R.id.work_experience_spi_salary);
-        edtJobtitle = findViewById(R.id.edt_work_experienceJobtitle);
-        edtCompanyName = findViewById(R.id.workexp_txt_CompanyName);
-        spinner_department = findViewById(R.id.work_experience_spi_Department);
-        spinner_indus = findViewById(R.id.work_experience_spin_Industry);
-        spinner_notice = findViewById(R.id.work_experience_spin_Notice);
-        txtFrom = findViewById(R.id.txt_work_experienceWorkFrom);
-        txtTo = findViewById(R.id.txt_work_experienceWorkTo);
-        currentRadio = findViewById(R.id.work_exp_radio_current);
-        previousRadio = findViewById(R.id.work_exp_radio_pre);
-        noticeLayout = findViewById(R.id.addexp_notice_layout);
-        toLayout = findViewById(R.id.addexp_to_layout);
-        txtDelete = findViewById(R.id.txtwork_exp_remove);
+        spinner_jobtype = (Spinner) findViewById(R.id.work_experience_spi_jobtype);
+        spinner_salary = (Spinner)findViewById(R.id.work_experience_spi_salary);
+        edtJobtitle =(EditText) findViewById(R.id.edt_work_experienceJobtitle);
+        edtCompanyName = (EditText)findViewById(R.id.workexp_txt_CompanyName);
+        spinner_department = (Spinner)findViewById(R.id.work_experience_spi_Department);
+        spinner_indus =(Spinner) findViewById(R.id.work_experience_spin_Industry);
+        spinner_notice = (Spinner)findViewById(R.id.work_experience_spin_Notice);
+        txtFrom = (TextView) findViewById(R.id.txt_work_experienceWorkFrom);
+        txtTo = (TextView) findViewById(R.id.txt_work_experienceWorkTo);
+        currentRadio = (RadioButton) findViewById(R.id.work_exp_radio_current);
+        previousRadio =(RadioButton) findViewById(R.id.work_exp_radio_pre);
+        noticeLayout = (LinearLayout) findViewById(R.id.addexp_notice_layout);
+        toLayout =  (LinearLayout)findViewById(R.id.addexp_to_layout);
+        txtDelete =(TextView) findViewById(R.id.txtwork_exp_remove);
 
         if (getIntent().hasExtra("type")){
             empType = getIntent().getStringExtra("type");
@@ -122,6 +123,22 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             indu = getIntent().getStringExtra("indu");
         }
 
+        /*   intent.putExtra("workfrom", (String) worksListBeans.get(finalK).getJobseeker_workexp_from());
+                                                intent.putExtra("workto", (*/
+        if (getIntent().hasExtra("workfrom")){
+
+            workingfrom = getIntent().getStringExtra("workfrom");
+            txtFrom.setText(workingfrom);
+        }
+        if (getIntent().hasExtra("workto")){
+            workingTo = getIntent().getStringExtra("workto");
+            if (workingTo!=null){
+                txtTo.setText(workingTo);
+            } else {
+                workingTo="";
+            }
+        }
+
         if (getIntent().hasExtra("depart")){
             departType = getIntent().getStringExtra("depart");
         }
@@ -149,6 +166,13 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         txtTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String myFormat ="yyyy-MM-dd"; //In which you need put here
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+                try {
+                    mCalendar.setTime(sdf.parse(workingTo));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 new DatePickerDialog(WorkExperience.this, dateTo, mCalendar
                         .get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
                         mCalendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -286,6 +310,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
     }
 
     Calendar mCalendar = Calendar.getInstance();
+
     int year, monthOfYear, dayOfMonth;
 
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -294,9 +319,14 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
             // TODO Auto-generated method stub
+            String[] a = workingfrom.split("-");
+            for (int i=0;i<a.length;i++){
+                Log.d("TAG", "onDateSet: "+a[i]);
+            }
             mCalendar.set(Calendar.YEAR, year);
             mCalendar.set(Calendar.MONTH, monthOfYear);
             mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
             updateLabel();
         }
 
@@ -317,7 +347,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
     };
 
     private void updateLabel() {
-        String myFormat = "MM/dd/yyyy"; //In which you need put here
+        String myFormat ="yyyy-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         workingfrom = sdf.format(mCalendar.getTime());
         txtFrom.setText(workingfrom);
@@ -325,7 +355,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
     }
 
     private void updateLabelTo() {
-        String myFormat = "MM/dd/yyyy"; //In which you need put here
+        String myFormat ="yyyy-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         workingTo = sdf.format(mCalendar.getTime());
         txtTo.setText(workingTo);
@@ -347,7 +377,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
         }
     }
     private void setupbottomtoolbar() {
-        bottom_toolbar=findViewById(R.id.bottom_view);
+        bottom_toolbar= (LinearLayout)findViewById(R.id.bottom_view);
         txt_save=bottom_toolbar.findViewById(R.id.txt_save);
         txt_cancel=bottom_toolbar.findViewById(R.id.txt_cancel);
         txt_save.setOnClickListener(this);
@@ -427,7 +457,6 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             Utillity.showloadingpopup(WorkExperience.this);
             RequestQueue queue = VolleySingelton.getsInstance().getmRequestQueue();
             HashMap<String, String> params = new HashMap<>();
-            params.put("user_id",userid);
             params.put("employertype",empType);
             params.put("user_id",userid);
             params.put("job_title",jobtitle);
@@ -438,7 +467,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             params.put("notice",noticeid);
             params.put("department",deptid);
             params.put("jobseeker_workexp_id", id);
-            params.put("jobtypeid", jobtypeid);
+            params.put("jobtype", jobtypeid);
             params.put("salary", salaryId);
 
             CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_WORK,
@@ -477,6 +506,8 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_WORK,
                     params, this.success(), this.errorListener());
             queue.add(customRequest);
+            customRequest.setRetryPolicy(new DefaultRetryPolicy(30000,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         }
         else
         {
@@ -508,7 +539,7 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
                             Utillity.message(WorkExperience.this, "Experience added");
                             finish();
                         } else {
-                            Utillity.message(WorkExperience.this, "Connection error");
+                            Utillity.message(WorkExperience.this, getResources().getString(R.string.internetConnection));
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -634,7 +665,6 @@ public class WorkExperience extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 jobtypeid = jobTypeIdList.get(position);
-
             }
 
             @Override

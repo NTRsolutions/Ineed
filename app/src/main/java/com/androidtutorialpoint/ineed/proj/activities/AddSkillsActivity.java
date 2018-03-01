@@ -69,9 +69,9 @@ public class AddSkillsActivity extends AppCompatActivity implements View.OnClick
         if (getIntent().hasExtra("skill")){
             value_skiil = getIntent().getStringArrayExtra("skill");
         }
-        txtAddSkills = findViewById(R.id.addmore_skills);
-        skillLayout = findViewById(R.id.skill_layout);
-        container = findViewById(R.id.layout_skills);
+        txtAddSkills = (TextView) findViewById(R.id.addmore_skills);
+        skillLayout = (LinearLayout) findViewById(R.id.skill_layout);
+        container = (LinearLayout)findViewById(R.id.layout_skills);
         container.setVisibility(View.GONE);
         txtAddSkills.setOnClickListener(this);
         setupbottomtoolbar();
@@ -82,13 +82,12 @@ public class AddSkillsActivity extends AppCompatActivity implements View.OnClick
                 addLayout(s,y);
             }
         }
-
     }
 
     private void setupbottomtoolbar() {
-        bottom_toolbar=findViewById(R.id.bottom_view);
-        txt_save=bottom_toolbar.findViewById(R.id.txt_save);
-        txt_cancel=bottom_toolbar.findViewById(R.id.txt_cancel);
+        bottom_toolbar=(LinearLayout) findViewById(R.id.bottom_view);
+        txt_save=(TextView) bottom_toolbar.findViewById(R.id.txt_save);
+        txt_cancel=(TextView) bottom_toolbar.findViewById(R.id.txt_cancel);
         txt_save.setOnClickListener(this);
         txt_cancel.setOnClickListener(this);
     }
@@ -156,6 +155,12 @@ public class AddSkillsActivity extends AppCompatActivity implements View.OnClick
         });
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     private void addLayoutf() {
         LayoutInflater layoutInflater =
                 (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -57,7 +57,7 @@ public class ProfileViewed extends AppCompatActivity implements ProfileViewdAdap
         loginData = gson.fromJson(loginPrefData, LoginData.class);
         userId = loginData.getUser_detail().getUser_id();
         requestQueue= VolleySingelton.getsInstance().getmRequestQueue();
-        recyclerView = findViewById(R.id.viewed_recycler);
+        recyclerView =(RecyclerView) findViewById(R.id.viewed_recycler);
         profileViewdAdapter = new ProfileViewdAdapter(getApplicationContext(), profileListBean);
 //        set recyclerview
         RecyclerView.LayoutManager mlayoutManager=new LinearLayoutManager(getApplicationContext());

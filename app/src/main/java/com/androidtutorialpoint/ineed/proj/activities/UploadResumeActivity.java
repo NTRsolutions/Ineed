@@ -78,8 +78,8 @@ public class UploadResumeActivity extends AppCompatActivity {
         user_id = loginData.getUser_detail().getUser_id();
         mRuntimePermission = new AppPermissions(UploadResumeActivity.this);
 //        find jobseekerid
-        frameLayout = findViewById(R.id.frame_upload);
-        btnUpload = findViewById(R.id.upload);
+        frameLayout =(FrameLayout) findViewById(R.id.frame_upload);
+        btnUpload =(Button) findViewById(R.id.upload);
 
 //        set onclick
         btnUpload.setOnClickListener(new View.OnClickListener() {

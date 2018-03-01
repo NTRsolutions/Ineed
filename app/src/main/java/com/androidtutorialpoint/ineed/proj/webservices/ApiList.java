@@ -37,6 +37,8 @@ public interface ApiList {
     String JOBSEEKER_WORK_EXP_DELETE = BASE_URL+"work_delete";
     String JOBSEEKER_EDU_EXP_DELETE = BASE_URL+"education_delete";
     String EMP_JOBSEEKER_VIEWED = BASE_URL+"viewdetails";
+    String EMP_ALREADY_JOBSEEKER_VIEWED = BASE_URL+"allreadyviewed";
+    String GET_HISTORY=BASE_URL+"paymenthistory";
 
 
     String FILTERS = BASE_URL+"filters";

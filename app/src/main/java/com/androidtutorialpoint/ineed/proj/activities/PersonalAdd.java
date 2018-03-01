@@ -121,23 +121,23 @@ public class PersonalAdd extends AppCompatActivity implements View.OnClickListen
         }
 
 //        find jobseekerid
-        edtCurentComp = findViewById(R.id.edt_personal_curent);
-        select_location = findViewById(R.id.spinner_location);
-        spinner_workPermit = findViewById(R.id.permit_country_spinner);
+        edtCurentComp = (EditText) findViewById(R.id.edt_personal_curent);
+        select_location = (Spinner)findViewById(R.id.spinner_location);
+        spinner_workPermit = (Spinner)findViewById(R.id.permit_country_spinner);
 //        spinner_age = findViewById(R.jobseekerid.spinner_age);
-        spinner_expYear = findViewById(R.id.edit_personal_year);
-        spinner_expMonth = findViewById(R.id.edit_personal_month);
-        spinner_salary = findViewById(R.id.spinner_salary);
-        workPermitYes = findViewById(R.id.radio_work_permit_yes);
-        workPermitNo = findViewById(R.id.radio_work_permit_no);
-        maleRadioButton = findViewById(R.id.radio_gender_male);
-        femaleRadioButton = findViewById(R.id.radio_gender_female);
-        edtNationality = findViewById(R.id.spinner_nationality);
-        edtName = findViewById(R.id.txt_personal_edtname);
-        edtDesig = findViewById(R.id.edt_personal_desi);
-        edtNo = findViewById(R.id.edt_personal_no);
-        edDob = findViewById(R.id.edt_dob);
-        spinner_jobtype = findViewById(R.id.spinner_jobtype);
+        spinner_expYear = (Spinner)findViewById(R.id.edit_personal_year);
+        spinner_expMonth = (Spinner)findViewById(R.id.edit_personal_month);
+        spinner_salary =(Spinner) findViewById(R.id.spinner_salary);
+        workPermitYes = (RadioButton) findViewById(R.id.radio_work_permit_yes);
+        workPermitNo =(RadioButton) findViewById(R.id.radio_work_permit_no);
+        maleRadioButton = (RadioButton)findViewById(R.id.radio_gender_male);
+        femaleRadioButton = (RadioButton)findViewById(R.id.radio_gender_female);
+        edtNationality = (EditText) findViewById(R.id.spinner_nationality);
+        edtName =  (EditText)findViewById(R.id.txt_personal_edtname);
+        edtDesig =  (EditText)findViewById(R.id.edt_personal_desi);
+        edtNo = (EditText) findViewById(R.id.edt_personal_no);
+        edDob =  (TextView) findViewById(R.id.edt_dob);
+        spinner_jobtype = (Spinner)findViewById(R.id.spinner_jobtype);
 
 //        set value
 
@@ -183,9 +183,9 @@ public class PersonalAdd extends AppCompatActivity implements View.OnClickListen
     }
 
     private void setupbottomtoolbar() {
-        bottom_toolbar=findViewById(R.id.bottom_toolbar);
-        txt_save=bottom_toolbar.findViewById(R.id.txt_save);
-        txt_cancel=bottom_toolbar.findViewById(R.id.txt_cancel);
+        bottom_toolbar=(LinearLayout) findViewById(R.id.bottom_toolbar);
+        txt_save=(TextView)bottom_toolbar.findViewById(R.id.txt_save);
+        txt_cancel=(TextView)bottom_toolbar.findViewById(R.id.txt_cancel);
         txt_save.setOnClickListener(this);
         txt_cancel.setOnClickListener(this);
     }

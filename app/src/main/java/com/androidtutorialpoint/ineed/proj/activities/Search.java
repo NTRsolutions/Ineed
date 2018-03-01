@@ -74,13 +74,13 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        recsearch=findViewById(R.id.search_recy);
-        et_search=findViewById(R.id.et_search);
-        txt_filter=findViewById(R.id.txt_filter);
+        recsearch=(RecyclerView) findViewById(R.id.search_recy);
+        et_search=(EditText) findViewById(R.id.et_search);
+        txt_filter=(Button) findViewById(R.id.txt_filter);
         txt_filter.setOnClickListener(this);
         et_search.setOnEditorActionListener(this);
         // linearLayout= (LinearLayout) findViewById(R.jobseekerid.ll_linear);
-        select_country=findViewById(R.id.sp_selectCountry);
+        select_country=(Spinner) findViewById(R.id.sp_selectCountry);
         // linearLayout.setOnClickListener(this);
         Intent it=getIntent();
         set=it.getStringExtra("Login");
@@ -198,27 +198,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         TextView textView=(TextView)dialog.findViewById(R.id.txt_msg);
         final Button job=(Button)dialog.findViewById(R.id.overjob);
         Button emp=(Button)dialog.findViewById(R.id.overemp);
-        /*if(set.equalsIgnoreCase("search"))
-        {
-            relativeLayout.setBackgroundResource(R.drawable.card);
-            textView.setText("Are you sure you want to view detail,it will deduct one credit from your account");
-            job.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getViewed(jobseekerid);
-                    startActivity(new Intent(Search.this,
-                            JobseekerDetailActivity.class).putExtra("id",jobseekerid));
-                    dialog.dismiss();
-                }
-            });
-            emp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
-        }
-        else */if(set.equalsIgnoreCase("login"))
+        if(set.equalsIgnoreCase("login"))
         {
             textView.setText("To view details please get Login");
             job.setText("Login");
@@ -247,6 +227,8 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
 
         dialog.show();
     }
+
+
     String experi,ctc,Age,Gender;
     @Override
     public void onClick(View view) {
@@ -612,6 +594,72 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         }
     }
 
+
+    public void getAlreadyViewed(String jobseekerid) {
+        if (Utillity.isNetworkConnected(this)) {
+            Utillity.showloadingpopup(Search.this);
+            HashMap<String, String> params = new HashMap<>();
+            params.put("employer_id", HomeActivity.userid);
+            params.put("user_id", jobseekerid);
+            RequestQueue requestQueue = VolleySingelton.getsInstance().getmRequestQueue();
+            CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.EMP_ALREADY_JOBSEEKER_VIEWED,
+                    params, this.alreadyviewedsucess(), this.errorlistener());
+            customRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            requestQueue.add(customRequest);
+        }
+    }
+    private Response.Listener<JSONObject> alreadyviewedsucess() {
+        return new Response.Listener<JSONObject>() {
+            @Override
+            /*{"msg":"all ready viewed"}*/
+            public void onResponse(JSONObject response) {
+                if (response!=null){
+                    try {
+                        String msg = response.getString("msg");
+                        if (!msg.equals("all ready viewed")){
+                            final Dialog dialog = new Dialog(Search.this, android.R.style.Theme_Translucent_NoTitleBar);
+                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            dialog.setContentView(R.layout.search_overlay_popup);
+                            RelativeLayout relativeLayout = (RelativeLayout) dialog.findViewById(R.id.rela_backgrnd);
+                            TextView textView = (TextView) dialog.findViewById(R.id.txt_msg);
+                            final Button job = (Button) dialog.findViewById(R.id.overjob);
+                            Button emp = (Button) dialog.findViewById(R.id.overemp);
+
+                            relativeLayout.setBackgroundResource(R.drawable.card);
+                            textView.setText("Are you sure you want to view details, It will deduct one credit from your account");
+                            job.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    getViewed(jobseekerid);
+                                    dialog.dismiss();
+                                }
+                            });
+                            emp.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            dialog.setCanceledOnTouchOutside(false);
+                            dialog.setCancelable(false);
+                            dialog.show();
+                        } else {
+                            startActivity(new Intent(Search.this,
+                                    JobseekerDetailActivity.class).putExtra("id", jobseekerid));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.d("TAG", "onResponse: "+response.toString());
+                Utillity.hidepopup();
+                Gson gson=new Gson();
+
+            }
+        };
+    }
+
+
     private void search() {
         if(Utillity.isNetworkConnected(this)) {
             if(searchlist!=null)
@@ -652,13 +700,13 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                 Gson gson=new Gson();
                 SearchModel sModel=null;
                 try {
+                    Log.d("TAG", "onResponse: search"+response.toString());
                     sModel=new SearchModel();
                     sModel=gson.fromJson(response.toString(),SearchModel.class);
                     boolean status=sModel.isStatus();
-                    if(status==true);
-                    {
+                    if(status==true){
                         searchlist.addAll(sModel.getProfile_list());
-                        Log.d("List", searchlist.toString());
+                        Log.d("List", gson.toJson(searchlist));
                         if(searchlist.size()>0) {
                             txt_filter.setVisibility(View.VISIBLE);
                         }
@@ -666,8 +714,10 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                         {
                             Utillity.message(getApplicationContext(),"No record Found Data");
                         }
-
+                    } else {
+                        Utillity.message(getApplicationContext(),"No record Found Data");
                     }
+
                     searchAdapte.notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -685,34 +735,6 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
                     try {
                         String msg = response.getString("msg");
                         if (!msg.equals("all ready viewed")) {
-                            final Dialog dialog = new Dialog(Search.this, android.R.style.Theme_Translucent_NoTitleBar);
-                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            dialog.setContentView(R.layout.search_overlay_popup);
-                            RelativeLayout relativeLayout = (RelativeLayout) dialog.findViewById(R.id.rela_backgrnd);
-                            TextView textView = (TextView) dialog.findViewById(R.id.txt_msg);
-                            final Button job = (Button) dialog.findViewById(R.id.overjob);
-                            Button emp = (Button) dialog.findViewById(R.id.overemp);
-
-                                relativeLayout.setBackgroundResource(R.drawable.card);
-                                textView.setText("Are you sure you want to view details, It will deduct one credit from your account");
-                                job.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        startActivity(new Intent(Search.this,
-                                                JobseekerDetailActivity.class).putExtra("id", jobseekerid));
-                                        dialog.dismiss();
-                                    }
-                                });
-                            emp.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            dialog.setCanceledOnTouchOutside(false);
-                            dialog.setCancelable(false);
-                            dialog.show();
-                        } else {
                             startActivity(new Intent(Search.this,
                                     JobseekerDetailActivity.class).putExtra("id", jobseekerid));
                         }
@@ -738,7 +760,7 @@ public class Search extends AppCompatActivity implements View.OnClickListener, T
         else
         {
             jobseekerid = searchlist.get(position).getUser_id();
-            getViewed(jobseekerid);
+            getAlreadyViewed(jobseekerid);
 
         }
     }

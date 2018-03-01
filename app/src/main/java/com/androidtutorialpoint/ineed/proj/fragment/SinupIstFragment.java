@@ -136,6 +136,7 @@ public class SinupIstFragment extends Fragment {
                 }*/
 
 //                hit api for sign up
+                Utillity.hideSoftKeyboard(getActivity());
                 hitApi();
             }
         });

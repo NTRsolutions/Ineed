@@ -1,20 +1,21 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_margin="15dp"
+
     android:background="@drawable/background"
     tools:context="com.androidtutorialpoint.ineed.proj.fragment.JobseekerDashboardFragment">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:fillViewport="true">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:layout_centerVertical="true"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_gravity="center_vertical">
 
@@ -216,4 +217,4 @@
         </LinearLayout>
 
     </ScrollView>
-</RelativeLayout>
+</LinearLayout>

@@ -72,7 +72,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:paddingTop="10dp"
-                        android:text="name"
                         android:textColor="@color/white"
                         android:textSize="@dimen/small_size"
                         android:textStyle="bold" />
@@ -98,9 +97,6 @@
                             android:textColor="@color/white"
                             />
                     </LinearLayout>
-
-
-
                 </LinearLayout>
                 <TextView
                     android:layout_width="match_parent"
@@ -135,8 +131,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <LinearLayout
-                        android:layout_weight="33"
-                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
@@ -161,8 +157,8 @@
                         android:layout_height="match_parent"
                         android:background="@color/white"/>
                     <LinearLayout
-                        android:layout_weight="33"
-                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
@@ -187,8 +183,8 @@
                         android:layout_height="match_parent"
                         android:background="@color/white"/>
                     <LinearLayout
-                        android:layout_weight="33"
-                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
@@ -200,6 +196,7 @@
                             android:textColor="@color/white"/>
                         <TextView
                             android:paddingTop="2dp"
+                            android:paddingLeft="2dp"
                             android:gravity="center"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -358,6 +355,7 @@
                            android:paddingBottom="8dp"
                            android:paddingRight="15dp"
                            android:paddingLeft="15dp"
+                           android:layout_centerHorizontal="true"
                            android:layout_centerVertical="true"
                            android:drawablePadding="5dp"
                            android:drawableLeft="@drawable/ic_plus"

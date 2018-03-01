@@ -6,31 +6,25 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -44,25 +38,19 @@ import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
 import com.androidtutorialpoint.ineed.proj.activities.AddSkillsActivity;
 import com.androidtutorialpoint.ineed.proj.activities.EducationAdd;
-import com.androidtutorialpoint.ineed.proj.activities.HomeActivity;
 import com.androidtutorialpoint.ineed.proj.activities.PersonalAdd;
 import com.androidtutorialpoint.ineed.proj.activities.UploadResumeActivity;
 import com.androidtutorialpoint.ineed.proj.activities.WorkExperience;
-import com.androidtutorialpoint.ineed.proj.models.ImageInputHelper;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
 import com.androidtutorialpoint.ineed.proj.models.JobseekerProileData;
 import com.androidtutorialpoint.ineed.proj.models.Skills;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
 import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
 import com.androidtutorialpoint.ineed.proj.webservices.VolleySingelton;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.mukesh.permissions.AppPermissions;
 import com.mukesh.tinydb.TinyDB;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.ByteArrayInputStream;
@@ -73,7 +61,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -115,7 +102,7 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
     LinearLayout workLayout,workview, eduLayout,skillAdd, eduView, skillsLayout, noticeLayout, toLayout;
     TextView txtResumeView, txtResumeUpload, txtSkillsEditHeading, txtSaveObj, txtCancle, txt_personal, txtName, txtDob, txtDesignation, txtNationaliaty,
             txtExp, txtGender,txtCurrentLocation, txtSalary,txtWorkSalary, txtJobtype, txtMobile, txtEmail, txtWorkingexp,txtJobTitle, txtCompanyName, txtJobHeading, txtWorkingFrom, txtWrokingTo,
-    txtNotice, txtIndustry, txtDepartment, txtTo,txtCoursetype, txtSpecilization, txtInstitute, txtYear, txtDepartMent,txt_addwk;
+    txtNotice, txtIndustry, txtDepartment, txtTo, txtCourseTitle,txtCourseType, txtSpecilization, txtInstitute, txtYear, txtDepartMent,txt_addwk;
     EditText edtobjective;
     private static final int ALL_REQUEST_CODE = 3;
     ArrayList<Skills>skillsList = new ArrayList<>();
@@ -284,7 +271,6 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
         loginData = gson.fromJson(loginPrefData, LoginData.class);
         userId = loginData.getUser_detail().getUser_id();
 //        set text
-        txtEmail.setText(loginData.getUser_detail().getUser_email());
 
         language = tinyDB.getString("language_id");
 
@@ -459,7 +445,7 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                 if (response!=null){
                     try {
                         if (!response.getString("status").equals("false")){
-                            JSONObject jsonObject = response.getJSONObject("user_list");
+                            final JSONObject jsonObject = response.getJSONObject("user_list");
                             jobseekerProileData = gson.fromJson(response.toString(), JobseekerProileData.class);
                             if (jsonObject.getString("user_fname")!=null && jsonObject.getString("user_fname").length()>1){
                                 name = jobseekerProileData.getUser_list().getUser_fname();
@@ -475,36 +461,43 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                             }
                             gender =  jobseekerProileData.getUser_list().getUser_gender();
                             txtGender.setText(gender);
+                            txtEmail.setText(jobseekerProileData.getUser_list().getUser_email());
 
-                            if (!jsonObject.getString("user_nationality").equals("0") &&jsonObject.getString("user_nationality").length()>1){
-                                nationality  = jobseekerProileData.getUser_list().getUser_nationality();
+                            if (!jsonObject.getString("user_nationality").equals("0") && jsonObject.getString("user_nationality").length()>1){
+                                nationality  = jsonObject.getString("user_nationality");
                                 String workpc ;
                                 if (jobseekerProileData.getUser_list().getUser_workpermit().equals("no")){
                                     workpc = "No";
+                                    txtNationaliaty.setText(jobseekerProileData.getUser_list().getUser_nationality()
+                                            +", "+" with "+workpc+" work permit");
                                 } else {
                                     workpc = (String) jobseekerProileData.getUser_list().getUser_permitcountry();
                                     permitCountry = (String) jobseekerProileData.getUser_list().getUser_permitcountry();
+                                    txtNationaliaty.setText(jobseekerProileData.getUser_list().getUser_nationality()
+                                            +", "+" with "+workpc+" work permit");
                                 }
-                                txtNationaliaty.setText(jobseekerProileData.getUser_list().getUser_nationality()
-                                        +", "+" with "+workpc+" work permit");
+
                                 workpermit = jobseekerProileData.getUser_list().getUser_workpermit();
                             }
-                            txtEmail.setText(jobseekerProileData.getUser_list().getUser_email());
-
-
-                            if (jsonObject.getString("profile_summary_resumeheadline").length()>1&&jsonObject.getString("profile_summary_resumeheadline").length()>1){
+                            if (jsonObject.getString("profile_summary_resumeheadline")!=null&& !jsonObject.getString("profile_summary_resumeheadline").equals("null")){
                                 edtobjective.setText(" ");
-                                edtobjective.append(jobseekerProileData.getUser_list().getProfile_summary_resumeheadline());
+                                String s = jsonObject.getString("profile_summary_resumeheadline");
+                                if (s!=null&&!s.equals("null")){
+                                    edtobjective.append(s);
+                                }
 
                             }
-                            if (jsonObject.getString("profile_summary_skills").length()>1&&jsonObject.getString("profile_summary_skills").length()>1){
+                            if (jsonObject.getString("profile_summary_skills")!=null &&!jsonObject.getString("profile_summary_skills").equals("null")&&jsonObject.getString("profile_summary_skills").length()>1){
+                                Log.d(TAG, "onResponse: skills"+jsonObject.getString("profile_summary_skills"));
+
                                 String skll = jobseekerProileData.getUser_list().getProfile_summary_skills();
                                 String yera = jobseekerProileData.getUser_list().getProfile_summary_exp();
                                 if (skll!=null&&yera!=null){
                                     value_split = skll.split(",");
                                     value_year = yera.split(",");
+                                    txtSkillsEditHeading.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pencil_edit_button_white,0,0,0);
+                                    txtSkillsEditHeading.setText("");
 
-                                    Log.d(TAG, "onResponse: "+gson.toJson(value_split));
                                     for (int i=0;i<value_split.length;i++){
                                         String s = value_split[i];
                                         String y=value_year[i];
@@ -512,9 +505,8 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                                     }
                                 }
                             }
-                            if (jsonObject.getString("profile_summary_currentsalary")!=null){
-                                Log.d(TAG, "onResponse: "+jobseekerProileData.getUser_list().getProfile_summary_currentsalary());
-                                txtSalary.setText(jobseekerProileData.getUser_list().getProfile_summary_currentsalary());
+                            if (jsonObject.getString("profile_summary_currentsalary")!=null && !jsonObject.getString("profile_summary_currentsalary").equals("null")){
+                                txtSalary.setText("$ "+jobseekerProileData.getUser_list().getProfile_summary_currentsalary());
                                 salary = jobseekerProileData.getUser_list().getProfile_summary_currentsalary();
                             }
                             if (jsonObject.getString("profile_summary_positions").length()>1&&jsonObject.getString("profile_summary_positions").length()>1){
@@ -556,25 +548,34 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                             /*    Glide.with(getContext()).load(R.drawable.gfgf)
                                         .apply(RequestOptions.circleCropTransform()).into(imgUser);*/
                             }
-                            if (jsonObject.getString("user_resume")!=null  && jsonObject.getString("user_resume").length()>0){
-                                final String text = ApiList.IMG_BASE+jsonObject.getString("user_resume");
-                                final String afterDecode = URLDecoder.decode(text, "UTF-8");
-                                txtResumeView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        if (afterDecode.length()>0){
-                                            Intent i = new Intent(Intent.ACTION_VIEW);
-                                            i.setData(Uri.parse(afterDecode));
-                                            startActivity(i);
+
+                            txtResumeView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    try {
+                                        if (jsonObject.getString("user_resume")!=null  && jsonObject.getString("user_resume").length()>0){
+                                            final String text = ApiList.IMG_BASE+jsonObject.getString("user_resume");
+                                            final String afterDecode = URLDecoder.decode(text, "UTF-8");
+                                            if (afterDecode.length()>0){
+                                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                                i.setData(Uri.parse(afterDecode));
+                                                startActivity(i);
+                                            }
                                         } else {
                                             Utillity.message(getContext(), "Please upload resume");
                                         }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (UnsupportedEncodingException e) {
+                                        e.printStackTrace();
                                     }
-                                });
-                            }
+                                }
+                            });
+
                             worksListBeans.addAll(jobseekerProileData.getWorks_list());
 
                             if (worksListBeans != null && worksListBeans.size()>0) {
+                                workLayout.setVisibility(View.VISIBLE);
 
                                 for (int i = 0; i <worksListBeans.size(); i++) {
                                     workview = (LinearLayout) View.inflate(getContext(), R.layout.work_experience_view, null);
@@ -605,7 +606,8 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                                         txtJobHeading.setText("Current");
                                         noticeLayout.setVisibility(View.VISIBLE);
 //                                            toLayout.setVisibility(View.GONE);
-                                        txtNotice.setText(jobseekerProileData.getWorks_list().get(i).getJobseeker_workexp_noticeperiod());
+
+                                        txtNotice.setText(worksListBeans.get(i).getJobseeker_workexp_noticeperiod());
                                         txtIndustry.setText(worksListBeans.get(i).getJobseeker_workexp_companyindus());
                                         txtWorkingexp.setText(worksListBeans.get(i).getJobseeker_workexp_totalyear()+" year");
                                         txtJobTitle.setText(worksListBeans.get(i).getPositions());
@@ -617,6 +619,7 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
 
                                     } else if (worksListBeans.get(i).getJobseeker_workexp_employertype().equals("p")){
                                         txtJobHeading.setText("Previous");
+                                        noticeLayout.setVisibility(View.GONE);
                                         txtIndustry.setText(worksListBeans.get(i).getJobseeker_workexp_companyindus());
                                         txtWorkingexp.setText(worksListBeans.get(i).getJobseeker_workexp_totalyear()+" year");
                                         txtJobTitle.setText(worksListBeans.get(i).getPositions());
@@ -663,6 +666,8 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                                                 intent.putExtra("jobseekerid", worksListBeans.get(finalK).getJobseeker_workexp_id());
                                                 intent.putExtra("salary", (String) worksListBeans.get(finalK).getJobseeker_workexp_annualsalary());
                                                 intent.putExtra("jobtypeid", (String) worksListBeans.get(finalK).getJobseeker_workexp_jobtype());
+                                                intent.putExtra("workfrom", (String) worksListBeans.get(finalK).getJobseeker_workexp_from());
+                                                intent.putExtra("workto", (String) worksListBeans.get(finalK).getJobseeker_workexp_to());
                                                 startActivity(intent);
                                             }
                                         });
@@ -675,7 +680,6 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                             }
                             educationsListBeans.addAll(jobseekerProileData.getEducations_list());
                             if (educationsListBeans!=null){
-                                Log.d(TAG, "onResponse: "+educationsListBeans.size());
                                  eduLayout.setVisibility(View.VISIBLE);
 
                                 Collections.sort(educationsListBeans, new Comparator<JobseekerProileData.EducationsListBean>() {
@@ -683,7 +687,6 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                                     public int compare(JobseekerProileData.EducationsListBean educationsListBean, JobseekerProileData.EducationsListBean t1) {
                                         if(educationsListBean.getJobseeker_education_year().compareTo(t1.getJobseeker_education_year())>0)
                                             return -1;
-
                                         else
                                             return 0;
                                     }
@@ -691,16 +694,23 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
 
                                 for (int i=0; i<educationsListBeans.size();i++){
                                     eduView = (LinearLayout) View.inflate(getContext(), R.layout.education_view, null);
-                                    txtCoursetype = eduView.findViewById(R.id.txt_edu_course_title);
+                                    txtCourseTitle = eduView.findViewById(R.id.txt_edu_course_title);
+                                    txtCourseType = eduView.findViewById(R.id.txt_edu_course_type);
                                     txtSpecilization = eduView.findViewById(R.id.txt_Specialization);
                                     txtInstitute = eduView.findViewById(R.id.txt_institute);
                                     txtYear = eduView.findViewById(R.id.txt_edu_year);
+                                    String coursetype=educationsListBeans.get(i).getJobseeker_education_coursetype();
+                                    if (coursetype.equals("1")){
+                                        txtCourseType.setText("Full Time");
+
+                                    } else if (coursetype.equals("2")){
+                                        txtCourseType.setText("Part Time");
+                                    }
 
                                     txtYear.setText(jobseekerProileData.getEducations_list().get(i).getJobseeker_education_year());
-                                    txtCoursetype.setText(jobseekerProileData.getEducations_list().get(i).getJobseeker_education_course());
+                                     txtCourseTitle.setText(jobseekerProileData.getEducations_list().get(i).getJobseeker_education_course());
                                     txtInstitute.setText(jobseekerProileData.getEducations_list().get(i).getJobseeker_education_institute());
                                     txtSpecilization.setText(jobseekerProileData.getEducations_list().get(i).getJobseeker_education_special());
-
                                     eduLayout.addView(eduView);
 
                                     int id = eduLayout.getChildCount();
@@ -708,7 +718,9 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                                     for (int k = 0; k<id; k++){
                                         v = eduLayout.getChildAt(k);
                                         if (v!=null){
-                                            final TextView txtCoursetype = v.findViewById(R.id.txt_edu_course_title);
+                                            final TextView txtCourType= v.findViewById(R.id.txt_edu_course_type);
+
+                                            final TextView txtCourTitle = v.findViewById(R.id.txt_edu_course_title);
                                             final TextView txtSpecilization = v.findViewById(R.id.txt_Specialization);
                                             final TextView txtInstitute = v.findViewById(R.id.txt_institute);
                                             final TextView txtYear = v.findViewById(R.id.txt_edu_year);
@@ -721,10 +733,11 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                                                 @Override
                                                 public void onClick(View view) {
                                                     Intent intent = new Intent(getActivity(), EducationAdd.class);
-                                                    intent.putExtra("title", txtCoursetype.getText().toString());
-                                                    intent.putExtra("speci", txtSpecilization.getText().toString());
-                                                    intent.putExtra("insti", txtInstitute.getText().toString());
-                                                    intent.putExtra("year", txtYear.getText().toString());
+                                                    intent.putExtra("title", txtCourTitle.getText().toString().trim());
+                                                    intent.putExtra("speci", txtSpecilization.getText().toString().trim());
+                                                    intent.putExtra("insti", txtInstitute.getText().toString().trim());
+                                                    intent.putExtra("year", txtYear.getText().toString().trim());
+                                                    intent.putExtra("course", txtCourType.getText().toString().trim());
                                                     intent.putExtra("eduId", educationsListBeans.get(finalK).getJobseeker_education_id());
                                                     startActivity(intent);
                                                 }
@@ -739,8 +752,6 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                             Utillity.message(getContext(), "No data found");
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
                 }

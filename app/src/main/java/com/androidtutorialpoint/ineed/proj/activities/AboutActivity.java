@@ -44,7 +44,7 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        view=  findViewById(R.id.about_text);
+        view=  (WebView) findViewById(R.id.about_text);
         tinyDB = new TinyDB(getApplicationContext());
         language = tinyDB.getString("language_id");
         setuptoolbar();

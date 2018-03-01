@@ -58,12 +58,12 @@ public class FilterActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
       //  fl_jobtype=findViewById(R.jobseekerid.sp_jobtype);
-        fl_experience=findViewById(R.id.sp_experience);
+        fl_experience=(Spinner) findViewById(R.id.sp_experience);
       //  fl_noticeperiod=findViewById(R.jobseekerid.sp_noticeperiod);
-        fl_ctc=findViewById(R.id.sp_ctc);
-        fl_age=findViewById(R.id.sp_age);
-        fl_gender=findViewById(R.id.sp_gender);
-        bt_fliteredSearch=findViewById(R.id.bt_fliteredSearch);
+        fl_ctc=(Spinner)findViewById(R.id.sp_ctc);
+        fl_age=(Spinner)findViewById(R.id.sp_age);
+        fl_gender=(Spinner)findViewById(R.id.sp_gender);
+        bt_fliteredSearch=(Button) findViewById(R.id.bt_fliteredSearch);
         bt_fliteredSearch.setOnClickListener(this);
         getfilterApi();
         setuptoolbar();

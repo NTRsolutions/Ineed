@@ -8,16 +8,21 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.androidtutorialpoint.ineed.R;
 import com.androidtutorialpoint.ineed.proj.Utils.Utillity;
+import com.androidtutorialpoint.ineed.proj.models.AdminList;
 import com.androidtutorialpoint.ineed.proj.models.LoginData;
 import com.androidtutorialpoint.ineed.proj.webservices.ApiList;
 import com.androidtutorialpoint.ineed.proj.webservices.CustomRequest;
@@ -28,14 +33,17 @@ import com.mukesh.tinydb.TinyDB;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class EducationAdd extends AppCompatActivity implements View.OnClickListener {
     ActionBar actionBar;
     LinearLayout bottom_toolbar;
     TextView txt_save,txt_cancel, txtremoveedu;
     EditText edtCourseTitle, edtSpeci, edtyear, edtInsti;
-    String courseTitle="", speci="", year=" ", insti= " ", userid, eduId="";
+    Spinner edtCourse;
+    String courseTitle="", speci="",course="", year="", insti= "", userid, eduId="";
     TinyDB tinyDB;
     LoginData loginData = new LoginData();
     Gson gson = new Gson();
@@ -53,11 +61,12 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         userid = loginData.getUser_detail().getUser_id();
 
 //        find jobseekerid
-        edtCourseTitle = findViewById(R.id.txt_edu_course_title);
-        edtInsti = findViewById(R.id.txt_institute);
-        edtSpeci = findViewById(R.id.txt_Specialization);
-        edtyear = findViewById(R.id.txt_edu_year);
-        txtremoveedu = findViewById(R.id.txtedu_remove);
+        edtCourseTitle = (EditText) findViewById(R.id.txt_edu_course_title);
+        edtInsti = (EditText) findViewById(R.id.txt_institute);
+        edtSpeci = (EditText) findViewById(R.id.txt_Specialization);
+        edtyear = (EditText) findViewById(R.id.txt_edu_year);
+        txtremoveedu = (TextView) findViewById(R.id.txtedu_remove);
+        edtCourse = (Spinner) findViewById(R.id.txt_addword_edtCourse);
 
         txtremoveedu.setOnClickListener(this);
        if (getIntent().hasExtra("title")){
@@ -79,11 +88,14 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
             eduId = getIntent().getStringExtra("eduId");
         }
 
+        if (getIntent().hasExtra("course")){
+            course = getIntent().getStringExtra("course");
+        }
         edtyear.setText(year.trim());
         edtSpeci.setText(speci.trim());
         edtInsti.setText(insti.trim());
         edtCourseTitle.setText(courseTitle.trim());
-
+        courseList();
         txt_cancel.setOnClickListener(this);
         txt_save.setOnClickListener(this);
 
@@ -107,9 +119,9 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setupbottomtoolbar() {
-        bottom_toolbar=findViewById(R.id.bottom_toolbar);
-        txt_save=bottom_toolbar.findViewById(R.id.txt_save);
-        txt_cancel=bottom_toolbar.findViewById(R.id.txt_cancel);
+        bottom_toolbar=(LinearLayout) findViewById(R.id.bottom_toolbar);
+        txt_save=(TextView) bottom_toolbar.findViewById(R.id.txt_save);
+        txt_cancel=(TextView)bottom_toolbar.findViewById(R.id.txt_cancel);
         txt_save.setOnClickListener(this);
         txt_cancel.setOnClickListener(this);
     }
@@ -142,9 +154,9 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
                         if (!insti.isEmpty()){
                             if (!speci.isEmpty()){
                                 if (eduId==null){
-                                    addEdu(userid, courseTitle,speci,insti,year);
+                                    addEdu(userid, courseTitle,speci,insti,year,course);
                                 } else {
-                                    editEdu(userid, courseTitle,speci,insti,year,eduId);
+                                    editEdu(userid, courseTitle,speci,insti,year,eduId,course);
                                 }
 
                             }else {
@@ -173,7 +185,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void editEdu(String userId, String courseTitle, String speci, String insti, String year, String eduId) {
+    private void editEdu(String userId, String courseTitle, String speci, String insti, String year, String eduId,String course) {
         if(Utillity.isNetworkConnected(EducationAdd.this)) {
             Utillity.showloadingpopup(EducationAdd.this);
             RequestQueue queue = VolleySingelton.getsInstance().getmRequestQueue();
@@ -184,7 +196,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
             params.put("institute", insti);
             params.put("year", year);
             params.put("jobseeker_education_id", eduId);
-
+            params.put("course_type", course);
             CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_EDU, params, this.success(), this.errorListener());
             queue.add(customRequest);
 
@@ -196,8 +208,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-    private void addEdu(String userId, String courseTitle, String speci, String insti, String year) {
+    private void addEdu(String userId, String courseTitle, String speci, String insti, String year,String course) {
         if(Utillity.isNetworkConnected(EducationAdd.this)) {
             Utillity.showloadingpopup(EducationAdd.this);
             RequestQueue queue = VolleySingelton.getsInstance().getmRequestQueue();
@@ -207,6 +218,8 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
             params.put("specilization", speci);
             params.put("institute", insti);
             params.put("year", year);
+            params.put("course_type", course);
+
             CustomRequest customRequest = new CustomRequest(Request.Method.POST, ApiList.JOBSEEKER_ADD_EDU, params,
                     this.success(), this.errorListener());
             queue.add(customRequest);
@@ -230,6 +243,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
                 params, this.deletsuccess(), this.errorListener());
         queue.add(customRequest);
     }
+
     private Response.Listener<JSONObject> deletsuccess() {
         return new Response.Listener<JSONObject>() {
             @Override
@@ -250,8 +264,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
         };
     }
 
-    private Response.ErrorListener errorListener()
-    {
+    private Response.ErrorListener errorListener() {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -261,8 +274,7 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
             }
         };
     }
-    private Response.Listener<JSONObject> success()
-    {
+    private Response.Listener<JSONObject> success() {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -281,8 +293,35 @@ public class EducationAdd extends AppCompatActivity implements View.OnClickListe
                     }
                 }
                 Utillity.hidepopup();
-
             }
         };
     }
+
+    ArrayList<String> courseList=new ArrayList<>();
+    ArrayList<String> courseListId=new ArrayList<>();
+
+    private void courseList() {
+        courseList.add("Full Time");
+        courseList.add("Part Time");
+        courseListId.add("1");
+        courseListId.add("2");
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_row,courseList);
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_row);
+        edtCourse.setAdapter(arrayAdapter);
+        if (course != null) {
+            int spinnerPosition = arrayAdapter.getPosition(course);
+            edtCourse.setSelection(spinnerPosition);
+        }
+        edtCourse.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                course = courseListId.get(position);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
 }
