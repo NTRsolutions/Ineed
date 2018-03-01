@@ -158,13 +158,17 @@ public class UploadResumeActivity extends AppCompatActivity {
         if (requestCode == 0) {
             String a;
             if (resultCode == Activity.RESULT_OK) {
+                String s =data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
+                Log.d(TAG, "onActivityResult: "+s);
+
                 File file = new File(data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH));
 
                 try {
                     a = encodeFileToBase64Binary(file);
 //                    update resume
-                    upResume(a);
-
+                    if (!a.equals("File not found")){
+                        upResume(a);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -235,15 +239,23 @@ public class UploadResumeActivity extends AppCompatActivity {
             mRuntimePermission.requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 0);
         }
     }
-
+    String encodedString="";
     private String encodeFileToBase64Binary(File fileName)
             throws IOException {
-        byte[] bytes = loadFile(fileName);
-        byte[] encoded = Base64.encode(bytes);
+
         extension = fileName.getAbsolutePath().substring(fileName.getAbsolutePath().lastIndexOf("."));
-        String encodedString = new String(encoded);
-            Log.d(TAG, "upResume: "+extension.replace(".",""));
-        return encodedString;
+        Log.d(TAG, "upResume: "+extension.replace(".",""));
+        if (extension.equals(".docx")||extension.equals(".doc")||extension.equals(".pdf")||extension.equalsIgnoreCase(".RTF")){
+            byte[] bytes = loadFile(fileName);
+            byte[] encoded = Base64.encode(bytes);
+            encodedString = new String(encoded);
+            return encodedString;
+
+        } else {
+            Utillity.message(getApplicationContext(),"File not supported");
+            return "File not found";
+        }
+
     }
     private byte[] loadFile(File file) throws IOException {
 

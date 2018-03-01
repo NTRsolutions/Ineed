@@ -466,7 +466,7 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                             if (!jsonObject.getString("user_nationality").equals("0") && jsonObject.getString("user_nationality").length()>1){
                                 nationality  = jsonObject.getString("user_nationality");
                                 String workpc ;
-                                if (jobseekerProileData.getUser_list().getUser_workpermit().equals("no")){
+                                if (jobseekerProileData.getUser_list().getUser_workpermit().equalsIgnoreCase("no")){
                                     workpc = "No";
                                     txtNationaliaty.setText(jobseekerProileData.getUser_list().getUser_nationality()
                                             +", "+" with "+workpc+" work permit");
@@ -512,7 +512,6 @@ public class DashboardJobseeker extends Fragment implements View.OnClickListener
                             if (jsonObject.getString("profile_summary_positions").length()>1&&jsonObject.getString("profile_summary_positions").length()>1){
                                 if (jobseekerProileData.getUser_list().getProfile_summary_positions()!=null){
                                     desig = jobseekerProileData.getUser_list().getProfile_summary_positions();
-
                                 }
                                 if (jobseekerProileData.getUser_list().getProfile_summary_jobtype()!=null){
                                     jobtype = (String) jobseekerProileData.getUser_list().getProfile_summary_jobtype();
